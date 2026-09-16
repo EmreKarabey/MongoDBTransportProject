@@ -1,15 +1,13 @@
 # GitHub Linguist - Dil istatistiklerini düzeltme
-# wwwroot altındaki template dosyalarını "vendor" (üçüncü parti) olarak işaretle
+# wwwroot altındaki tüm statik/template dosyalarını "vendor" olarak işaretle
 # Bu sayede GitHub projeyi C# olarak tanıyacaktır
 
-# MongoDBProject wwwroot template dosyaları
-MongoDB/MongoDBProject/wwwroot/templates/** linguist-vendored
-MongoDB/MongoDBProject/wwwroot/lib/** linguist-vendored
+# MongoDBProject - Tüm wwwroot içeriği (hazır tema/template dosyaları)
+MongoDB/MongoDBProject/wwwroot/** linguist-vendored
 
-# MongoDBAdmin wwwroot template dosyaları
-MongoDBAdmin/MongoDBAdmin/wwwroot/templates/** linguist-vendored
-MongoDBAdmin/MongoDBAdmin/wwwroot/lib/** linguist-vendored
+# MongoDBAdmin - Tüm wwwroot içeriği (Silva-Admin tema dosyaları)
+MongoDBAdmin/MongoDBAdmin/wwwroot/** linguist-vendored
 
-# Genel statik dosyalar
+# Genel minify edilmiş dosyalar
 *.min.js linguist-vendored
 *.min.css linguist-vendored
