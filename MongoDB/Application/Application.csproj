@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.2.0" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="MediatR" Version="14.2.0" />
+    <PackageReference Include="MongoDB.Bson" Version="3.10.0" />
+    <PackageReference Include="MongoDB.Driver" Version="3.10.0" />
+    <PackageReference Include="MongoDB.Driver.Core" Version="2.30.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\About\Command\" />
+    <Folder Include="Features\Brand\Command\Create\" />
+    <Folder Include="Features\Brand\Command\Delete\" />
+    <Folder Include="Features\Brand\Command\Update\" />
+    <Folder Include="Features\Brand\Queries\GetById\" />
+    <Folder Include="Features\Offer\Command\" />
+    <Folder Include="Features\Offer\Constants\" />
+    <Folder Include="Features\Offer\Rules\" />
+    <Folder Include="Features\Slider\Command\Delete\" />
+    <Folder Include="Features\Slider\Command\Update\" />
+    <Folder Include="Features\Slider\Queries\GetById\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
+</Project>

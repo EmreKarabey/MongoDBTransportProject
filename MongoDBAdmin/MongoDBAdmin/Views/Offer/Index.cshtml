@@ -1,0 +1,294 @@
+@model EntityLayer.Paginate.Paginate<EntityLayer.Entities.Offer>
+@{
+    ViewData["Title"] = "Teklifler / Hizmetler";
+}
+
+<div class="container-fluid mt-4">
+    <!-- Süslü Başlık Alanı -->
+    <div class="mb-5 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%); padding: 30px; border-radius: 16px; color: white; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);">
+        <div>
+            <h2 class="font-weight-bold mb-2 text-white"><i class="fa fa-briefcase me-3"></i>Teklifler & Hizmetler Yönetimi</h2>
+            <p class="mb-0" style="color: #e2e8f0; font-size: 1.1rem;">Müşterilerinize sunduğunuz teklifleri ve hizmetleri bu alandan yönetebilir, aktif/pasif durumlarını ayarlayabilirsiniz.</p>
+        </div>
+    </div>
+
+    @{
+        var totalOffers = Model?.Items?.Count ?? 0;
+        var activeOffers = Model?.Items?.Count(x => x.IsStatus) ?? 0;
+        var passiveOffers = totalOffers - activeOffers;
+    }
+
+    <!-- İstatistik Özet Kartları -->
+    <div class="row g-3 mb-5">
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; background: #ffffff;">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted fs-13 fw-semibold text-uppercase d-block mb-1">Toplam Hizmet</span>
+                            <h3 class="fw-bold text-dark mb-0" id="signalrTotalOffers">@totalOffers</h3>
+                        </div>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; background: rgba(37, 99, 235, 0.1); color: #2563eb;">
+                            <i data-feather="briefcase" style="width: 22px; height: 22px;"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between fs-12 text-muted">
+                        <span>Sistem Kayıtları</span>
+                        <span class="text-primary fw-semibold">Tüm Hizmetler</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; background: #ffffff;">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted fs-13 fw-semibold text-uppercase d-block mb-1">Aktif Hizmetler</span>
+                            <h3 class="fw-bold text-dark mb-0" id="signalrActiveOffers">@activeOffers</h3>
+                        </div>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                            <i data-feather="check-circle" style="width: 22px; height: 22px;"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between fs-12 text-muted">
+                        <span>Yayında Olanlar</span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">Aktif</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; background: #ffffff;">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted fs-13 fw-semibold text-uppercase d-block mb-1">Pasif Hizmetler</span>
+                            <h3 class="fw-bold text-dark mb-0" id="signalrPassiveOffers">@passiveOffers</h3>
+                        </div>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                            <i data-feather="x-circle" style="width: 22px; height: 22px;"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between fs-12 text-muted">
+                        <span>Askıya Alınanlar</span>
+                        <span class="badge @(passiveOffers > 0 ? "bg-danger-subtle text-danger border border-danger-subtle" : "bg-light text-muted")">
+                            @(passiveOffers > 0 ? $"{passiveOffers} Pasif" : "Pasif Yok")
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        
+        <!-- YENİ EKLE KARTI (Her zaman en başta görünür) -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <a href="/Offer/Create" class="text-decoration-none h-100 d-block">
+                <div class="card h-100 shadow-sm add-new-card" style="border-radius: 16px; border: 2px dashed #93c5fd; background: linear-gradient(to bottom, #f8fafc, #eff6ff); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); min-height: 280px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden;">
+                    <div class="card-body text-center d-flex flex-column justify-content-center align-items-center w-100 z-index-1">
+                        <div class="icon-circle mb-3 d-flex justify-content-center align-items-center rounded-circle shadow-sm" style="width: 80px; height: 80px; background: linear-gradient(135deg, #3b82f6, #2563eb); transition: all 0.3s ease;">
+                            <i class="fa fa-plus fa-2x text-white" style="transition: all 0.3s ease;"></i>
+                        </div>
+                        <h4 class="font-weight-bold m-0" style="color: #1e293b;">Yeni Teklif Ekle</h4>
+                        <p class="mt-2 mb-0" style="font-size: 0.95rem; color: #64748b;">Sisteme yeni bir hizmet kartı oluşturun</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        @if (Model != null && Model.Items.Any())
+        {
+            foreach (var item in Model.Items)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0 offer-card position-relative" style="border-radius: 16px; overflow: hidden; transition: all 0.4s ease; background-color: #ffffff;">
+                        
+                        <!-- Durum Rozeti (Badge) -->
+                        <div class="position-absolute" style="top: 15px; right: 15px; z-index: 5;">
+                            @if (item.IsStatus)
+                            {
+                                <span class="badge" style="background: linear-gradient(45deg, #22c55e, #16a34a); padding: 8px 12px; border-radius: 20px; box-shadow: 0 4px 10px rgba(34,197,94,0.3); font-size: 0.8rem; font-weight: 600;"><i class="fa fa-check-circle me-1"></i> Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge" style="background: linear-gradient(45deg, #ef4444, #dc2626); padding: 8px 12px; border-radius: 20px; box-shadow: 0 4px 10px rgba(239,68,68,0.3); font-size: 0.8rem; font-weight: 600;"><i class="fa fa-times-circle me-1"></i> Pasif</span>
+                            }
+                        </div>
+
+                        <div class="card-body p-4 d-flex flex-column" style="position: relative; z-index: 2;">
+                            <!-- İkon / Resim Alanı -->
+                            <div class="mb-4 mt-3 text-center" style="height: 100px; display: flex; justify-content: center; align-items: center;">
+                                @if (!string.IsNullOrEmpty(item.ImageURL))
+                                {
+                                    <img src="@item.ImageURL" alt="@item.Title" style="max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.1)); transition: transform 0.3s ease;" class="offer-img" />
+                                }
+                                else
+                                {
+                                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #16a34a; box-shadow: 0 8px 20px rgba(22,163,74,0.15);">
+                                        <i class="fa fa-box-open fa-2x"></i>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <!-- Başlık -->
+                            <h4 class="card-title text-center font-weight-bold mb-3" style="color: #0f172a; font-size: 1.3rem;">@item.Title</h4>
+                            
+                            <!-- Açıklama (Satır Sınırlamalı) -->
+                            <p class="card-text text-muted text-center flex-grow-1 offer-desc" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 0;">
+                                @item.Description
+                            </p>
+                        </div>
+                        
+                        <!-- Hover Overlay - İşlem Butonları -->
+                        <div class="hover-overlay position-absolute top-0 left-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center" style="background: rgba(255, 255, 255, 0.95); z-index: 10; opacity: 0; transition: all 0.3s ease; backdrop-filter: blur(4px);">
+                            <h5 class="font-weight-bold mb-4" style="color: #1e293b;">İşlemler</h5>
+                            <div class="text-center w-100 px-4">
+                                <form asp-action="ChangeStatus" asp-controller="Offer" asp-route-id="@item.OfferId" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-lg w-75 mb-3 shadow-sm rounded-pill status-btn @(item.IsStatus ? "btn-outline-warning" : "btn-success")" style="font-weight: 600; border-width: 2px;">
+                                        <i class="fa @(item.IsStatus ? "fa-ban" : "fa-check") me-2"></i> @(item.IsStatus ? "Pasife Al" : "Aktife Al")
+                                    </button>
+                                </form>
+                                
+                                <a href="/Offer/Update/@item.OfferId" class="btn btn-outline-primary btn-lg w-75 mb-3 shadow-sm rounded-pill" style="font-weight: 600; border-width: 2px;">
+                                    <i class="fa fa-pen me-2"></i> Düzenle
+                                </a>
+                                
+                                <form asp-action="Delete" asp-controller="Offer" asp-route-id="@item.OfferId" method="post" class="d-inline" onsubmit="return confirm('Bu teklifi silmek istediğinize emin misiniz?');">
+                                    <button type="submit" class="btn btn-outline-danger btn-lg w-75 shadow-sm rounded-pill" style="font-weight: 600; border-width: 2px;">
+                                        <i class="fa fa-trash me-2"></i> Sil
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    @if (Model != null && Model.Page > 1)
+    {
+        <div class="d-flex justify-content-center mt-4 mb-5">
+            <p class="text-muted font-weight-bold bg-white px-4 py-2 rounded-pill shadow-sm">Sayfa @Model.Size / @Model.Page</p>
+        </div>
+    }
+</div>
+
+<style>
+    /* Açıklama metni sığdırma (CSS Line Clamp) */
+    .offer-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Maksimum 3 satır */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 4.8rem; /* 1.6 line-height * 3 = 4.8rem, kart yüksekliği sabit kalsın diye */
+    }
+
+    /* Var olan kartların üzerine gelinceki animasyonu */
+    .offer-card {
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+    }
+
+    .offer-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.15) !important;
+        border-color: #e2e8f0;
+    }
+    
+    .offer-card:hover .offer-img {
+        transform: scale(1.08);
+    }
+
+    /* Overlay Animasyonu */
+    .offer-card .hover-overlay {
+        visibility: hidden;
+    }
+
+    .offer-card:hover .hover-overlay {
+        opacity: 1 !important;
+        visibility: visible;
+    }
+    
+    /* Yeni Ekle Kartı Animasyonları */
+    .add-new-card:hover {
+        background: linear-gradient(to bottom, #eff6ff, #dbeafe) !important;
+        border-color: #60a5fa !important;
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.25) !important;
+        cursor: pointer;
+    }
+    
+    .add-new-card:hover .icon-circle {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+        transform: scale(1.15) rotate(90deg);
+    }
+    
+    .add-new-card:hover i {
+        color: #ffffff !important;
+    }
+    
+    .add-new-card:hover h4 {
+        color: #1e3a8a !important;
+    }
+    
+    .status-btn:hover {
+        color: white !important;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.12/signalr.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("/SignalRHub")
+                .build();
+
+            connection.on("TotalOffersCount", function (count) {
+                var el = document.getElementById("signalrTotalOffers");
+                if (el) el.innerText = count;
+            });
+
+            connection.on("ActiveOffersCount", function (count) {
+                var el = document.getElementById("signalrActiveOffers");
+                if (el) el.innerText = count;
+            });
+
+            connection.on("PassiveOffersCount", function (count) {
+                var el = document.getElementById("signalrPassiveOffers");
+                if (el) {
+                    el.innerText = count;
+                    var parentBadge = el.closest(".card-body").querySelector(".badge");
+                    if (parentBadge) {
+                        if (count > 0) {
+                            parentBadge.className = "badge bg-danger-subtle text-danger border border-danger-subtle";
+                            parentBadge.innerText = count + " Pasif";
+                        } else {
+                            parentBadge.className = "badge bg-light text-muted";
+                            parentBadge.innerText = "Pasif Yok";
+                        }
+                    }
+                }
+            });
+
+            connection.start().then(function () {
+                connection.invoke("SendOfferStatics");
+                setInterval(function () {
+                    connection.invoke("SendOfferStatics");
+                }, 5000);
+            }).catch(function (err) {
+                console.error(err.toString());
+            });
+        });
+    </script>
+}

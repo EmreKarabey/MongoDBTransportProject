@@ -1,0 +1,139 @@
+@model EntityLayer.Paginate.Paginate<EntityLayer.Entities.HowItWork>
+@{
+    ViewData["Title"] = "Nasıl Çalışırız Yönetimi";
+}
+
+<div class="container-fluid mt-4">
+    <div class="mb-5 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #1e293b 0%, #0ea5e9 100%); padding: 30px; border-radius: 16px; color: white; box-shadow: 0 10px 25px rgba(14, 165, 233, 0.2);">
+        <div>
+            <h2 class="font-weight-bold mb-2 text-white"><i class="fa fa-cogs me-3"></i>Nasıl Çalışırız Yönetimi</h2>
+            <p class="mb-0" style="color: #e2e8f0; font-size: 1.1rem;">"Nasıl Çalışırız" bölümünü ve çalışma adımlarınızı bu alandan yönetebilirsiniz.</p>
+        </div>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert" style="border-radius: 10px; border-left: 5px solid #dc2626;">
+            <div class="d-flex align-items-center">
+                <i class="fa fa-exclamation-triangle me-3" style="font-size: 1.5rem; color: #dc2626;"></i>
+                <div>
+                    <strong>İşlem Başarısız!</strong><br />
+                    @TempData["Error"]
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-4">
+            <a href="/HowItWork/AddHowItWork" class="text-decoration-none h-100 d-block">
+                <div class="card h-100 shadow-sm add-new-card" style="border-radius: 16px; border: 2px dashed #7dd3fc; background: linear-gradient(to bottom, #f8fafc, #f0f9ff); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); min-height: 280px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden;">
+                    <div class="card-body text-center d-flex flex-column justify-content-center align-items-center w-100 z-index-1">
+                        <div class="icon-circle mb-3 d-flex justify-content-center align-items-center rounded-circle shadow-sm" style="width: 80px; height: 80px; background: linear-gradient(135deg, #38bdf8, #0ea5e9); transition: all 0.3s ease;">
+                            <i class="fa fa-plus fa-2x text-white" style="transition: all 0.3s ease;"></i>
+                        </div>
+                        <h4 class="font-weight-bold m-0" style="color: #1e293b;">Yeni Alan Ekle</h4>
+                        <p class="mt-2 mb-0" style="font-size: 0.95rem; color: #64748b;">Sisteme yeni bir "Nasıl Çalışırız" bilgisi oluşturun</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        @if (Model != null && Model.Items.Any())
+        {
+            foreach (var item in Model.Items)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0 offer-card position-relative" style="border-radius: 16px; overflow: hidden; transition: all 0.4s ease; background-color: #ffffff;">
+                        
+                        <div class="position-absolute" style="top: 15px; right: 15px; z-index: 5;">
+                            <span class="badge" style="background: linear-gradient(45deg, #f59e0b, #d97706); padding: 8px 12px; border-radius: 20px; box-shadow: 0 4px 10px rgba(245,158,11,0.3); font-size: 0.8rem; font-weight: 600;">
+                                <i class="fa fa-list-ol me-1"></i> @(item.HowItWorkArticles?.Count ?? 0) Adım
+                            </span>
+                        </div>
+
+                        <div class="card-body p-4 d-flex flex-column" style="position: relative; z-index: 2;">
+                            <div class="mb-4 mt-3 text-center" style="height: 100px; display: flex; justify-content: center; align-items: center;">
+                                @if (!string.IsNullOrEmpty(item.ImageURL))
+                                {
+                                    <img src="@item.ImageURL" alt="Görsel" style="max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.1)); transition: transform 0.3s ease;" class="offer-img" />
+                                }
+                                else
+                                {
+                                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0284c7; box-shadow: 0 8px 20px rgba(14,165,233,0.15);">
+                                        <i class="fa fa-cogs fa-2x"></i>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <!-- Açıklama (Title yoktu entity'de, direk desc var) -->
+                            <p class="card-text text-muted text-center flex-grow-1 offer-desc" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 0;">
+                                @item.Description
+                            </p>
+                        </div>
+                        
+                        <div class="hover-overlay position-absolute top-0 left-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center" style="background: rgba(255, 255, 255, 0.95); z-index: 10; opacity: 0; transition: all 0.3s ease; backdrop-filter: blur(4px);">
+                            <h5 class="font-weight-bold mb-4" style="color: #1e293b;">İşlemler</h5>
+                            
+                            <a href="/HowItWork/Update/@item.HowItWorkId" class="btn btn-outline-primary btn-lg w-75 mb-3 shadow-sm rounded-pill" style="font-weight: 600; border-width: 2px;">
+                                <i class="fa fa-pen me-2"></i> Düzenle
+                            </a>
+                            
+                            <form method="post" action="/HowItWork/Delete/@item.HowItWorkId" style="width: 75%; margin: 0 auto;" onsubmit="return confirm('Bu içeriği silmek istediğinize emin misiniz?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger btn-lg w-100 shadow-sm rounded-pill" style="font-weight: 600; border-width: 2px;">
+                                    <i class="fa fa-trash me-2"></i> Sil
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    @if (Model != null && Model.Page > 1)
+    {
+        <div class="d-flex justify-content-center mt-4 mb-5">
+            <p class="text-muted font-weight-bold bg-white px-4 py-2 rounded-pill shadow-sm">Sayfa @Model.Size / @Model.Page</p>
+        </div>
+    }
+</div>
+
+<style>
+    .offer-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 6.4rem;
+    }
+    .offer-card {
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+    }
+    .offer-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.15) !important;
+        border-color: #e2e8f0;
+    }
+    .offer-card:hover .offer-img { transform: scale(1.08); }
+    .offer-card .hover-overlay { visibility: hidden; }
+    .offer-card:hover .hover-overlay { opacity: 1 !important; visibility: visible; }
+    
+    .add-new-card:hover {
+        background: linear-gradient(to bottom, #f0f9ff, #e0f2fe) !important;
+        border-color: #38bdf8 !important;
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.25) !important;
+        cursor: pointer;
+    }
+    .add-new-card:hover .icon-circle {
+        background: linear-gradient(135deg, #0ea5e9, #0284c7) !important;
+        transform: scale(1.15) rotate(90deg);
+    }
+    .add-new-card:hover i { color: #ffffff !important; }
+    .add-new-card:hover h4 { color: #0c4a6e !important; }
+</style>

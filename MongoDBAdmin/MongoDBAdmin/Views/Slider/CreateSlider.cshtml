@@ -1,0 +1,61 @@
+
+@model CreateSliderDto
+
+@{
+    ViewData["Title"] = "CreateSlider";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h2>Yeni Slider Ekle</h2>
+
+    <form asp-action="CreateSlider" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">Başlık (Title)</label>
+            <input asp-for="Title" class="form-control" placeholder="Slider başlığını giriniz" required />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SubTitle" class="form-label">Alt Başlık (SubTitle)</label>
+            <input asp-for="SubTitle" class="form-control" placeholder="Slider alt başlığını giriniz" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label">Açıklama</label>
+            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Slider açıklamasını giriniz"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label font-weight-bold">Görsel Seç (Cloudinary'ye Yüklenir)</label>
+            <input type="file" asp-for="ImageFile" class="form-control" accept="image/*" id="fileSliderImg" onchange="previewImage(this, 'previewImg')" />
+            <small class="text-muted">Bilgisayarınızdan resim seçebilirsiniz. Doğrudan Cloudinary'ye yüklenecektir.</small>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ImageURL" class="form-label">Veya Görsel URL Giriniz (İsteğe Bağlı)</label>
+            <input asp-for="ImageURL" class="form-control" id="urlSliderImg" placeholder="https://res.cloudinary.com/..." />
+        </div>
+
+        <div class="mb-3" id="previewContainer" style="display: none;">
+            <label class="form-label font-weight-bold">Seçilen Görsel Önizleme:</label><br />
+            <img id="previewImg" src="#" alt="Önizleme" class="img-thumbnail" style="max-height: 160px; object-fit: cover;" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Slider'ı Kaydet</button>
+        <a href="/Slider/Index" class="btn btn-secondary">Listeye Geri Dön</a>
+    </form>
+</div>
+
+<script>
+    function previewImage(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.getElementById(previewId);
+                img.src = e.target.result;
+                document.getElementById('previewContainer').style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

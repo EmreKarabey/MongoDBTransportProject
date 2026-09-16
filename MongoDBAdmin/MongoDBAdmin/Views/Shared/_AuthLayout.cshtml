@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] | MongoDB Admin Paneli</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MongoDB Admin Portalı Giriş ve Kayıt Ekranı" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/Silva-Admin/dist/assets/images/favicon.ico">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- App css -->
+    <link href="~/Silva-Admin/dist/assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- Icons -->
+    <link href="~/Silva-Admin/dist/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            background-color: #f1f5f9;
+        }
+
+        .auth-card {
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.08) !important;
+            backdrop-filter: blur(10px);
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .auth-brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 50px;
+            background: rgba(37, 99, 235, 0.08);
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+
+        .auth-right-panel {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0369a1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-right-panel::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.25) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            border-radius: 50%;
+        }
+
+        .auth-right-panel::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.2) 0%, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+            border-radius: 50%;
+        }
+
+        .auth-feature-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 14px 20px;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-feature-pill:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateX(6px);
+        }
+
+        .form-control-custom {
+            height: 48px;
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f0;
+            padding-left: 16px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-control-custom:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        }
+
+        .input-group-custom .input-group-text {
+            border-radius: 12px 0 0 12px;
+            background-color: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-right: none;
+            color: #64748b;
+        }
+
+        .input-group-custom .form-control-custom {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .form-control-custom.input-validation-error {
+            border-color: #ef4444 !important;
+            background-color: #fffbfa !important;
+        }
+
+        .input-group-custom:has(.input-validation-error) .input-group-text,
+        .input-group-custom:has(.input-validation-error) .password-toggle-btn {
+            border-color: #ef4444 !important;
+        }
+
+        .field-validation-error {
+            color: #dc2626 !important;
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .btn-gradient-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border: none;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.4);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-gradient-primary:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px -4px rgba(37, 99, 235, 0.5);
+            color: #ffffff;
+        }
+
+        .btn-gradient-primary:active {
+            transform: translateY(0);
+        }
+
+        .password-toggle-btn {
+            background: transparent;
+            border: 1.5px solid #e2e8f0;
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+            color: #64748b;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .password-toggle-btn:hover {
+            color: #0f172a;
+        }
+
+        .input-has-toggle {
+            border-radius: 0 !important;
+        }
+
+        .social-auth-btn {
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .social-auth-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .divider-with-text {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: #94a3b8;
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .divider-with-text::before,
+        .divider-with-text::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .divider-with-text span {
+            padding: 0 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid p-0">
+        <div class="row g-0 min-vh-100">
+            <!-- Sol Panel: Form Bölümü -->
+            <div class="col-xl-5 col-lg-6 d-flex flex-column justify-content-center py-5 px-3 px-sm-4 px-md-5">
+                <div class="w-100" style="max-width: 460px; margin: 0 auto;">
+                    <div class="card auth-card p-4 p-sm-5">
+                        <!-- Logo & Badge -->
+                        <div class="text-center mb-4">
+                            <a href="/" class="d-inline-block mb-3">
+                                <img src="~/Silva-Admin/dist/assets/images/logo-dark.png" alt="MongoDB Admin Logo" height="32" class="d-block mx-auto" />
+                            </a>
+                            <div class="d-flex justify-content-center">
+                                <span class="auth-brand-badge">
+                                    <i data-feather="shield" style="width: 14px; height: 14px;"></i> MongoDB Admin Portalı
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Sayfa İçeriği (Login veya Register Formu) -->
+                        @RenderBody()
+
+                    </div>
+
+                    <!-- Alt Bilgi / Copyright -->
+                    <div class="text-center mt-4">
+                        <p class="text-muted fs-13 mb-0">
+                            &copy; @DateTime.Now.Year <strong>MongoDB Project Admin</strong>. Tüm hakları saklıdır.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sağ Panel: Karşılama ve Görsel Vitrin -->
+            <div class="col-xl-7 col-lg-6 d-none d-lg-block auth-right-panel p-5">
+                <div class="position-relative z-index-1 text-center" style="max-width: 580px;">
+                    <div class="mb-4">
+                        <img src="~/Silva-Admin/dist/assets/images/auth-images.svg" alt="Auth Illustration" class="img-fluid" style="max-height: 340px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.25));" />
+                    </div>
+
+                    <h2 class="text-white fw-bold fs-28 mb-3">
+                        Hızlı, Güvenli ve Esnek NoSQL Yönetimi
+                    </h2>
+                    <p class="text-white-50 fs-16 mb-4" style="line-height: 1.6;">
+                        Tüm slider'lar, teklifler, marka işbirlikleri ve içerik süreçlerinizi tek bir modern kontrol panelinden kolayca yönetin.
+                    </p>
+
+                    <!-- Özellik Kartları -->
+                    <div class="row g-2 text-start mt-4">
+                        <div class="col-12 col-sm-6">
+                            <div class="auth-feature-pill">
+                                <div class="rounded-circle p-2 bg-primary bg-opacity-25 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                    <i data-feather="database" class="text-info" style="width: 18px; height: 18px;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-white fs-14 fw-semibold">MongoDB Atlas / Local</h6>
+                                    <small class="text-white-50 fs-12">Yüksek performanslı veri akışı</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="auth-feature-pill">
+                                <div class="rounded-circle p-2 bg-success bg-opacity-25 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                    <i data-feather="lock" class="text-success" style="width: 18px; height: 18px;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-white fs-14 fw-semibold">Gelişmiş Güvenlik</h6>
+                                    <small class="text-white-50 fs-12">Rol ve yetki bazlı erişim</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Scripts -->
+    <script src="~/Silva-Admin/dist/assets/libs/jquery/jquery.min.js"></script>
+    <script src="~/Silva-Admin/dist/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Silva-Admin/dist/assets/libs/feather-icons/feather.min.js"></script>
+    <script src="~/Silva-Admin/dist/assets/js/app.js"></script>
+
+    <script>
+        // Feather icons init
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+
+        // Genel şifre gizle / göster fonksiyonu
+        function setupPasswordToggle(toggleBtnId, inputId) {
+            const btn = document.getElementById(toggleBtnId);
+            const input = document.getElementById(inputId);
+            if (btn && input) {
+                btn.addEventListener('click', function () {
+                    const isPassword = input.type === 'password';
+                    input.type = isPassword ? 'text' : 'password';
+                    btn.innerHTML = isPassword ? '<i data-feather="eye-off" style="width: 16px; height: 16px;"></i>' : '<i data-feather="eye" style="width: 16px; height: 16px;"></i>';
+                    feather.replace();
+                });
+            }
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

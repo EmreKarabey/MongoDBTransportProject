@@ -1,0 +1,300 @@
+@model MongoDBAdmin.Dto.GetInTouch.CreateGetInTouchDto
+
+@{
+    ViewData["Title"] = "Yeni İletişim Alanı Ekle";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid mt-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="text-primary font-weight-bold" style="color: #1e293b !important;">Yeni İletişim Alanı Ekle</h2>
+            <p class="text-muted">Buradan web siteniz için yeni bir iletişim alanı ve maddeleri oluşturabilirsiniz.</p>
+        </div>
+        <a href="/GetInTouch/Index" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert" style="border-radius: 10px; border-left: 5px solid #dc2626;">
+            <div class="d-flex align-items-center">
+                <i class="fa fa-exclamation-triangle me-3" style="font-size: 1.5rem; color: #dc2626;"></i>
+                <div>
+                    <strong>İşlem Başarısız!</strong><br />
+                    @TempData["Error"]
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Form Alanı (Sol Taraf) -->
+        <div class="col-lg-7 mb-4">
+            <form method="post" action="/GetInTouch/AddGetInTouch" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                
+                <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+                    <div class="card-header bg-white border-0 pt-4 pb-0">
+                        <h5 class="font-weight-bold" style="color: #475569;"><i class="fa fa-edit me-2"></i>Ana İletişim Bilgileri</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Başlık (Title)</label>
+                            <input type="text" class="form-control" name="Title" id="inputTitle" placeholder="Örn: Bize Ulaşın" required onkeyup="updatePreview()">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Açıklama (Description)</label>
+                            <textarea class="form-control" name="Description" id="inputDesc" rows="4" placeholder="İletişim sayfanızdaki açıklama metnini girin..." required onkeyup="updatePreview()"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Görsel Seç (Cloudinary'ye Yüklenir)</label>
+                            <input type="file" class="form-control" name="ImageFile" id="inputFileImg" accept="image/*" onchange="previewSelectedFile(this)">
+                            <small class="text-muted">Bilgisayarınızdan resim seçebilirsiniz. Cloudinary'ye otomatik yüklenecektir.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Veya Görsel (Image URL)</label>
+                            <input type="text" class="form-control" name="ImageURL" id="inputImg" placeholder="https://site.com/contact.jpg" onkeyup="updatePreview()">
+                            <small class="text-muted">Dosya seçmezseniz buraya girdiğiniz URL kullanılır veya varsayılan bilgi ikonu gösterilir.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+                    <div class="card-header bg-white border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+                        <h5 class="font-weight-bold" style="color: #475569;"><i class="fa fa-list-check me-2 text-primary"></i>İletişim Maddeleri</h5>
+                        <button type="button" class="btn btn-sm btn-success rounded-pill shadow-sm" id="btnAddArticle">
+                            <i class="fas fa-plus me-1"></i> Madde Ekle
+                        </button>
+                    </div>
+                    <div class="card-body p-4">
+                        <div id="articlesContainer">
+                            <!-- Dinamik İçerik Buraya Gelecek -->
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 py-2 font-weight-bold" style="border-radius: 8px;">
+                    <i class="fa fa-save me-2"></i> Kaydet
+                </button>
+            </form>
+        </div>
+
+        <!-- Canlı Önizleme Alanı (Sağ Taraf) -->
+        <div class="col-lg-5 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 12px; background-color: #f8fafc; position: sticky; top: 20px;">
+                <div class="card-header border-0 pt-4 pb-0" style="background-color: transparent;">
+                    <h5 class="font-weight-bold text-center" style="color: #475569;"><i class="fa fa-eye me-2"></i>Canlı Önizleme</h5>
+                </div>
+                <div class="card-body p-4 d-flex justify-content-center align-items-center">
+                    
+                    <div class="card shadow-sm border-0 offer-card position-relative" style="border-radius: 16px; overflow: hidden; width: 100%; max-width: 380px; border: 1px solid #f1f5f9; background-color: #ffffff;">
+                        
+                        <!-- Makale Sayısı Rozeti -->
+                        <div class="position-absolute" style="top: 15px; right: 15px; z-index: 5;">
+                            <span id="previewArticleCount" class="badge" style="background: linear-gradient(45deg, #3b82f6, #2563eb); padding: 8px 12px; border-radius: 20px; box-shadow: 0 4px 10px rgba(59,130,246,0.3); font-size: 0.8rem; font-weight: 600;">
+                                <i class="fa fa-list me-1"></i> 0 Madde
+                            </span>
+                        </div>
+
+                        <div class="card-body p-4 d-flex flex-column" style="position: relative; z-index: 2;">
+                            <div class="mb-4 mt-3 text-center" style="height: 100px; display: flex; justify-content: center; align-items: center;" id="previewImgContainer">
+                                <div class="d-inline-flex align-items-center justify-content-center rounded-circle default-icon-box" style="width: 80px; height: 80px; background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #059669; box-shadow: 0 8px 20px rgba(5,150,105,0.15);">
+                                    <i class="fa fa-envelope fa-2x"></i>
+                                </div>
+                                <img src="" id="previewImg" class="d-none" style="max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.1));" />
+                            </div>
+                            
+                            <h4 class="card-title text-center font-weight-bold mb-3" style="color: #0f172a; font-size: 1.3rem;" id="previewTitle">Başlık Örneği</h4>
+                            
+                            <p class="card-text text-muted text-center flex-grow-1 offer-desc" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 0;" id="previewDesc">
+                                Açıklama metni burada görünecektir. Formu doldurdukça bu alan otomatik olarak güncellenir.
+                            </p>
+
+                            <div id="previewArticlesContainer" class="mt-3">
+                                <div class="small font-weight-bold text-muted mb-2 text-center" style="font-size: 0.75rem;"><i class="fa fa-check-double text-success me-1"></i>EKLENEN MADDELER</div>
+                                <ul id="previewArticlesList" class="list-unstyled mb-0 d-flex flex-column gap-2 small text-secondary">
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="hover-overlay position-absolute top-0 left-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center" style="background: rgba(255, 255, 255, 0.95); z-index: 10; opacity: 0; transition: all 0.3s ease; backdrop-filter: blur(4px);">
+                            <h5 class="font-weight-bold mb-4" style="color: #1e293b;">Önizleme İşlemleri</h5>
+                            
+                            <a href="javascript:void(0)" class="btn btn-outline-primary btn-lg w-75 mb-3 shadow-sm rounded-pill" style="font-weight: 600; border-width: 2px;">
+                                <i class="fa fa-pen me-2"></i> Düzenle
+                            </a>
+                            
+                            <a href="javascript:void(0)" class="btn btn-outline-danger btn-lg w-75 shadow-sm rounded-pill" style="font-weight: 600; border-width: 2px;">
+                                <i class="fa fa-trash me-2"></i> Sil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .offer-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 4.8rem;
+    }
+
+    .offer-card {
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+    }
+
+    .offer-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.15) !important;
+        border-color: #e2e8f0;
+    }
+
+    .offer-card .hover-overlay {
+        visibility: hidden;
+    }
+
+    .offer-card:hover .hover-overlay {
+        opacity: 1 !important;
+        visibility: visible;
+    }
+</style>
+
+<script>
+    let articleIndex = 0;
+
+    function updatePreview() {
+        const title = document.getElementById('inputTitle').value || 'Başlık Örneği';
+        const desc = document.getElementById('inputDesc').value || 'Açıklama metni burada görünecektir.';
+        const img = document.getElementById('inputImg').value;
+
+        document.getElementById('previewTitle').textContent = title;
+        document.getElementById('previewDesc').textContent = desc;
+
+        const defaultIcon = document.querySelector('.default-icon-box');
+        const previewImg = document.getElementById('previewImg');
+
+        if (img) {
+            defaultIcon.classList.add('d-none');
+            previewImg.classList.remove('d-none');
+            previewImg.src = img;
+        } else {
+            defaultIcon.classList.remove('d-none');
+            previewImg.classList.add('d-none');
+        }
+
+        updateArticlesPreview();
+    }
+
+    function previewSelectedFile(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var previewImg = document.getElementById('previewImg');
+                var defaultIcon = document.querySelector('.default-icon-box');
+                previewImg.src = e.target.result;
+                previewImg.classList.remove('d-none');
+                defaultIcon.classList.add('d-none');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function updateArticlesPreview() {
+        const previewList = document.getElementById('previewArticlesList');
+        const items = document.querySelectorAll('.article-item');
+        previewList.innerHTML = '';
+
+        document.getElementById('previewArticleCount').innerHTML = `<i class="fa fa-list me-1"></i> ${items.length} Madde`;
+
+        items.forEach((item, idx) => {
+            const titleInput = item.querySelector(`input[name$=".Title"]`).value || `Madde ${idx + 1}`;
+            const iconInput = item.querySelector(`input[name$=".IconURL"]`).value || `fa-circle`;
+            const descInput = item.querySelector(`input[name$=".Description"]`).value || `...`;
+            
+            previewList.innerHTML += `
+                <li class="d-flex align-items-center p-2 rounded bg-light" style="border: 1px solid #e2e8f0;">
+                    <i class="${iconInput} text-success me-2" style="width: 20px; text-align: center;"></i>
+                    <div style="flex: 1;">
+                        <strong class="d-block text-dark">${titleInput}</strong>
+                        <span class="d-block text-muted" style="font-size: 0.8rem;">${descInput}</span>
+                    </div>
+                </li>
+            `;
+        });
+    }
+
+    document.getElementById('btnAddArticle').addEventListener('click', function () {
+        const container = document.getElementById('articlesContainer');
+        
+        const html = `
+            <div class="article-item p-3 mb-3 border-info" style="border-radius: 8px; border: 1px solid #93c5fd; background-color: #eff6ff; position: relative;" id="article_${articleIndex}">
+                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2 rounded-circle shadow-sm" onclick="removeArticle(${articleIndex})" title="Kaldır" style="width:30px; height:30px; padding:0; line-height:1;">
+                    <i class="fas fa-times"></i>
+                </button>
+                
+                <div class="row pe-4">
+                    <div class="col-md-12 mb-2">
+                        <label class="form-label text-muted small font-weight-bold">İkon Sınıfı (örn: fa fa-phone)</label>
+                        <input type="text" name="GetInTouchArticles[${articleIndex}].IconURL" class="form-control form-control-sm" onkeyup="updatePreview()" required />
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label text-muted small font-weight-bold">Başlık</label>
+                        <input type="text" name="GetInTouchArticles[${articleIndex}].Title" class="form-control form-control-sm" onkeyup="updatePreview()" required />
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label text-muted small font-weight-bold">İçerik</label>
+                        <input type="text" name="GetInTouchArticles[${articleIndex}].Description" class="form-control form-control-sm" onkeyup="updatePreview()" required />
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        container.insertAdjacentHTML('beforeend', html);
+        articleIndex++;
+        updatePreview();
+    });
+
+    function removeArticle(index) {
+        const item = document.getElementById(`article_${index}`);
+        if(item) {
+            item.remove();
+            reindexArticles();
+            updatePreview();
+        }
+    }
+
+    function reindexArticles() {
+        const items = document.querySelectorAll('.article-item');
+        items.forEach((item, index) => {
+            const inputs = item.querySelectorAll('input');
+            inputs.forEach(input => {
+                const name = input.getAttribute('name');
+                if (name) {
+                    const newName = name.replace(/\[\d+\]/, `[${index}]`);
+                    input.setAttribute('name', newName);
+                }
+            });
+            const btn = item.querySelector('.btn-outline-danger');
+            if (btn) {
+                btn.setAttribute('onclick', `removeArticle(${index})`);
+            }
+            item.id = `article_${index}`;
+        });
+        articleIndex = items.length;
+    }
+
+    window.onload = function() {
+        document.getElementById('btnAddArticle').click();
+    };
+</script>

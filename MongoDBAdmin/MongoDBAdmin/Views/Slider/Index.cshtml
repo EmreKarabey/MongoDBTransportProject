@@ -1,0 +1,215 @@
+@model Paginate<EntityLayer.Entities.Slider>
+
+@{
+    ViewData["Title"] = "Slider Yönetimi";
+    Layout = "_Layout";
+
+    var sliders = Model.Items ?? new List<EntityLayer.Entities.Slider>();
+    var totalSliders = sliders.Count;
+}
+
+<div class="content">
+    <div class="container-fluid">
+
+        <!-- Sayfa Başlığı ve Breadcrumb -->
+        <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column justify-content-between">
+            <div class="flex-grow-1">
+                <h4 class="fs-20 fw-bold m-0 text-dark d-flex align-items-center gap-2">
+                    <i data-feather="image" class="text-primary" style="width: 24px; height: 24px;"></i>
+                    Slider Yönetimi
+                </h4>
+                <p class="text-muted fs-13 mb-0 mt-1">Ana sayfada yer alan dönen görselleri (slider) ve metinlerini buradan yönetebilirsiniz.</p>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 mt-3 mt-sm-0">
+                <a href="/Slider/CreateSlider" class="btn btn-success d-flex align-items-center gap-2 shadow-sm px-3 py-2" style="border-radius: 10px; font-weight: 600;">
+                    <i data-feather="plus-circle" style="width: 16px; height: 16px;"></i>
+                    <span>Yeni Slider Ekle</span>
+                </a>
+            </div>
+        </div>
+
+        @* Başarı Bildirimi *@
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show p-3 mb-4 border-0 shadow-sm" role="alert" style="border-radius: 12px; background-color: #ecfdf5; color: #065f46; border-left: 5px solid #10b981 !important;">
+                <div class="d-flex align-items-center gap-2">
+                    <i data-feather="check-circle" class="text-success flex-shrink-0" style="width: 20px; height: 20px;"></i>
+                    <span class="fw-semibold fs-14">@TempData["SuccessMessage"]</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+            </div>
+        }
+
+        <!-- İstatistik Özet Kartları -->
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-sm-6 col-xl-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; background: #ffffff;">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="text-muted fs-13 fw-semibold text-uppercase d-block mb-1">Toplam Slider</span>
+                                <h3 class="fw-bold text-dark mb-0" id="signalrTotalSliders">@totalSliders</h3>
+                            </div>
+                            <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; background: rgba(37, 99, 235, 0.1); color: #2563eb;">
+                                <i data-feather="layers" style="width: 22px; height: 22px;"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between fs-12 text-muted">
+                            <span>Sistem Kayıtları</span>
+                            <span class="text-primary fw-semibold">Görünen Slaytlar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; background: #ffffff;">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="text-muted fs-13 fw-semibold text-uppercase d-block mb-1">Gösterim Durumu</span>
+                                <h3 class="fw-bold text-dark mb-0">Aktif</h3>
+                            </div>
+                            <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                                <i data-feather="monitor" style="width: 22px; height: 22px;"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between fs-12 text-muted">
+                            <span>Ana Sayfa Görünümü</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">Yayında</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 col-sm-12 col-xl-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%); color: white;">
+                    <div class="card-body p-4 d-flex flex-column justify-content-center">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                <i data-feather="info" class="text-white"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-1 text-white">İpucu</h5>
+                                <p class="mb-0 fs-13 text-white text-opacity-75">Yüksek çözünürlüklü görseller kullanmaya özen gösterin.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ana Tablo Kartı -->
+        <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px; overflow: visible; background: #ffffff;">
+            <div class="card-body p-0">
+                <div class="table-responsive" style="border-radius: 16px; overflow: visible;">
+                    <table class="table table-hover align-middle mb-0" id="slidersTable">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="text-muted fw-semibold fs-13 text-uppercase ps-4 py-3" style="width: 120px;">Görsel</th>
+                                <th class="text-muted fw-semibold fs-13 text-uppercase py-3">Başlık (Title)</th>
+                                <th class="text-muted fw-semibold fs-13 text-uppercase py-3">Alt Başlık (SubTitle)</th>
+                                <th class="text-muted fw-semibold fs-13 text-uppercase py-3">Açıklama</th>
+                                <th class="text-muted fw-semibold fs-13 text-uppercase pe-4 py-3 text-end" style="width: 100px;">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody class="border-top-0">
+                            @if (Model.Items != null && Model.Items.Any())
+                            {
+                                foreach (var item in Model.Items)
+                                {
+                                    <tr class="slider-row border-bottom">
+                                        <td class="ps-4">
+                                            <div class="rounded shadow-sm overflow-hidden border" style="width: 100px; height: 60px; background: #f8f9fa;">
+                                                <img src="@item.ImageURL" alt="Slider" style="width: 100%; height: 100%; object-fit: cover;" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="fw-bold text-dark fs-14">@item.Title</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted fs-14">@item.SubTitle</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted fs-13 d-inline-block text-truncate" style="max-width: 250px;">
+                                                @item.Description
+                                            </span>
+                                        </td>
+                                        <td class="pe-4 text-end">
+                                            <div class="dropdown">
+                                                <button class="btn btn-light btn-sm rounded-circle d-inline-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="viewport" style="width: 32px; height: 32px; border: 1px solid #e5e7eb;">
+                                                    <i data-feather="more-vertical" style="width: 16px; height: 16px; color: #4b5563;"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="border-radius: 12px; min-width: 180px; padding: 8px;">
+                                                    <li>
+                                                        <a class="dropdown-item d-flex align-items-center gap-2 py-2 fs-14" href="/Slider/UpdateSlider/@item.SliderId" style="border-radius: 8px;">
+                                                            <i data-feather="edit-2" class="text-primary" style="width: 15px; height: 15px;"></i>
+                                                            <span class="text-dark fw-medium">Güncelle</span>
+                                                        </a>
+                                                    </li>
+                                                    <li><hr class="dropdown-divider my-1"></li>
+                                                    <li>
+                                                        <form asp-action="DeleteSlider" asp-controller="Slider" asp-route-Id="@item.SliderId" method="post" class="d-inline">
+                                                            <button type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2 fs-14 text-danger" style="border-radius: 8px;" onclick="return confirm('Bu slider\\'ı silmek istediğinize emin misiniz?');">
+                                                                <i data-feather="trash-2" style="width: 15px; height: 15px;"></i>
+                                                                <span class="fw-medium">Kalıcı Olarak Sil</span>
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center py-5">
+                                        <div class="d-flex flex-column align-items-center justify-content-center">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center bg-light mb-3" style="width: 64px; height: 64px;">
+                                                <i data-feather="inbox" class="text-muted" style="width: 28px; height: 28px;"></i>
+                                            </div>
+                                            <h5 class="text-dark fw-bold mb-1">Henüz Slider Eklenmemiş</h5>
+                                            <p class="text-muted fs-14 mb-0">Ana sayfa için henüz bir slayt görseli oluşturmadınız.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.12/signalr.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("/SignalRHub")
+                .build();
+
+            connection.on("TotalSlidersCount", function (count) {
+                var el = document.getElementById("signalrTotalSliders");
+                if (el) el.innerText = count;
+            });
+
+            connection.start().then(function () {
+                connection.invoke("SendSliderStatics");
+                setInterval(function () {
+                    connection.invoke("SendSliderStatics");
+                }, 5000);
+            }).catch(function (err) {
+                console.error(err.toString());
+            });
+        });
+    </script>
+}

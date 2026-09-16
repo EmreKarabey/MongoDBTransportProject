@@ -1,0 +1,171 @@
+
+@model CreateOfferDto
+@{
+    ViewData["Title"] = "Yeni Teklif Ekle";
+}
+
+<div class="container-fluid mt-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="text-primary font-weight-bold" style="color: #1e293b !important;">Yeni Teklif Ekle</h2>
+            <p class="text-muted">Buradan yeni bir hizmet kartı oluşturabilirsiniz.</p>
+        </div>
+        <a href="/Offer/Index" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Listeye Dön</a>
+    </div>
+
+    <div class="row">
+        <!-- Form Alanı (Sol Taraf) -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 12px;">
+                <div class="card-header bg-white border-0 pt-4 pb-0">
+                    <h5 class="font-weight-bold" style="color: #475569;"><i class="fa fa-edit me-2"></i>Teklif Bilgileri</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" action="/Offer/Create" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Başlık (Title)</label>
+                            <input type="text" class="form-control" name="Title" id="inputTitle" placeholder="Örn: Sea Forwarding" required onkeyup="updatePreview()">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Açıklama (Description)</label>
+                            <textarea class="form-control" name="Description" id="inputDesc" rows="4" placeholder="Hizmetinizin detaylarını girin..." required onkeyup="updatePreview()"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Görsel Seç (Cloudinary'ye Yüklenir)</label>
+                            <input type="file" class="form-control" name="ImageFile" id="inputFileImg" accept="image/*" onchange="previewSelectedFile(this)">
+                            <small class="text-muted">Bilgisayarınızdan resim seçebilirsiniz. Cloudinary'ye otomatik yüklenecektir.</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label font-weight-bold">Veya İkon / Resim Linki (İsteğe Bağlı)</label>
+                            <input type="text" class="form-control" name="ImageURL" id="inputImg" placeholder="https://site.com/icon.png" onkeyup="updatePreview()">
+                            <small class="text-muted">Dosya seçmezseniz buraya girdiğiniz URL kullanılır veya varsayılan ikon gösterilir.</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-2 font-weight-bold" style="border-radius: 8px;">
+                            <i class="fa fa-save me-2"></i> Kaydet
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canlı Önizleme Alanı (Sağ Taraf) -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 12px; background-color: #f8fafc;">
+                <div class="card-header border-0 pt-4 pb-0" style="background-color: transparent;">
+                    <h5 class="font-weight-bold text-center" style="color: #475569;"><i class="fa fa-eye me-2"></i>Canlı Önizleme</h5>
+                </div>
+                <div class="card-body p-4 d-flex justify-content-center align-items-center">
+                    
+                    <!-- Gerçek Kart Tasarımının Birebir Kopyası -->
+                    <div class="card shadow-sm border-0 preview-card position-relative" style="border-radius: 16px; overflow: hidden; width: 350px; max-width: 100%; border: 1px solid #f1f5f9; background-color: #ffffff;">
+                        
+                        <!-- Durum Rozeti (Badge) - Varsayılan Aktif -->
+                        <div class="position-absolute" style="top: 15px; right: 15px; z-index: 5;">
+                            <span class="badge" style="background: linear-gradient(45deg, #22c55e, #16a34a); padding: 8px 12px; border-radius: 20px; box-shadow: 0 4px 10px rgba(34,197,94,0.3); font-size: 0.8rem; font-weight: 600;"><i class="fa fa-check-circle me-1"></i> Aktif</span>
+                        </div>
+
+                        <div class="card-body p-4 d-flex flex-column" style="position: relative; z-index: 2;">
+                            <!-- İkon / Resim Alanı -->
+                            <div class="mb-4 mt-3 text-center" style="height: 100px; display: flex; justify-content: center; align-items: center;" id="previewImgContainer">
+                                <div class="d-inline-flex align-items-center justify-content-center rounded-circle default-icon-box" style="width: 80px; height: 80px; background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #16a34a; box-shadow: 0 8px 20px rgba(22,163,74,0.15);">
+                                    <i class="fa fa-box-open fa-2x"></i>
+                                </div>
+                                <img src="" id="previewImg" class="d-none" style="max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.1));" />
+                            </div>
+                            
+                            <!-- Başlık -->
+                            <h4 class="card-title text-center font-weight-bold mb-3" style="color: #0f172a; font-size: 1.3rem;" id="previewTitle">Başlık Örneği</h4>
+                            
+                            <!-- Açıklama (Satır Sınırlamalı) -->
+                            <p class="card-text text-muted text-center flex-grow-1" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; height: 4.8rem;" id="previewDesc">
+                                Açıklama metni burada görünecektir. Formu doldurdukça bu alan otomatik olarak güncellenir.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nasıl Doldurulmalı Alanı (Alt Kısım) -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0" style="border-radius: 12px; border-left: 5px solid #3b82f6 !important;">
+                <div class="card-body p-4">
+                    <h5 class="font-weight-bold" style="color: #1e293b;"><i class="fa fa-info-circle text-primary me-2"></i>Nasıl Doldurulmalı?</h5>
+                    <div class="row mt-3">
+                        <div class="col-md-4 mb-3">
+                            <h6 class="font-weight-bold text-dark">1. Başlık (Title)</h6>
+                            <p class="text-muted" style="font-size: 0.9rem;">Kısa ve net bir hizmet adı girin. Örneğin: "Sea Forwarding", "Depolama Hizmetleri" vb. Başlıklar müşterinin dikkatini çeken ilk unsurdur.</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <h6 class="font-weight-bold text-dark">2. Açıklama (Description)</h6>
+                            <p class="text-muted" style="font-size: 0.9rem;">Hizmetin detaylarını anlatan 2-3 cümlelik bir metin yazın. Ekranda çok uzun görünmemesi için özlü tutmaya çalışın.</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <h6 class="font-weight-bold text-dark">3. Resim (Image URL)</h6>
+                            <p class="text-muted" style="font-size: 0.9rem;">Hizmeti temsil eden küçük bir ikon veya png görselinin internet bağlantısını (URL) yapıştırın. Şeffaf (saydam) arka planlı görseller daha şık durur.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updatePreview() {
+        // Form değerlerini al
+        var title = document.getElementById('inputTitle').value;
+        var desc = document.getElementById('inputDesc').value;
+        var imgUrl = document.getElementById('inputImg').value;
+
+        // DOM elemanlarını bul
+        var previewTitle = document.getElementById('previewTitle');
+        var previewDesc = document.getElementById('previewDesc');
+        var previewImg = document.getElementById('previewImg');
+        var defaultIconBox = document.querySelector('.default-icon-box');
+
+        // Değerleri güncelle
+        previewTitle.innerText = title ? title : "Başlık Örneği";
+        
+        // Açıklamayı güncelle (Çok uzunsa nokta koy)
+        if (desc) {
+            previewDesc.innerText = desc.length > 100 ? desc.substring(0, 100) + "..." : desc;
+        } else {
+            previewDesc.innerText = "Açıklama metni burada görünecektir. Formu doldurdukça bu alan otomatik olarak güncellenir.";
+        }
+
+        // Resmi güncelle
+        if (imgUrl) {
+            previewImg.src = imgUrl;
+            previewImg.classList.remove('d-none');
+            defaultIconBox.classList.add('d-none');
+            defaultIconBox.classList.remove('d-inline-flex');
+        } else {
+            previewImg.classList.add('d-none');
+            defaultIconBox.classList.remove('d-none');
+            defaultIconBox.classList.add('d-inline-flex');
+        }
+    }
+
+    function previewSelectedFile(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var previewImg = document.getElementById('previewImg');
+                var defaultIconBox = document.querySelector('.default-icon-box');
+                previewImg.src = e.target.result;
+                previewImg.classList.remove('d-none');
+                defaultIconBox.classList.add('d-none');
+                defaultIconBox.classList.remove('d-inline-flex');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

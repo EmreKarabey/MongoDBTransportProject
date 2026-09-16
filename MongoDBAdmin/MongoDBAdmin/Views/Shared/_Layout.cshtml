@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head Partial -->
+@await Component.InvokeAsync("_HeadPartialComponent")
+
+<body data-menu-color="dark" data-sidebar="default">
+
+    <div id="app-layout">
+
+        <!-- Navbar Partial -->
+        @await Component.InvokeAsync("_NavbarPartialComponent")
+
+        <!-- Sidebar Partial -->
+        @await Component.InvokeAsync("_SidebarPartialComponent")
+
+        <div class="content-page">
+
+            @RenderBody()
+            <!-- Footer Partial -->
+            @await Component.InvokeAsync("_FooterPartialComponent")
+
+
+        </div>
+    </div>
+    @await Component.InvokeAsync("_ScriptPartialComponent")
+    @await RenderSectionAsync("Scripts", required: false)
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var toast = document.createElement("div");
+                toast.style.cssText = "position:fixed;top:20px;right:20px;z-index:9999;max-width:400px;padding:16px 20px;background:#28a745;color:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.2);font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;animation:slideIn 0.3s ease;";
+                toast.innerHTML = '<i style="font-size:18px;">&#10003;</i><span>@Html.Raw(TempData["SuccessMessage"].ToString().Replace("'", "\\'"))</span>';
+                document.body.appendChild(toast);
+                setTimeout(function () { toast.style.opacity = "0"; toast.style.transition = "opacity 0.5s"; setTimeout(function () { toast.remove(); }, 500); }, 4000);
+            });
+        </script>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var toast = document.createElement("div");
+                toast.style.cssText = "position:fixed;top:20px;right:20px;z-index:9999;max-width:420px;padding:16px 20px;background:#dc3545;color:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.2);font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;animation:slideIn 0.3s ease;";
+                toast.innerHTML = '<i style="font-size:18px;">&#9888;</i><span>@Html.Raw(TempData["ErrorMessage"].ToString().Replace("'", "\\'"))</span>';
+                document.body.appendChild(toast);
+                setTimeout(function () { toast.style.opacity = "0"; toast.style.transition = "opacity 0.5s"; setTimeout(function () { toast.remove(); }, 500); }, 6000);
+            });
+        </script>
+    }
+
+</body>
+</html>

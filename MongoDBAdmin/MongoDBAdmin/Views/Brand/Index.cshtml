@@ -1,0 +1,270 @@
+@model Paginate<EntityLayer.Entities.Brand>
+
+@{
+    ViewData["Title"] = "Marka Yönetimi";
+    Layout = "_Layout";
+
+    var brands = Model.Items ?? new List<EntityLayer.Entities.Brand>();
+    var totalBrands = brands.Count;
+    var activeBrands = brands.Count(x => x.IsStatus);
+    var passiveBrands = totalBrands - activeBrands;
+}
+
+<div class="content">
+    <div class="container-fluid">
+
+        <!-- Sayfa Başlığı ve Breadcrumb -->
+        <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column justify-content-between">
+            <div class="flex-grow-1">
+                <h4 class="fs-20 fw-bold m-0 text-dark d-flex align-items-center gap-2">
+                    <i data-feather="star" class="text-primary" style="width: 24px; height: 24px;"></i>
+                    Marka Yönetimi
+                </h4>
+                <p class="text-muted fs-13 mb-0 mt-1">Sistemde kayıtlı olan markaları yönetin, yeni markalar ekleyin veya durumlarını güncelleyin.</p>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 mt-3 mt-sm-0">
+                <a href="/Brand/CreateBrand" class="btn btn-success d-flex align-items-center gap-2 shadow-sm px-3 py-2" style="border-radius: 10px; font-weight: 600;">
+                    <i data-feather="plus-circle" style="width: 16px; height: 16px;"></i>
+                    <span>Yeni Marka Ekle</span>
+                </a>
+            </div>
+        </div>
+
+        @* Başarı Bildirimi *@
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show p-3 mb-4 border-0 shadow-sm" role="alert" style="border-radius: 12px; background-color: #ecfdf5; color: #065f46; border-left: 5px solid #10b981 !important;">
+                <div class="d-flex align-items-center gap-2">
+                    <i data-feather="check-circle" class="text-success flex-shrink-0" style="width: 20px; height: 20px;"></i>
+                    <span class="fw-semibold fs-14">@TempData["SuccessMessage"]</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+            </div>
+        }
+
+        <!-- İstatistik Özet Kartları -->
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-sm-6 col-xl-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; background: #ffffff;">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="text-muted fs-13 fw-semibold text-uppercase d-block mb-1">Toplam Marka</span>
+                                <h3 class="fw-bold text-dark mb-0" id="signalrTotalBrands">@totalBrands</h3>
+                            </div>
+                            <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; background: rgba(37, 99, 235, 0.1); color: #2563eb;">
+                                <i data-feather="grid" style="width: 22px; height: 22px;"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between fs-12 text-muted">
+                            <span>Sistem Kayıtları</span>
+                            <span class="text-primary fw-semibold">Tüm Markalar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; background: #ffffff;">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="text-muted fs-13 fw-semibold text-uppercase d-block mb-1">Aktif Markalar</span>
+                                <h3 class="fw-bold text-dark mb-0" id="signalrActiveBrands">@activeBrands</h3>
+                            </div>
+                            <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                                <i data-feather="check-circle" style="width: 22px; height: 22px;"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between fs-12 text-muted">
+                            <span>Kullanımda</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">Aktif</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; background: #ffffff;">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="text-muted fs-13 fw-semibold text-uppercase d-block mb-1">Pasif Markalar</span>
+                                <h3 class="fw-bold text-dark mb-0" id="signalrPassiveBrands">@passiveBrands</h3>
+                            </div>
+                            <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                                <i data-feather="x-circle" style="width: 22px; height: 22px;"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between fs-12 text-muted">
+                            <span>Görünmüyor</span>
+                            <span class="badge @(passiveBrands > 0 ? "bg-danger-subtle text-danger border border-danger-subtle" : "bg-light text-muted")">
+                                @(passiveBrands > 0 ? $"{passiveBrands} Pasif" : "Pasif Yok")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ana Tablo Kartı -->
+        <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px; overflow: visible; background: #ffffff;">
+            <div class="card-body p-0">
+                <div class="table-responsive" style="border-radius: 16px; overflow: visible;">
+                    <table class="table table-hover align-middle mb-0" id="brandsTable">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="text-muted fw-semibold fs-13 text-uppercase ps-4 py-3" style="width: 80px;">Görsel</th>
+                                <th class="text-muted fw-semibold fs-13 text-uppercase py-3">Marka Adı</th>
+                                <th class="text-muted fw-semibold fs-13 text-uppercase py-3">Durum</th>
+                                <th class="text-muted fw-semibold fs-13 text-uppercase pe-4 py-3 text-end" style="width: 100px;">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody class="border-top-0">
+                            @if (Model.Items != null && Model.Items.Any())
+                            {
+                                foreach (var item in Model.Items)
+                                {
+                                    <tr class="brand-row border-bottom">
+                                        <td class="ps-4">
+                                            <div class="rounded d-flex align-items-center justify-content-center bg-light shadow-sm" style="width: 60px; height: 40px; overflow: hidden; padding: 4px;">
+                                                <img src="@item.ImageURL" alt="Marka" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="fw-bold text-dark fs-14">@item.BrandName</span>
+                                        </td>
+                                        <td>
+                                            @if (item.IsStatus)
+                                            {
+                                                <span class="badge px-2 py-1 bg-success-subtle text-success border border-success-subtle" style="border-radius: 8px;">Aktif</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge px-2 py-1 bg-danger-subtle text-danger border border-danger-subtle" style="border-radius: 8px;">Pasif</span>
+                                            }
+                                        </td>
+                                        <td class="pe-4 text-end">
+                                            <div class="dropdown">
+                                                <button class="btn btn-light btn-sm rounded-circle d-inline-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="viewport" style="width: 32px; height: 32px; border: 1px solid #e5e7eb;">
+                                                    <i data-feather="more-vertical" style="width: 16px; height: 16px; color: #4b5563;"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="border-radius: 12px; min-width: 180px; padding: 8px;">
+                                                    
+                                                    @if (item.IsStatus)
+                                                    {
+                                                        <li>
+                                                            <form asp-action="ChangePassive" asp-controller="Brand" asp-route-Id="@item.BrandId" method="post" class="d-inline">
+                                                                <button type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2 fs-14 text-warning" style="border-radius: 8px;">
+                                                                    <i data-feather="eye-off" style="width: 15px; height: 15px;"></i>
+                                                                    <span class="fw-medium">Pasif Yap</span>
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                            <form asp-action="ChangeActive" asp-controller="Brand" asp-route-Id="@item.BrandId" method="post" class="d-inline">
+                                                                <button type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2 fs-14 text-info" style="border-radius: 8px;">
+                                                                    <i data-feather="eye" style="width: 15px; height: 15px;"></i>
+                                                                    <span class="fw-medium">Aktif Yap</span>
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    }
+
+                                                    <li>
+                                                        <a class="dropdown-item d-flex align-items-center gap-2 py-2 fs-14" href="/Brand/UpdateBrand/@item.BrandId" style="border-radius: 8px;">
+                                                            <i data-feather="edit-2" class="text-primary" style="width: 15px; height: 15px;"></i>
+                                                            <span class="text-dark fw-medium">Güncelle</span>
+                                                        </a>
+                                                    </li>
+                                                    <li><hr class="dropdown-divider my-1"></li>
+                                                    <li>
+                                                        <form asp-action="DeleteBrand" asp-controller="Brand" asp-route-Id="@item.BrandId" method="post" class="d-inline">
+                                                            <button type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2 fs-14 text-danger" style="border-radius: 8px;" onclick="return confirm('Bu markayı silmek istediğinize emin misiniz?');">
+                                                                <i data-feather="trash-2" style="width: 15px; height: 15px;"></i>
+                                                                <span class="fw-medium">Kalıcı Olarak Sil</span>
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center py-5">
+                                        <div class="d-flex flex-column align-items-center justify-content-center">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center bg-light mb-3" style="width: 64px; height: 64px;">
+                                                <i data-feather="inbox" class="text-muted" style="width: 28px; height: 28px;"></i>
+                                            </div>
+                                            <h5 class="text-dark fw-bold mb-1">Henüz Marka Eklenmemiş</h5>
+                                            <p class="text-muted fs-14 mb-0">Sistemde listelenecek hiçbir marka bulunamadı.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.12/signalr.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("/SignalRHub")
+                .build();
+
+            connection.on("TotalBrandsCount", function (count) {
+                var el = document.getElementById("signalrTotalBrands");
+                if (el) el.innerText = count;
+            });
+
+            connection.on("ActiveBrandsCount", function (count) {
+                var el = document.getElementById("signalrActiveBrands");
+                if (el) el.innerText = count;
+            });
+
+            connection.on("PassiveBrandsCount", function (count) {
+                var el = document.getElementById("signalrPassiveBrands");
+                if (el) {
+                    el.innerText = count;
+                    var parentBadge = el.closest(".card-body").querySelector(".badge");
+                    if (parentBadge) {
+                        if (count > 0) {
+                            parentBadge.className = "badge bg-danger-subtle text-danger border border-danger-subtle";
+                            parentBadge.innerText = count + " Pasif";
+                        } else {
+                            parentBadge.className = "badge bg-light text-muted";
+                            parentBadge.innerText = "Pasif Yok";
+                        }
+                    }
+                }
+            });
+
+            connection.start().then(function () {
+                connection.invoke("SendBrandStatics");
+                setInterval(function () {
+                    connection.invoke("SendBrandStatics");
+                }, 5000);
+            }).catch(function (err) {
+                console.error(err.toString());
+            });
+        });
+    </script>
+}

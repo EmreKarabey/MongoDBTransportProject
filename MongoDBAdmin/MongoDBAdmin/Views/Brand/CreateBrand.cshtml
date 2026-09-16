@@ -1,0 +1,52 @@
+
+@model CreateBrandDto
+
+@{
+    ViewData["Title"] = "Yeni Marka Ekle";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h2>Yeni Marka Ekle</h2>
+
+    <form asp-action="CreateBrand" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label asp-for="BrandName" class="form-label">Marka Adı</label>
+            <input asp-for="BrandName" class="form-control" placeholder="Marka adı giriniz" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label font-weight-bold">Marka Logosu / Görseli Seç (Cloudinary'ye Yüklenir)</label>
+            <input type="file" asp-for="ImageFile" class="form-control" accept="image/*" id="fileBrandImg" onchange="previewImage(this, 'previewImg')" />
+            <small class="text-muted">Bilgisayarınızdan logo/resim seçebilirsiniz. Doğrudan Cloudinary'ye yüklenecektir.</small>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ImageURL" class="form-label">Veya Görsel URL Giriniz (İsteğe Bağlı)</label>
+            <input asp-for="ImageURL" class="form-control" placeholder="https://res.cloudinary.com/..." />
+        </div>
+
+        <div class="mb-3" id="previewContainer" style="display: none;">
+            <label class="form-label font-weight-bold">Seçilen Görsel Önizleme:</label><br />
+            <img id="previewImg" src="#" alt="Önizleme" class="img-thumbnail" style="max-height: 120px; object-fit: contain;" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Marka'yı Kaydet</button>
+        <a href="/Brand/Index" class="btn btn-secondary">Listeye Geri Dön</a>
+    </form>
+</div>
+
+<script>
+    function previewImage(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.getElementById(previewId);
+                img.src = e.target.result;
+                document.getElementById('previewContainer').style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

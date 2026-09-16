@@ -1,0 +1,104 @@
+
+@model Paginate<GetListGetInTouchDto>
+
+@if (Model != null && Model.List.Any())
+{
+    <section class="section mt-55 bg-1 position-relative pt-90 pb-90">
+        <div id="getInTouchCarousel" class="carousel slide" data-bs-ride="carousel">
+            
+            @if (Model.List.Count > 1)
+            {
+                <div class="carousel-indicators">
+                    @for (int i = 0; i < Model.List.Count; i++)
+                    {
+                        <button type="button" data-bs-target="#getInTouchCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i+1)"></button>
+                    }
+                </div>
+            }
+
+            <div class="carousel-inner">
+                @{ int slideIndex = 0; }
+                @foreach (var item in Model.List)
+                {
+                    <div class="carousel-item @(slideIndex == 0 ? "active" : "")">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6">
+                                    <span class="btn btn-tag">İletişime Geçin</span>
+                                    <h3 class="color-grey-900 mb-20 mt-15">@Html.Raw(item.Title.Replace("\n", "<br class='d-none d-lg-block'>"))</h3>
+                                    <p class="font-md color-grey-900 mb-40">@item.Description</p>
+                                    
+                                    <div class="row">
+                                        @if (item.GetInTouchArticles != null && item.GetInTouchArticles.Any())
+                                        {
+                                            foreach (var article in item.GetInTouchArticles)
+                                            {
+                                                <div class="col-lg-6 mb-30">
+                                                    <h6 class="@(string.IsNullOrEmpty(article.IconURL) ? "feature-title" : article.IconURL) font-md-bold color-grey-900">
+                                                        @article.Title
+                                                    </h6>
+                                                    <p class="font-xs color-grey-900 mt-2">@article.Description</p>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    
+                                    <div class="mt-20 mb-40">
+                                        <a class="btn btn-brand-2 mr-20" href="/Contact/Index">Bize Ulaşın</a>
+                                        <a class="btn btn-link-medium" href="#">
+                                            Daha Fazla
+                                            <svg class="w-6 h-6 icon-16 ml-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Sağ taraf resim veya arka plan (orijinal box-image-touch alanını container içine aldık ki carousel ile dönebilsin) -->
+                                <div class="col-lg-6 text-center d-none d-lg-block">
+                                    @if (!string.IsNullOrEmpty(item.ImageURL))
+                                    {
+                                        <img src="@item.ImageURL" alt="Get in Touch" class="img-fluid rounded shadow-lg" style="max-height: 600px; object-fit: cover; width: 100%; border-radius: 12px;">
+                                    }
+                                    else
+                                    {
+                                        <div class="box-image-touch" style="position: relative; right: 0; top: 0; width: 100%; height: 500px; border-radius: 12px;"></div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    slideIndex++;
+                }
+            </div>
+
+            @if (Model.List.Count > 1)
+            {
+                <button class="carousel-control-prev" type="button" data-bs-target="#getInTouchCarousel" data-bs-slide="prev" style="width: 5%; left: -2%;">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 20px;"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#getInTouchCarousel" data-bs-slide="next" style="width: 5%; right: -2%;">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 20px;"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            }
+        </div>
+    </section>
+
+    <!-- Carousel göstergeleri ve okları için minik CSS -->
+    <style>
+        #getInTouchCarousel .carousel-indicators {
+            bottom: -50px;
+        }
+        #getInTouchCarousel .carousel-indicators [data-bs-target] {
+            background-color: #3b82f6;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        #getInTouchCarousel .carousel-item {
+            transition: transform .6s ease-in-out;
+        }
+    </style>
+}

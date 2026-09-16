@@ -1,0 +1,77 @@
+
+@{
+    ViewData["Title"] = "Yorum Yap";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mt-90"></div>
+<section class="section">
+    <div class="container position-relative"> 
+        <div class="box-cover-contactform">
+            <div class="row align-items-center"> 
+                <div class="col-xl-8 col-lg-7">
+                    <div class="box-contactform-left"> 
+                        <h3 class="color-brand-2 mb-15">Yorumunuzu Bırakın</h3>
+                        <p class="font-md color-grey-900 mb-50">Hizmetlerimiz hakkındaki düşüncelerinizi, önerilerinizi ve geri bildirimlerinizi bizimle paylaşın.</p>
+                        
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                                @TempData["SuccessMessage"]
+                            </div>
+                        }
+                        
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="position: relative; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 15px; padding-right: 3rem; border-radius: 5px; margin-bottom: 20px; text-align: left;">
+                                <strong>Uyarı!</strong> @TempData["ErrorMessage"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position: absolute; top: 0; right: 0; padding: 1.25rem 1rem; background: transparent; border: 0; font-size: 1.5rem; line-height: 1; cursor: pointer;">&times;</button>
+                            </div>
+                        }
+                        <form method="post" asp-controller="Comment" asp-action="Index"> 
+                            <div class="row"> 
+
+                                <div class="col-md-12">
+                                    <div class="form-group"> 
+                                        <input class="form-control" name="Content" type="text" placeholder="Yorum Konusu">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group"> 
+                                        <textarea class="form-control" name="Details" placeholder="Yorumunuz / Mesajınız" rows="8" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <input class="btn btn-brand-1-big" type="submit" value="Yorumu Gönder">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-5 position-relative">
+                    <div class="box-contactform-right"> 
+                        <h5 class="color-brand-2 mb-20">Geri Bildirimleriniz Değerli</h5>
+                        <p class="font-md color-grey-900 mb-20">Müşterilerimizin yorumları, hizmet kalitemizi artırmamızdaki en büyük motivasyon kaynağımızdır. Değerli vaktinizi ayırdığınız için teşekkür ederiz.</p>
+                        <ul class="list-info-footer">
+                            <li>
+                                <div class="cardImage"><span class="icon-brand-1"><img src="~/templates/assets/imgs/page/homepage2/email.svg" alt="transp"></span></div>
+                                <div class="cardInfo">
+                                    <h6 class="font-sm-bold color-grey-900">E-Posta</h6>
+                                    <p class="font-sm color-grey-900">iletisim@transp.com</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="cardImage"><span class="icon-brand-1"><img src="~/templates/assets/imgs/page/homepage2/address.svg" alt="transp"></span></div>
+                                <div class="cardInfo">
+                                    <h6 class="font-sm-bold color-grey-900">Adres</h6>
+                                    <p class="font-sm color-grey-900">İstanbul, Türkiye</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="mt-90"></div>

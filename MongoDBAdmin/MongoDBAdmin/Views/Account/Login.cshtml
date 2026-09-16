@@ -1,0 +1,126 @@
+@model LoginDto
+@{
+    ViewData["Title"] = "Giriş Yap";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="auth-title-section text-center mb-4">
+    <h3 class="fw-bold text-dark fs-22 mb-1">Tekrar Hoş Geldiniz! 👋</h3>
+    <p class="text-muted fs-14 mb-0">Devam etmek için yönetici hesabınıza giriş yapın.</p>
+</div>
+
+@* Başarı Bildirimi *@
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show p-3 mb-3 border-0 shadow-sm" role="alert" style="border-radius: 12px; background-color: #f0fdf4; color: #166534; border-left: 4px solid #22c55e !important;">
+        <div class="d-flex align-items-center gap-2">
+            <i data-feather="check-circle" style="width: 18px; height: 18px;" class="text-success flex-shrink-0"></i>
+            <span class="fs-13 fw-semibold">@TempData["SuccessMessage"]</span>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+    </div>
+}
+
+@* ViewBag Hata Bildirimi *@
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show p-3 mb-3 border-0 shadow-sm" role="alert" style="border-radius: 12px; background-color: #fef2f2; color: #991b1b; border-left: 4px solid #ef4444 !important;">
+        <div class="d-flex align-items-center gap-2">
+            <i data-feather="alert-circle" style="width: 18px; height: 18px;" class="text-danger flex-shrink-0"></i>
+            <span class="fs-13 fw-medium">@ViewBag.ErrorMessage</span>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+    </div>
+}
+
+@* Model ve Endpoint Detaylı Hata Listesi *@
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div class="alert alert-danger alert-dismissible fade show p-3 mb-3 border-0 shadow-sm" role="alert" style="border-radius: 12px; background-color: #fef2f2; color: #991b1b; border-left: 4px solid #ef4444 !important;">
+        <div class="d-flex align-items-start gap-2">
+            <i data-feather="alert-circle" class="text-danger flex-shrink-0 mt-1" style="width: 18px; height: 18px;"></i>
+            <div class="w-100">
+                <span class="fs-13 fw-bold d-block mb-1">Giriş Yapılamadı:</span>
+                <ul class="mb-0 ps-3 fs-13" style="line-height: 1.6;">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+    </div>
+}
+
+<form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">
+    @Html.AntiForgeryToken()
+
+    <!-- Kullanıcı Adı / E-Posta -->
+    <div class="mb-3">
+        <label for="username" class="form-label text-dark fw-semibold fs-13 mb-1">Kullanıcı Adı veya E-Posta</label>
+        <div class="input-group input-group-custom">
+            <span class="input-group-text">
+                <i data-feather="user" style="width: 17px; height: 17px;"></i>
+            </span>
+            <input asp-for="UserName" type="text" 
+                   class="form-control form-control-custom" 
+                   id="username" 
+                   placeholder="ornek@alanadi.com veya admin" 
+                   autocomplete="username" />
+        </div>
+        <span asp-validation-for="UserName" class="text-danger fs-12 mt-1 d-block fw-medium"></span>
+    </div>
+
+    <!-- Şifre -->
+    <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            <label for="password" class="form-label text-dark fw-semibold fs-13 mb-0">Şifre</label>
+            <a href="javascript:void(0);" class="text-primary fs-13 fw-semibold text-decoration-none">
+                Şifremi unuttum?
+            </a>
+        </div>
+        <div class="input-group input-group-custom">
+            <span class="input-group-text">
+                <i data-feather="lock" style="width: 17px; height: 17px;"></i>
+            </span>
+            <input asp-for="Password" type="password" 
+                   class="form-control form-control-custom input-has-toggle" 
+                   id="password" 
+                   placeholder="••••••••" 
+                   autocomplete="current-password" />
+            <button class="password-toggle-btn" type="button" id="togglePasswordBtn">
+                <i data-feather="eye" style="width: 16px; height: 16px;"></i>
+            </button>
+        </div>
+        <span asp-validation-for="Password" class="text-danger fs-12 mt-1 d-block fw-medium"></span>
+    </div>
+
+    <!-- Beni Hatırla -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+            <input asp-for="RememberMe" class="form-check-input" type="checkbox" id="rememberMe" style="cursor: pointer;">
+            <label class="form-check-label text-muted fs-13" for="rememberMe" style="cursor: pointer;">
+                Beni hatırla
+            </label>
+        </div>
+    </div>
+
+    <!-- Giriş Butonu -->
+    <div class="d-grid mb-3">
+        <button type="submit" class="btn btn-gradient-primary d-flex align-items-center justify-content-center gap-2">
+            <i data-feather="log-in" style="width: 18px; height: 18px;"></i>
+            <span>Giriş Yap</span>
+        </button>
+    </div>
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setupPasswordToggle('togglePasswordBtn', 'password');
+        });
+    </script>
+}

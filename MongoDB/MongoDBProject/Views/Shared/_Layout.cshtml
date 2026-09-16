@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+@await Component.InvokeAsync("_HeadPartialComponent")
+<body>
+	<!--Boxbar alanı-->
+	@await Component.InvokeAsync("_BoxBarPartialComponent")
+
+	<!--Navbar Alanı-->
+	@await Component.InvokeAsync("_NavbarPartialComponent")
+
+	<!--Mobile Navbar Alanı-->
+	@await Component.InvokeAsync("_MobileNavbarPartialComponent")
+
+	<main class="main">
+		@RenderBody()
+
+	<!--Harita ve İletişim Alanı-->
+	@await Component.InvokeAsync("_MapAndContactComponent")
+	</main>
+
+	<!--Footer Alanı-->
+	@await Component.InvokeAsync("_FooterPartialComponent")
+
+	<!--Script Alanı-->
+	@await Component.InvokeAsync("_ScriptPartialComponent")
+
+</body>
+</html>

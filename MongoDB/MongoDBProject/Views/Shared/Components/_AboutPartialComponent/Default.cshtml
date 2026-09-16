@@ -1,0 +1,91 @@
+﻿
+@model Paginate<GetActiveAboutDto>
+
+@{
+    var item = Model.List.FirstOrDefault();
+}
+
+<section class="section mt-85">
+    <div class="container">
+        <div class="text-center">
+            <img class="mb-15" src="~/templates/assets/imgs/template/icons/favicon.svg" alt="transp">
+            <p class="font-md color-grey-700">Sektör Liderleri İçin Sonuç Üretiyoruz</p>
+            <h2 class="color-brand-2 mb-65 mt-15">İş gücümüzle gurur duyuyoruz<br class="d-none d-lg-block">ve çok çalıştık.</h2>
+        </div>
+        <div class="row mt-50 align-items-center">
+            <div class="col-xl-7 col-lg-6 mb-30">
+                <div class="box-images-pround">
+                    <div class="box-images">
+                        <img class="img-main" src="@item.ImageURL" alt="transp">
+                        <div class="image-2 shape-3"> <img src="~/templates/assets/imgs/page/homepage1/icon1.png" alt="transp"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5 col-lg-6 mb-30">
+                <div class="box-info-pround">
+                    <h3 class="color-brand-2 mb-15">@item.Title</h3>
+                    <p class="font-md color-grey-500">@item.Description</p>
+                    <div class="mt-30">
+                        <ul class="list-ticks">
+                            @if (!string.IsNullOrEmpty(item.Article) )
+                            {
+                                <li>
+                                    <svg class="w-6 h-6 icon-16" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>@item.Article
+                                </li>
+                            }
+
+                            @if (!string.IsNullOrEmpty(item.Article2))
+                            {
+                                <li>
+                                    <svg class="w-6 h-6 icon-16" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>@item.Article2
+                                </li>
+                            }
+
+                             @if (!string.IsNullOrEmpty(item.Article3) )
+                            {
+                                <li>
+                                    <svg class="w-6 h-6 icon-16" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>@item.Article3
+                                </li>
+                            }
+
+                            @if (!string.IsNullOrEmpty(item.Article4))
+                            {
+                                <li>
+                                    <svg class="w-6 h-6 icon-16" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>@item.Article4
+                                </li>
+                            }
+
+                            @if (!string.IsNullOrEmpty(item.Article5))
+                            {
+                                <li>
+                                    <svg class="w-6 h-6 icon-16" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>@item.Article5
+                                </li>
+                            }
+
+                            @if (!string.IsNullOrEmpty(item.Article6))
+                            {
+                                <li>
+                                    <svg class="w-6 h-6 icon-16" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>@item.Article6
+                                </li>
+                            }
+                           
+                        </ul>
+                    </div>
+                    <div class="mt-30 text-start d-flex"> <a class="hover-up mr-10" href="#"> <img src="~/templates/assets/imgs/template/appstore-btn.png" alt="transp"></a><a class="hover-up" href="#"> <img src="~/templates/assets/imgs/template/google-play-btn.png" alt="transp"></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

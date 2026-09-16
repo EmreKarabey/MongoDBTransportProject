@@ -1,0 +1,76 @@
+@model UpdateBrandDto
+
+@{
+    ViewData["Title"] = "Marka Güncelle";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h2>Marka Güncelle</h2>
+
+    <form asp-action="UpdateBrand" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="BrandId" />
+        <input type="hidden" asp-for="ImageURL" />
+
+        <div class="mb-3">
+            <label asp-for="BrandName" class="form-label">Marka Adı</label>
+            <input asp-for="BrandName" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label font-weight-bold">Yeni Logo / Görsel Seç (Cloudinary'ye Yüklenir)</label>
+            <input type="file" asp-for="ImageFile" class="form-control" accept="image/*" onchange="previewImage(this, 'previewImg')" />
+            <small class="text-muted">Görseli değiştirmek istemiyorsanız boş bırakınız. Yeni dosya seçerseniz Cloudinary'ye yüklenecektir.</small>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="IsStatus" class="form-label">Durum</label>
+            <select asp-for="IsStatus" class="form-control" required>
+                @if (Model.IsStatus)
+                {
+                    <option value="true">Aktif</option>
+                    <option value="false">Pasif</option>
+                }
+                else
+                {
+                    <option value="false">Pasif</option>
+                    <option value="true">Aktif</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label font-weight-bold">Görsel Önizleme (Mevcut / Yeni):</label><br />
+            @if (!string.IsNullOrEmpty(Model?.ImageURL))
+            {
+                <img id="previewImg" src="@Model.ImageURL" alt="Görsel Önizleme" class="img-thumbnail" style="height: 120px; object-fit: contain;" />
+            }
+            else
+            {
+                <img id="previewImg" src="#" alt="Görsel Önizleme" class="img-thumbnail" style="height: 120px; object-fit: contain; display: none;" />
+                <span id="noImgText" class="text-muted">Görsel bulunamadı.</span>
+            }
+        </div>
+
+        <button type="submit" class="btn btn-primary">Değişiklikleri Kaydet</button>
+        <a href="/Brand/Index" class="btn btn-secondary">İptal / Geri Dön</a>
+    </form>
+</div>
+
+<script>
+    function previewImage(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.getElementById(previewId);
+                img.src = e.target.result;
+                img.style.display = 'inline-block';
+                var noImg = document.getElementById('noImgText');
+                if (noImg) noImg.style.display = 'none';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

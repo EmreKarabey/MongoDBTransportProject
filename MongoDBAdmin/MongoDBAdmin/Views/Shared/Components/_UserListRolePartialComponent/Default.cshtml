@@ -1,0 +1,43 @@
+@model List<RoleListDto>
+
+
+<div class="modal fade" id="roleAssignModal" tabindex="-1" aria-labelledby="roleAssignModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+			<div class="modal-header border-bottom-0 pb-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+				<h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="roleAssignModalLabel">
+					<i data-feather="shield" class="text-info" style="width: 22px; height: 22px;"></i>
+					Kullanıcıya Rol Ata
+				</h5>
+				<button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<form id="assignRoleForm" method="post" asp-controller="Account" asp-action="AssigneRole">
+				@Html.AntiForgeryToken()
+				<div class="modal-body p-4 text-center">
+					<p class="text-muted mb-4 fs-14">
+						<strong id="roleAssignUserName" class="text-dark">Kullanıcı</strong> için atanacak rolü seçin.
+					</p>
+
+					<input type="hidden" name="userId" id="roleAssignUserId" />
+					<input type="hidden" name="roleName" id="roleAssignRoleName" />
+
+					<div class="d-grid gap-2 text-start">
+						@foreach (var item in Model)
+						{
+							<button type="button" class="btn btn-outline-primary text-start px-3 py-2" 
+							        onclick="document.getElementById('roleAssignRoleName').value='@item.Name'; document.getElementById('assignRoleForm').submit();">
+								<i data-feather="check-circle" style="width: 16px; height: 16px;" class="me-2"></i> @item.Name
+							</button>
+						}
+
+					</div>
+				</div>
+
+				<div class="modal-footer border-0 pt-0 px-4 pb-4">
+					<button type="button" class="btn btn-light w-100 py-2" data-bs-dismiss="modal" style="border-radius: 10px;">İptal</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
