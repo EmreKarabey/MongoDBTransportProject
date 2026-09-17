@@ -37,6 +37,9 @@ namespace MongoDBAdmin.Mapper
             CreateMap<HowItWorkArticle, UpdateHowItWorkArticleDto>().ReverseMap();
 
             CreateMap<AppRole, RoleListDto>().ReverseMap();
+
+            CreateMap<MongoDBAdmin.Dto.WhatWeHaveDone.CreateWhatWeHaveDoneDto, WhatWeHaveDone>().ReverseMap();
+            CreateMap<MongoDBAdmin.Dto.WhatWeHaveDone.UpdateWhatWeHaveDoneDto, WhatWeHaveDone>().ReverseMap();
         }
 
     }

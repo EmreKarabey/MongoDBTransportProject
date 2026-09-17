@@ -1,0 +1,67 @@
+@model MongoDBAdmin.Dto.WhatWeHaveDone.UpdateWhatWeHaveDoneDto
+
+@{
+    ViewData["Title"] = "Çalışmayı Güncelle";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <h2>Çalışmayı Güncelle (What We Have Done)</h2>
+
+    <form asp-action="UpdateWhatWeHaveDone" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="WhatWeHaveDoneId" />
+
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">Başlık</label>
+            <input asp-for="Title" class="form-control" required />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label">Açıklama</label>
+            <textarea asp-for="Description" class="form-control" required rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label font-weight-bold">Yeni Görsel Seç (Değiştirmek istemiyorsanız boş bırakın)</label>
+            <input type="file" asp-for="ImageFile" class="form-control" accept="image/*" id="fileImg" onchange="previewImage(this, 'previewImg')" />
+        </div>
+        
+        <div class="mb-3">
+            <label asp-for="ImageURL" class="form-label">Görsel URL</label>
+            <input asp-for="ImageURL" class="form-control" />
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ImageURL))
+        {
+            <div class="mb-3">
+                <label class="form-label font-weight-bold">Mevcut Görsel:</label><br />
+                <img src="@Model.ImageURL" alt="Current Image" class="img-thumbnail" style="max-height: 120px; object-fit: contain;" />
+            </div>
+        }
+
+        <div class="mb-3" id="previewContainer" style="display: none;">
+            <label class="form-label font-weight-bold">Seçilen Yeni Görsel Önizleme:</label><br />
+            <img id="previewImg" src="#" alt="Önizleme" class="img-thumbnail" style="max-height: 120px; object-fit: contain;" />
+        </div>
+
+        <button type="submit" class="btn btn-warning">Güncelle</button>
+        <a href="/WhatWeHaveDone/Index" class="btn btn-secondary">Listeye Dön</a>
+    </form>
+</div>
+
+<script>
+    function previewImage(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.getElementById(previewId);
+                img.src = e.target.result;
+                document.getElementById('previewContainer').style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

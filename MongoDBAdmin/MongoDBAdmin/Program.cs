@@ -41,6 +41,9 @@ builder.Services.AddScoped<ICloudinaryService, CloudinaryManager>();
 builder.Services.AddScoped<ICommentService, CommentManager>();
 builder.Services.AddScoped<ICommentDal, EFCommentDal>();
 
+builder.Services.AddScoped<IWhatWeHaveDoneDal, EFWhatWeHaveDoneDal>();
+builder.Services.AddScoped<IWhatWeHaveDoneService, WhatWeHaveDoneManager>();
+
 
 builder.Services.AddScoped<IDatabaseSettings, DatabaseSettings>();
 var databaseSettings = builder.Configuration.GetSection("DatabaseSettings").Get<DatabaseSettings>() ?? new DatabaseSettings();
