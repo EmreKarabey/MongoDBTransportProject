@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -51,9 +51,10 @@ namespace Persistence.Services
         {
             var skipItem = (page - 1) * size;
 
+            var totalCount = (int)await _collection.CountDocumentsAsync(Builders<T>.Filter.Empty);
             var list = await _collection.AsQueryable().Skip(skipItem).Take(size).ToListAsync();
 
-            var paginate = new Paginate<T>(list, size, page);
+            var paginate = new Paginate<T>(list, size, page, totalCount);
 
             return paginate;
         }
@@ -65,12 +66,15 @@ namespace Persistence.Services
             var query = _collection.AsQueryable();
 
             if (predicate != null) query = query.Where(predicate);
+            
+            var filter = predicate != null ? Builders<T>.Filter.Where(predicate) : Builders<T>.Filter.Empty;
+            var totalCount = (int)await _collection.CountDocumentsAsync(filter);
 
             var list = await query.Skip(skipItem).Take(size).ToListAsync();
 
             if (!list.Any()) list = new List<T>();
 
-            var paginate = new Paginate<T>(list, size, page);
+            var paginate = new Paginate<T>(list, size, page, totalCount);
 
             return paginate;
         }

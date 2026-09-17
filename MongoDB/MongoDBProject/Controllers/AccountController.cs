@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Application.Features.Login.Command.GoogleLogin;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MongoDBProject.Controllers
@@ -85,6 +86,18 @@ namespace MongoDBProject.Controllers
             }
 
             return View(loginDto);
+        }
+
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task <IActionResult> GoogleLogin(GoogleLoginCommand googleLoginCommand)
+        {
+            GoogleLoginResult loginResponse = await Mediator.Send(googleLoginCommand);
+            if (loginResponse.Success) return RedirectToAction("Index","Home");
+            
+            ModelState.AddModelError(string.Empty, loginResponse.Message ?? "Google ile giriþ yaparken bir hata oluþtu.");
+            return View("Login");
         }
     }
 

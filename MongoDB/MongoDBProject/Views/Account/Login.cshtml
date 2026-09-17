@@ -1,3 +1,4 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @model MongoDBProject.Controllers.LoginDto
 @{
     Layout = null;
@@ -37,10 +38,29 @@
             <div class="box-login-left">
               <h2 class="color-brand-2 mb-10">Tekrar Hoşgeldiniz</h2>
               <p class="font-md color-grey-500">Tüm özelliklere erişin. Kredi kartı gerekmez.</p>
-              <div class="box-btn-signin mt-55"> 
-                <a class="btn btn-signin mb-10" href="#"> <img src="~/templates/assets/imgs/page/login/Google.svg" alt="Transp">Google ile Giriş Yap</a>
-                <a class="btn btn-signin" href="#"> <img src="~/templates/assets/imgs/page/login/apple.svg" alt="Transp">Apple Kimliği ile Devam Et</a>
+              <div class="box-btn-signin mt-55" style="display: flex; justify-content: center; width: 100%;">
+                <!-- Google Identity Services -->
+                <div id="g_id_onload"
+                     data-client_id="395839596647-ggssm7f7g6ei2pdnd0tkj3ncglubfldi.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleCredentialResponse"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin mb-10"
+                     data-type="standard"
+                     data-shape="rectangular"
+                     data-theme="outline"
+                     data-text="signin_with"
+                     data-size="large"
+                     data-logo_alignment="center"
+                     data-width="350">
+                </div>
               </div>
+              <form id="googleLoginForm" asp-action="GoogleLogin" asp-controller="Account" method="post" style="display: none;">
+                  @Html.AntiForgeryToken()
+                  <input type="hidden" name="Token" id="googleToken" />
+              </form>
               <div class="box-or-login"> <span class="text-or font-xs color-grey-500">Veya şununla devam edin</span></div>
               <div class="box-form-login">
                 <form asp-action="Login" method="post"> 
@@ -111,5 +131,13 @@
     <script src="~/templates/assets/js/vendors/jquery.elevatezoom.js"></script>
     <script src="~/templates/assets/js/vendors/slick.js"></script>
     <script src="~/templates/assets/js/main.js?v=3.0.0"></script>
+    <!-- Google Identity Services API -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      function handleCredentialResponse(response) {
+          document.getElementById("googleToken").value = response.credential;
+          document.getElementById("googleLoginForm").submit();
+      }
+    </script>
   </body>
 </html>

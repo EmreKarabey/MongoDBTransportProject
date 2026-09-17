@@ -26,11 +26,12 @@ namespace MongoDBAdmin.Controllers
             _cloudinaryService = cloudinaryService;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(int size = 9, int page = 1)
         {
             try
             {
-                var list = await _sliderService.GetListAsync(10, 1);
+                var list = await _sliderService.GetListAsync(size, page);
                 return View(list);
             }
             catch (Exception ex)

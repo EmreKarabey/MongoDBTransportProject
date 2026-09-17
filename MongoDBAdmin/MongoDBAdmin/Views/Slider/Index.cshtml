@@ -185,6 +185,8 @@
     </div>
 </div>
 
+@await Html.PartialAsync("_PaginationPartial", Model)
+
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.12/signalr.min.js"></script>
     <script>

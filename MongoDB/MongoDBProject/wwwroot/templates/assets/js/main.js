@@ -266,6 +266,10 @@
             slidesPerView: 3,
             slidesPerGroup: 1,
             loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
             navigation: {
                 nextEl: ".swiper-button-next-style-2",
                 prevEl: ".swiper-button-prev-style-2"

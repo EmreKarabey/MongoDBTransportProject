@@ -22,11 +22,11 @@ namespace MongoDBAdmin.Controllers
             _cloudinaryService = cloudinaryService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int size = 9, int page = 1)
         {
             try
             {
-                var list = await _brandService.GetListAsync(10, 1);
+                var list = await _brandService.GetListAsync(size, page);
                 return View(list);
             }
             catch (Exception ex)

@@ -114,12 +114,7 @@
         }
     </div>
 
-    @if (Model != null && Model.Page > 1)
-    {
-        <div class="d-flex justify-content-center mt-4 mb-5">
-            <p class="text-muted font-weight-bold bg-white px-4 py-2 rounded-pill shadow-sm">Sayfa @Model.Size / @Model.Page</p>
-        </div>
-    }
+    @await Html.PartialAsync("_PaginationPartial", Model)
 </div>
 
 <style>

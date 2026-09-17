@@ -1,36 +1,44 @@
-﻿@model Paginate<GetListHowItWorkDto>
+@model Paginate<GetListHowItWorkDto>
 
 <section class="section pt-85 bg-worldmap">
-	@foreach (var item in Model.List)
-	{
-		<div class="container">
-			<div class="text-center">
-				<img class="mb-15" src="~/templates/assets/imgs/template/icons/favicon.svg" alt="transp">
-				<h2 class="color-brand-2 mb-20">Nasıl Çalışır ?</h2>
-				<p class="font-md color-grey-700">@item.Description</p>
-			</div>
-			<div class="row mt-50">
-				<div class="col-lg-6 mb-30">
-					<div class="box-image-how">
-						<img class="w-100" src="@item.ImageURL" alt="transp">
-					</div>
-				</div>
-				<div class="col-lg-6 mb-30">
-					<ul class="list-how-works">
-						@foreach (var item2 in item.HowItWorkArticles)
-						{
-							<li>
-								<div class="image-how"> <span class="img"> <img src="@item2.ImageURL" alt="@item2.Title.ToLower()"></span></div>
-								<div class="info-how">
-									<h5 class="color-brand-2">@item2.Title</h5>
-									<p class="font-md color-grey-700">@item2.Description</p>
+	<div class="box-swiper">
+		<div class="swiper-container swiper-group-1 pb-50">
+			<div class="swiper-wrapper">
+				@foreach (var item in Model.List)
+				{
+					<div class="swiper-slide">
+						<div class="container">
+							<div class="text-center">
+								<img class="mb-15" src="~/templates/assets/imgs/template/icons/favicon.svg" alt="transp">
+								<h2 class="color-brand-2 mb-20">Nasıl Çalışır ?</h2>
+								<p class="font-md color-grey-700">@item.Description</p>
+							</div>
+							<div class="row mt-50">
+								<div class="col-lg-6 mb-30">
+									<div class="box-image-how">
+										<img class="w-100" src="@item.ImageURL" alt="transp">
+									</div>
 								</div>
-							</li>
-						}
-					</ul>
-				</div>
-
+								<div class="col-lg-6 mb-30">
+									<ul class="list-how-works">
+										@foreach (var item2 in item.HowItWorkArticles)
+										{
+											<li>
+												<div class="image-how"> <span class="img"> <img src="@item2.ImageURL" alt="@item2.Title.ToLower()"></span></div>
+												<div class="info-how">
+													<h5 class="color-brand-2">@item2.Title</h5>
+													<p class="font-md color-grey-700">@item2.Description</p>
+												</div>
+											</li>
+										}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
 			</div>
+			<div class="swiper-pagination swiper-pagination-banner"></div>
 		</div>
-	}
+	</div>
 </section>

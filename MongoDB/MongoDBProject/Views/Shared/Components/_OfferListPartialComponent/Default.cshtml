@@ -1,4 +1,4 @@
-﻿
+
 @model Paginate<GetActiveOfferListDto>
 
 <section class="section mt-100">
@@ -18,21 +18,35 @@
         </div>
         <div class="mt-20 box-background-offer">
             <div class="bg-under"></div>
-            <div class="row">
-                @foreach (var item in Model.List)
-                {
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card-offer hover-up">
-                            <div class="card-image"><img src="@item.ImageURL" alt="transp"></div>
-                            <div class="card-info">
-                                <h5 class="color-brand-2 mb-15">@item.Title</h5>
-                                <p class="font-sm color-grey-900 mb-35">@item.Description</p>
+            <div class="box-swiper">
+                <div class="swiper-container swiper-group-3-slider pb-50">
+                    <div class="swiper-wrapper">
+                        @foreach (var item in Model.List)
+                        {
+                            <div class="swiper-slide">
+                                <div class="card-offer hover-up">
+                                    <div class="card-image"><img src="@item.ImageURL" alt="transp"></div>
+                                    <div class="card-info">
+                                        <h5 class="color-brand-2 mb-15">@item.Title</h5>
+                                        <p class="font-sm color-grey-900 mb-35">@item.Description</p>
+                                    </div>
+                                </div>
                             </div>
+                        }
+                    </div>
+                    <div class="box-pagination-customers mt-4">
+                        <div class="swiper-button-prev swiper-button-prev-style-2">
+                            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+                            </svg>
+                        </div>
+                        <div class="swiper-button-next swiper-button-next-style-2">
+                            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
+                            </svg>
                         </div>
                     </div>
-
-                }
-              
+                </div>
             </div>
         </div>
     </div>

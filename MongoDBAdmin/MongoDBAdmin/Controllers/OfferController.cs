@@ -23,7 +23,7 @@ namespace MongoDBAdmin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int size = 10, int page = 1)
+        public async Task<IActionResult> Index(int size = 9, int page = 1)
         {
             try
             {

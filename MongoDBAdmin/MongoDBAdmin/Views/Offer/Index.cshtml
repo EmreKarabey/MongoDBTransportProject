@@ -83,7 +83,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" id="offer-container">
         
         <!-- YENİ EKLE KARTI (Her zaman en başta görünür) -->
         <div class="col-md-6 col-lg-4 mb-4">
@@ -170,12 +170,7 @@
         }
     </div>
 
-    @if (Model != null && Model.Page > 1)
-    {
-        <div class="d-flex justify-content-center mt-4 mb-5">
-            <p class="text-muted font-weight-bold bg-white px-4 py-2 rounded-pill shadow-sm">Sayfa @Model.Size / @Model.Page</p>
-        </div>
-    }
+    @await Html.PartialAsync("_PaginationPartial", Model)
 </div>
 
 <style>
@@ -289,6 +284,7 @@
             }).catch(function (err) {
                 console.error(err.toString());
             });
+
         });
     </script>
 }

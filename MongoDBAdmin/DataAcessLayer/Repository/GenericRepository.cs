@@ -52,12 +52,13 @@ namespace DataAcessLayer.Repository
         public async Task<EntityLayer.Paginate.Paginate<T>> GetListAsync(int size, int page)
         {
             var skipItem = (page - 1) * size;
+            var totalCount = (int)await _collection.CountDocumentsAsync(Builders<T>.Filter.Empty);
 
             var list = await _collection.AsQueryable().Skip(skipItem).Take(size).ToListAsync();
 
             if (!list.Any()) list = new List<T>();
 
-            var paginate = new Paginate<T>(list, size, page);
+            var paginate = new Paginate<T>(list, size, page, totalCount);
 
             return paginate;
         }

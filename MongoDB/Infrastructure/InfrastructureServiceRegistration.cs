@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Services.GoogleLogin;
 using Application.Services.Helsinki;
 using Application.Services.Repository;
 using Application.Services.ToxicBert;
 using Infrastructure.ConnectionService;
+using Infrastructure.GoogleLogin;
 using Infrastructure.Helsinki;
 using Infrastructure.ToxicBert;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +24,7 @@ namespace Infrastructure
             services.AddScoped<IDataBaseSettings, DataBaseSettings>();
             services.AddScoped<IHelsinkiService, HelsinkiService>();
             services.AddScoped<IToxicBertService, ToxicBertService>();
+            services.AddScoped<IGoogleLoginService, GoogleLoginService>();
 
             services.Configure<DataBaseSettings>(configuration.GetSection("DatabaseSettings"));
 

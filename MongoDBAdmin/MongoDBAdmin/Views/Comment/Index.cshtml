@@ -1,0 +1,138 @@
+@model EntityLayer.Paginate.Paginate<EntityLayer.Entities.Comment>
+@{
+    ViewData["Title"] = "Yorumlar Yönetimi";
+}
+
+<div class="container-fluid mt-4">
+    <!-- Süslü Başlık Alanı -->
+    <div class="mb-5 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #1e293b 0%, #8b5cf6 100%); padding: 30px; border-radius: 16px; color: white; box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);">
+        <div>
+            <h2 class="font-weight-bold mb-2 text-white"><i data-feather="message-circle" class="me-3" style="width: 28px; height: 28px; color: white;"></i>Yorumlar Yönetimi</h2>
+            <p class="mb-0" style="color: #e2e8f0; font-size: 1.1rem;">Kullanıcılar tarafından yapılan yorumları bu alandan görüntüleyebilir ve silebilirsiniz.</p>
+        </div>
+    </div>
+
+    <!-- Alert Area -->
+    <div id="alertArea"></div>
+
+    <div class="row">
+        @if (Model != null && Model.Items.Any())
+        {
+            foreach (var item in Model.Items)
+            {
+                <div class="col-md-6 col-lg-4 mb-4 comment-card-container" id="comment-@item.CommentId">
+                    <div class="card h-100 shadow-sm border-0 position-relative" style="border-radius: 16px; overflow: hidden; background-color: #ffffff; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="me-3">
+                                    @if (!string.IsNullOrEmpty(item.ImageURL))
+                                    {
+                                        <img src="@item.ImageURL" alt="@item.FullName" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                                            @(string.IsNullOrEmpty(item.FullName) ? "?" : item.FullName.Substring(0, 1).ToUpper())
+                                        </div>
+                                    }
+                                </div>
+                                <div>
+                                    <h5 class="mb-0 fw-bold text-dark">@item.FullName</h5>
+                                    <small class="text-muted">@item.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, HH:mm")</small>
+                                </div>
+                            </div>
+                            
+                            <h6 class="text-primary mb-2"><span class="text-dark fw-bold">Konu:</span> @item.Content</h6>
+                            <p class="card-text text-muted flex-grow-1" style="font-size: 0.95rem;">
+                                <span class="text-dark fw-bold">Mesaj:</span> @item.Details
+                            </p>
+                            
+                            <div class="mt-3 pt-3 border-top text-end">
+                                <button class="btn btn-outline-danger rounded-pill px-4 delete-comment-btn d-inline-flex align-items-center" data-id="@item.CommentId" data-name="@item.FullName">
+                                    <i data-feather="trash-2" class="me-2" style="width: 16px; height: 16px;"></i> Sil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <i data-feather="message-square" class="text-muted mb-3" style="width: 64px; height: 64px;"></i>
+                <h4 class="text-muted">Henüz hiç yorum yapılmamış.</h4>
+            </div>
+        }
+    </div>
+
+    <!-- Sayfalama (Pagination) -->
+    @await Html.PartialAsync("_PaginationPartial", Model)
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+
+            const deleteButtons = document.querySelectorAll('.delete-comment-btn');
+            
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const commentId = this.getAttribute('data-id');
+                    const authorName = this.getAttribute('data-name');
+                    
+                    Swal.fire({
+                        title: 'Emin misiniz?',
+                        text: `${authorName} isimli kullanıcının yorumunu silmek istediğinize emin misiniz? Bu işlem geri alınamaz!`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Evet, Sil!',
+                        cancelButtonText: 'İptal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // AJAX ile silme isteği
+                            fetch(`/Comment/DeleteComment`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: new URLSearchParams({ 'Id': commentId })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Yorum kartını ekrandan kaldır
+                                    const cardContainer = document.getElementById(`comment-${commentId}`);
+                                    if (cardContainer) {
+                                        cardContainer.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                                        cardContainer.style.opacity = "0";
+                                        cardContainer.style.transform = "scale(0.9)";
+                                        setTimeout(() => {
+                                            cardContainer.remove();
+                                        }, 500);
+                                    }
+                                    
+                                    Swal.fire('Silindi!', data.message, 'success');
+                                } else {
+                                    Swal.fire('Hata!', data.message, 'error');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire('Hata!', 'Sunucu ile iletişim kurulamadı.', 'error');
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}
