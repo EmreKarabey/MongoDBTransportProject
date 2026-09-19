@@ -40,6 +40,9 @@ namespace MongoDBAdmin.Mapper
 
             CreateMap<MongoDBAdmin.Dto.WhatWeHaveDone.CreateWhatWeHaveDoneDto, WhatWeHaveDone>().ReverseMap();
             CreateMap<MongoDBAdmin.Dto.WhatWeHaveDone.UpdateWhatWeHaveDoneDto, WhatWeHaveDone>().ReverseMap();
+
+            CreateMap<MongoDBAdmin.Dto.FAQ.CreateFAQDto, FAQ>().ReverseMap();
+            CreateMap<MongoDBAdmin.Dto.FAQ.UpdateFAQDto, FAQ>().ReverseMap();
         }
 
     }

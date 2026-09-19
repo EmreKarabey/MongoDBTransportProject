@@ -44,6 +44,8 @@ builder.Services.AddScoped<ICommentDal, EFCommentDal>();
 builder.Services.AddScoped<IWhatWeHaveDoneDal, EFWhatWeHaveDoneDal>();
 builder.Services.AddScoped<IWhatWeHaveDoneService, WhatWeHaveDoneManager>();
 
+builder.Services.AddScoped<IFAQDal, EFFAQDal>();
+builder.Services.AddScoped<IFAQService, FAQManager>();
 
 builder.Services.AddScoped<IDatabaseSettings, DatabaseSettings>();
 var databaseSettings = builder.Configuration.GetSection("DatabaseSettings").Get<DatabaseSettings>() ?? new DatabaseSettings();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -16,6 +16,10 @@ namespace Application
             services.AddAutoMapper(n => n.AddMaps(Assembly.GetExecutingAssembly()));
 
             services.AddMediatR(n => n.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            
+            services.AddScoped<Application.Features.FAQ.Rules.FAQBusinessRules>();
+            services.AddScoped<Application.Features.WhatWeHaveDone.Rules.WhatWeHaveDoneBusinessRules>();
+
             return services;
         }
     }

@@ -20,6 +20,23 @@
     <title>Giriş Yap</title>
     <style>
       .text-danger { color: #dc3545; }
+      
+      /* Google Login widget overflow ve z-index düzeltmesi */
+      .box-btn-signin {
+          position: relative;
+          z-index: 10;
+          min-height: 50px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          margin-top: 40px;
+          margin-bottom: 25px;
+      }
+      .box-or-login {
+          margin-top: 15px;
+          margin-bottom: 25px;
+      }
     </style>
   </head>
   <body>
@@ -38,7 +55,8 @@
             <div class="box-login-left">
               <h2 class="color-brand-2 mb-10">Tekrar Hoşgeldiniz</h2>
               <p class="font-md color-grey-500">Tüm özelliklere erişin. Kredi kartı gerekmez.</p>
-              <div class="box-btn-signin mt-55" style="display: flex; justify-content: center; width: 100%;">
+              
+              <div class="box-btn-signin">
                 <!-- Google Identity Services -->
                 <div id="g_id_onload"
                      data-client_id="395839596647-ggssm7f7g6ei2pdnd0tkj3ncglubfldi.apps.googleusercontent.com"
@@ -47,7 +65,7 @@
                      data-callback="handleCredentialResponse"
                      data-auto_prompt="false">
                 </div>
-                <div class="g_id_signin mb-10"
+                <div class="g_id_signin"
                      data-type="standard"
                      data-shape="rectangular"
                      data-theme="outline"
@@ -61,7 +79,11 @@
                   @Html.AntiForgeryToken()
                   <input type="hidden" name="Token" id="googleToken" />
               </form>
-              <div class="box-or-login"> <span class="text-or font-xs color-grey-500">Veya şununla devam edin</span></div>
+              
+              <div class="box-or-login"> 
+                  <span class="text-or font-xs color-grey-500">Veya şununla devam edin</span>
+              </div>
+              
               <div class="box-form-login">
                 <form asp-action="Login" method="post"> 
                   <div asp-validation-summary="ModelOnly" class="text-danger mb-3 font-sm"></div>

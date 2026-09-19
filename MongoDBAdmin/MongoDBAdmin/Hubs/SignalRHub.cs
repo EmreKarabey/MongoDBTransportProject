@@ -14,14 +14,16 @@ namespace MongoDBAdmin.Hubs
         private readonly IOfferService _offerService;
         private readonly ISliderService _sliderService;
         private readonly IWhatWeHaveDoneService _whatWeHaveDoneService;
+        private readonly IFAQService _faqService;
 
-        public SignalRHub(UserManager<AppUser> userManager, IBrandService brandService, IOfferService offerService, ISliderService sliderService, IWhatWeHaveDoneService whatWeHaveDoneService)
+        public SignalRHub(UserManager<AppUser> userManager, IBrandService brandService, IOfferService offerService, ISliderService sliderService, IWhatWeHaveDoneService whatWeHaveDoneService, IFAQService faqService)
         {
             _userManager = userManager;
             _brandService = brandService;
             _offerService = offerService;
             _sliderService = sliderService;
             _whatWeHaveDoneService = whatWeHaveDoneService;
+            _faqService = faqService;
         }
 
         public async Task SendStatics()
@@ -87,6 +89,20 @@ namespace MongoDBAdmin.Hubs
             await Clients.All.SendAsync("TotalWhatWeHaveDoneCount", totalCount);
             await Clients.All.SendAsync("ActiveWhatWeHaveDoneCount", activeCount);
             await Clients.All.SendAsync("PassiveWhatWeHaveDoneCount", passiveCount);
+        }
+
+        public async Task SendFAQStatics()
+        {
+            var dataList = await _faqService.GetListAsync(1000, 1);
+            var items = dataList.Items;
+
+            var totalCount = items.Count;
+            var activeCount = items.Count(x => x.IsActive);
+            var passiveCount = totalCount - activeCount;
+
+            await Clients.All.SendAsync("TotalFAQCount", totalCount);
+            await Clients.All.SendAsync("ActiveFAQCount", activeCount);
+            await Clients.All.SendAsync("PassiveFAQCount", passiveCount);
         }
     }
 }

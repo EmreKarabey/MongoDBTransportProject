@@ -20,6 +20,7 @@ namespace Persistence
             services.AddScoped<IHowItWorkRepository, HowItWorkRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IWhatWeHaveDoneRepository, WhatWeHaveDoneRepository>();
+            services.AddScoped<IFAQRepository, FAQRepository>();
 
             var connectionString = configuration.GetSection("DatabaseSettings")["ConnectionString"];
             var databaseName = configuration.GetSection("DatabaseSettings")["DatabaseName"];
