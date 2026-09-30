@@ -1,0 +1,182 @@
+@model EntityLayer.Entities.Shipment
+@{
+    ViewData["Title"] = "Sipariş Detayları";
+}
+
+<div class="container-fluid mt-4">
+    <!-- Başlık -->
+    <div class="mb-5 d-flex justify-content-between align-items-center flex-wrap gap-3" style="background: linear-gradient(135deg, #0f172a 0%, #4f46e5 100%); padding: 30px; border-radius: 16px; color: white; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2);">
+        <div>
+            <h2 class="font-weight-bold mb-2 text-white"><i class="fa fa-info-circle me-3"></i>Sipariş Detayları</h2>
+            <p class="mb-0" style="color: #e0e7ff; font-size: 1.1rem;">Takip No: <strong>@Model.TrackingNumber</strong></p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/Shipment/Update/@Model.ShipmentId" class="btn btn-warning rounded-pill px-4 py-2 font-weight-bold shadow-sm text-white">
+                <i class="fa fa-edit me-2"></i>Düzenle
+            </a>
+            <a href="/Shipment/Index" class="btn btn-outline-light rounded-pill px-4 py-2 font-weight-bold">
+                <i class="fa fa-arrow-left me-2"></i>Listeye Dön
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sol: Sipariş Bilgileri -->
+        <div class="col-lg-5 mb-4">
+            <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+                <div class="card-header bg-white p-4 border-bottom" style="border-bottom: 2px solid #f1f5f9 !important;">
+                    <h4 class="mb-0 text-dark font-weight-bold"><i class="fa fa-box me-2 text-primary"></i>Sipariş Bilgileri</h4>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Kargo Bileti Önizleme -->
+                    <div class="ticket-preview p-0 rounded-4 shadow-sm bg-white position-relative overflow-hidden mb-4" style="border: none;">
+                        <div class="p-4 text-center text-white position-relative" style="background: linear-gradient(135deg, #4f46e5, #3b82f6);">
+                            <div style="position: absolute; bottom: -15px; left: -15px; width: 30px; height: 30px; background-color: white; border-radius: 50%; z-index: 10;"></div>
+                            <div style="position: absolute; bottom: -15px; right: -15px; width: 30px; height: 30px; background-color: white; border-radius: 50%; z-index: 10;"></div>
+                            <i class="fa fa-box-open fa-2x mb-2 text-white" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));"></i>
+                            <h5 class="font-weight-bold mb-1" style="letter-spacing: 2px;">KARGO BİLETİ</h5>
+                            <span class="badge bg-white text-primary rounded-pill px-3 py-1 font-weight-bold">@Model.CreatedDate.ToString("dd MMM yyyy")</span>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="text-start" style="width: 35%;">
+                                    <small class="text-muted fw-bold d-block text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 1px;">Çıkış</small>
+                                    <h4 class="text-dark font-weight-bold mb-0">@Model.OriginCity</h4>
+                                </div>
+                                <div class="text-center px-2 flex-grow-1 position-relative">
+                                    <div style="height: 2px; background: repeating-linear-gradient(to right, #cbd5e1 0, #cbd5e1 6px, transparent 6px, transparent 12px); width: 100%; position: absolute; top: 50%; left: 0; transform: translateY(-50%); z-index: 1;"></div>
+                                    <i class="fa fa-truck text-primary fs-4" style="position: relative; z-index: 2; background-color: white; padding: 0 5px;"></i>
+                                </div>
+                                <div class="text-end" style="width: 35%;">
+                                    <small class="text-muted fw-bold d-block text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 1px;">Varış</small>
+                                    <h4 class="text-dark font-weight-bold mb-0">@Model.DestinationCity</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detay Bilgileri -->
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                            <span class="text-muted fw-bold"><i class="fa fa-hashtag me-2 text-primary"></i>Takip No</span>
+                            <span class="fw-bold text-primary fs-5">@Model.TrackingNumber</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                            <span class="text-muted fw-bold"><i class="fa fa-paper-plane me-2 text-info"></i>Gönderici</span>
+                            <span class="fw-bold">@Model.SenderName</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                            <span class="text-muted fw-bold"><i class="fa fa-user me-2 text-success"></i>Alıcı</span>
+                            <span class="fw-bold">@Model.ReceiverName</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                            <span class="text-muted fw-bold"><i class="fa fa-calendar me-2 text-warning"></i>Oluşturma Tarihi</span>
+                            <span class="fw-bold">@Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                            <span class="text-muted fw-bold"><i class="fa fa-toggle-on me-2 text-secondary"></i>Aktiflik</span>
+                            @if (Model.IsActive)
+                            {
+                                <span class="badge bg-success rounded-pill px-3 py-2">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary rounded-pill px-3 py-2">Pasif</span>
+                            }
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                            <span class="text-muted fw-bold"><i class="fa fa-flag me-2 text-danger"></i>Güncel Durum</span>
+                            @{
+                                string statusBadge = "bg-primary";
+                                string currentSt = Model.CurrentStatus ?? "";
+                                if (currentSt.Contains("Hazırlanıyor")) statusBadge = "bg-warning text-dark";
+                                else if (currentSt.Contains("Yolda") || currentSt.Contains("verildi") || currentSt.Contains("dağıtıma")) statusBadge = "bg-info text-white";
+                                else if (currentSt.Contains("Teslim")) statusBadge = "bg-success";
+                                else if (currentSt.Contains("İptal")) statusBadge = "bg-danger";
+                            }
+                            <span class="badge @statusBadge rounded-pill px-3 py-2">@(string.IsNullOrEmpty(Model.CurrentStatus) ? "Bilinmiyor" : Model.CurrentStatus)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sağ: Tracking Timeline -->
+        <div class="col-lg-7 mb-4">
+            <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+                <div class="card-header bg-white p-4 border-bottom" style="border-bottom: 2px solid #f1f5f9 !important;">
+                    <h4 class="mb-0 text-dark font-weight-bold"><i class="fa fa-route me-2 text-success"></i>Kargo Takip Geçmişi</h4>
+                </div>
+                <div class="card-body p-4">
+                    @if (Model.Trackings != null && Model.Trackings.Any())
+                    {
+                        <div class="timeline">
+                            @{ var trackingList = Model.Trackings.OrderByDescending(t => t.EventDate).ToList(); }
+                            @for (int i = 0; i < trackingList.Count; i++)
+                            {
+                                var tracking = trackingList[i];
+                                bool isFirst = (i == 0);
+                                string dotColor = isFirst ? "#4f46e5" : "#cbd5e1";
+                                string cardBg = isFirst ? "background: linear-gradient(135deg, #eef2ff, #e0e7ff);" : "background-color: #f8fafc;";
+                                string borderLeft = isFirst ? "border-left: 4px solid #4f46e5;" : "border-left: 4px solid #e2e8f0;";
+
+                                <div class="timeline-item d-flex mb-4 position-relative">
+                                    <!-- Timeline Dot & Line -->
+                                    <div class="timeline-dot-container d-flex flex-column align-items-center me-4" style="min-width: 40px;">
+                                        <div class="timeline-dot rounded-circle shadow-sm @(isFirst ? "pulse-dot" : "")" style="width: 18px; height: 18px; background-color: @dotColor; border: 3px solid white; box-shadow: 0 0 0 3px @dotColor; z-index: 2;"></div>
+                                        @if (i < trackingList.Count - 1)
+                                        {
+                                            <div class="timeline-line flex-grow-1" style="width: 2px; background-color: #e2e8f0;"></div>
+                                        }
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="timeline-content flex-grow-1 p-3 rounded-3 shadow-sm" style="@cardBg @borderLeft transition: all 0.3s ease;">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6 class="mb-0 fw-bold" style="color: @(isFirst ? "#4f46e5" : "#475569");">
+                                                <i class="fa @(isFirst ? "fa-check-circle" : "fa-circle") me-2" style="font-size: 0.7rem;"></i>
+                                                @tracking.Description
+                                            </h6>
+                                            <small class="text-muted ms-2 text-nowrap">
+                                                <i class="fa fa-clock me-1"></i>@tracking.EventDate.ToString("dd.MM.yyyy HH:mm")
+                                            </small>
+                                        </div>
+                                        <div class="d-flex gap-3 mt-2">
+                                            <span class="badge bg-light text-dark rounded-pill px-3 py-1 shadow-sm" style="font-size: 0.8rem;">
+                                                <i class="fa fa-map-marker-alt me-1 text-danger"></i> @tracking.Location
+                                            </span>
+                                            <span class="badge bg-light text-dark rounded-pill px-3 py-1 shadow-sm" style="font-size: 0.8rem;">
+                                                <i class="fa fa-tag me-1 text-primary"></i> @tracking.TrackingStatus
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <i class="fa fa-route fa-3x mb-3" style="color: #e2e8f0;"></i>
+                            <h5>Henüz takip kaydı bulunmamaktadır.</h5>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .timeline-content:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+    .pulse-dot {
+        animation: pulse 2s infinite;
+    }
+    @@keyframes pulse {
+        0% { box-shadow: 0 0 0 3px #4f46e5; }
+        50% { box-shadow: 0 0 0 8px rgba(79, 70, 229, 0.2); }
+        100% { box-shadow: 0 0 0 3px #4f46e5; }
+    }
+</style>

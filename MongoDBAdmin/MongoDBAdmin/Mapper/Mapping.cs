@@ -6,6 +6,7 @@ using MongoDBAdmin.Dto.GetInTouch;
 using MongoDBAdmin.Dto.HowItWork;
 using MongoDBAdmin.Dto.Offer;
 using MongoDBAdmin.Dto.Role;
+using MongoDBAdmin.Dto.Shipment;
 using MongoDBAdmin.Dto.Slider;
 
 namespace MongoDBAdmin.Mapper
@@ -43,6 +44,13 @@ namespace MongoDBAdmin.Mapper
 
             CreateMap<MongoDBAdmin.Dto.FAQ.CreateFAQDto, FAQ>().ReverseMap();
             CreateMap<MongoDBAdmin.Dto.FAQ.UpdateFAQDto, FAQ>().ReverseMap();
+
+
+            CreateMap<Shipment, CreateShipmentDto>().ReverseMap();
+            CreateMap<ShipmentTracking, CreateShipmentTrackingDto>().ReverseMap();
+
+            CreateMap<Shipment, UpdateShipmentDto>().ReverseMap();
+            CreateMap<ShipmentTracking, UpdateShipmentTrackingDto>().ReverseMap();
         }
 
     }

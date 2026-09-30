@@ -47,13 +47,18 @@ namespace BusinessLayer.Concrete
             return await _appUserDal.GetListAsync(size, page);
         }
 
+        public async Task<List<AppUser>> GetListAsync()
+        {
+            return await _appUserDal.GetListAsync();
+        }
+
         public Task<List<AppUser?>> GetUserListAsync()
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             Guid currentUserId = Guid.Parse(userId);
 
-            var list = _userManager.Users.Where(n=>n.Id!=currentUserId).ToListAsync();
+            var list = _userManager.Users.Where(n => n.Id != currentUserId).ToListAsync();
 
             return list ?? null;
         }

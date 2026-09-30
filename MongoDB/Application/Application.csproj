@@ -26,6 +26,7 @@
     <Folder Include="Features\Offer\Command\" />
     <Folder Include="Features\Offer\Constants\" />
     <Folder Include="Features\Offer\Rules\" />
+    <Folder Include="Features\Shipment\Command\" />
     <Folder Include="Features\Slider\Command\Delete\" />
     <Folder Include="Features\Slider\Command\Update\" />
     <Folder Include="Features\Slider\Queries\GetById\" />

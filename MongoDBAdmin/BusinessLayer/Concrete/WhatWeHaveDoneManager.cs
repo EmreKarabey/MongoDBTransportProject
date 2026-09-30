@@ -40,6 +40,11 @@ namespace BusinessLayer.Concrete
             return await _whatWeHaveDoneDal.GetListAsync(limit, skip);
         }
 
+        public async Task<List<WhatWeHaveDone>> GetListAsync()
+        {
+            return await _whatWeHaveDoneDal.GetListAsync();
+        }
+
         public async Task UpdateAsync(WhatWeHaveDone entity, string id)
         {
             await _whatWeHaveDoneDal.UpdateAsync(entity, id);

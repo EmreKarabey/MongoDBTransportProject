@@ -11,6 +11,7 @@ using MongoDBAdmin.Dto.Brand;
 
 namespace MongoDBAdmin.Controllers
 {
+    [Authorize(Roles = "Admin,Moderatör")]
     public class AccountController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -37,6 +38,7 @@ namespace MongoDBAdmin.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginDto loginDto, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -103,16 +105,15 @@ namespace MongoDBAdmin.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid)
@@ -278,7 +279,7 @@ namespace MongoDBAdmin.Controllers
         }
 
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> Logout()
         {

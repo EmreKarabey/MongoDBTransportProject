@@ -39,6 +39,11 @@ namespace BusinessLayer.Concrete
            return await _brandDal.GetListAsync(size, page);
         }
 
+        public async Task<List<Brand>> GetListAsync()
+        {
+            return await _brandDal.GetListAsync();
+        }
+
         public async Task UpdateAsync(Brand t, string Id)
         {
            await _brandDal.UpdateAsync(t, Id);

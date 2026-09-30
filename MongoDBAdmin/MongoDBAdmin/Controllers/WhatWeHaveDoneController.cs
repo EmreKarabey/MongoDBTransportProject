@@ -8,7 +8,7 @@ using MongoDBAdmin.Dto.WhatWeHaveDone;
 
 namespace MongoDBAdmin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Moderatör")]
     public class WhatWeHaveDoneController : Controller
     {
         private readonly IWhatWeHaveDoneService _whatWeHaveDoneService;

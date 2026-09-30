@@ -9,7 +9,7 @@ using MongoDBAdmin.Dto.FAQ;
 
 namespace MongoDBAdmin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Moderatör")]
     public class FAQController : Controller
     {
         private readonly IFAQService _faqService;

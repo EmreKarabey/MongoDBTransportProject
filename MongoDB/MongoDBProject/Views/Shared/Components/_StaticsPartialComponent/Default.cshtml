@@ -1,0 +1,361 @@
+<section class="section bg-leading-company pt-95">
+    <div class="box-bg-leading"></div>
+    <div class="container">
+        <div class="text-center mb-45">
+            <h2 class="color-brand-1 mb-15">80 Yılı Aşkın Süredir <br class="d-none d-lg-block">Dünyanın Öncü Şirketlerinin Yanındayız.</h2>
+            <p class="font-md color-white">İşinizi büyütmek için benzersiz çözümler sunuyor, sektör liderlerine güvenilir sonuçlar ulaştırıyoruz. <br class="d-none d-lg-block">Başarılarımızla gurur duyuyor, geleceğe güvenle taşıyoruz.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6 mb-30">
+                <div class="cardLeadingCompany">
+                    <div class="cardImage"> <span class="img"> <img src="~/templates/assets/imgs/page/homepage1/handover.png" alt="transp"></span></div>
+                    <div class="cardInfo">
+                        <h3 class="color-brand-1" id="deliveredCount">0</h3>
+                        <p class="font-lg color-white">Teslim Edilen Kargo</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 mb-30">
+                <div class="cardLeadingCompany">
+                    <div class="cardImage"> <span class="img"> <img src="~/templates/assets/imgs/page/homepage1/cities.png" alt="transp"></span></div>
+                    <div class="cardInfo">
+                        <h3 class="color-brand-1" id="destinationCityCount">0</h3>
+                        <p class="font-lg color-white">Hizmet Verilen Şehir</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 mb-30">
+                <div class="cardLeadingCompany">
+                    <div class="cardImage"> <span class="img"> <img src="~/templates/assets/imgs/page/homepage1/client.png" alt="transp"></span></div>
+                    <div class="cardInfo">
+                        <h3 class="color-brand-1" id="userCount">0</h3>
+                        <p class="font-lg color-white">Kayıtlı Kullanıcı</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 mb-30">
+                <div class="cardLeadingCompany">
+                    <div class="cardImage"> <span class="img"> <img src="~/templates/assets/imgs/page/homepage1/company.png" alt="transp"></span></div>
+                    <div class="cardInfo">
+                        <h3 class="color-brand-1" id="preparingCount">0</h3>
+                        <p class="font-lg color-white">Hazırlanan Kargo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-form-contact-leading" id="kargo-hesapla">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h2 class="title-favicon color-brand-2 mb-15">Kargo Hesapla</h2>
+                    <p class="font-md color-grey-700 mb-25">Toplam fiyatı öğrenmek için lütfen tüm alanları doldurun.</p>
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <select class="form-control" id="kh-service">
+                                    <option value="">Hizmet Seçin</option>
+                                    <option value="standart">Standart Kargo</option>
+                                    <option value="ekspres">Ekspres Kargo</option>
+                                    <option value="ekonomik">Ekonomik Kargo</option>
+                                    <option value="agir">Ağır Yük Nakliyesi</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="kh-dimensions" placeholder="Boyutlar (En x Boy x Yükseklik cm)">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <input class="form-control" type="number" min="0" step="0.1" id="kh-weight" placeholder="Ağırlık (kg)">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <select class="form-control" id="kh-from">
+                                    <option value="">Alım Yeri</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <select class="form-control" id="kh-to">
+                                    <option value="">Teslimat Yeri</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <select class="form-control" id="kh-commodity">
+                                    <option value="">Eşya Türü</option>
+                                    <option value="genel">Genel Eşya</option>
+                                    <option value="elektronik">Elektronik</option>
+                                    <option value="kirilabilir">Kırılabilir Eşya</option>
+                                    <option value="gida">Gıda</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <select class="form-control" id="kh-quantity">
+                                    <option value="">Ürün Adedi</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <textarea class="form-control" name="message" rows="5" placeholder="Mesaj / Not"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <strong class="font-sm-bold color-grey-900">Ekstra Hizmetler</strong>
+                                <div class="row mt-10 box-cb-form">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-group">
+                                            <input class="cd-form kh-extra" type="checkbox" data-key="ekspres"> Hızlı Teslimat (+₺<span data-extra-price="ekspres">0</span>)
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-group">
+                                            <input class="cd-form kh-extra" type="checkbox" data-key="sigorta"> Sigorta (+₺<span data-extra-price="sigorta">0</span>)
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-group">
+                                            <input class="cd-form kh-extra" type="checkbox" data-key="paketleme"> Paketleme (+₺<span data-extra-price="paketleme">0</span>)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sonuç kutusu -->
+                        <div class="col-lg-12">
+                            <div id="kh-result" style="display:none;margin-bottom:25px;padding:20px;border:1px solid #cfe3ea;border-radius:8px;background:#f5fafc;"></div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <a class="btn btn-brand-1-big mr-25" href="#" id="kh-calc">
+                                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"></path>
+                                </svg>Maliyet Hesapla
+                            </a><a class="btn btn-link-medium" href="contact.html">
+                                Bize Ulaşın
+                                <svg class="w-6 h-6 icon-16 ml-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="box-image-contact"> <img src="~/templates/assets/imgs/page/homepage1/img-contact.png" alt="transp"></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                /* ============ AYARLAR (fiyatları buradan değiştirebilirsiniz) ============ */
+                var CONFIG = {
+                    desiBolen: 3000,      // Desi = (en x boy x yükseklik) / 3000
+                    yolKatsayisi: 1.25,   // Kuş uçuşu mesafe x katsayı = tahmini karayolu mesafesi
+                    ayniIlIndirimi: 0.5,  // Aynı il içi gönderimde mesafe ücreti çarpanı
+                    minimumUcret: 50,     // TL
+                    // base: sabit ücret, perKg: desi/kg başına, perKm: km başına, (TL)
+                    hizmetler: {
+                        standart: { ad: "Standart Kargo",     base: 60,  perKg: 4,   perKm: 0.08 },
+                        ekspres:  { ad: "Ekspres Kargo",      base: 90,  perKg: 6,   perKm: 0.12 },
+                        ekonomik: { ad: "Ekonomik Kargo",     base: 45,  perKg: 3,   perKm: 0.06 },
+                        agir:     { ad: "Ağır Yük Nakliyesi", base: 250, perKg: 2.5, perKm: 0.35 }
+                    },
+                    // Eşya türüne göre çarpan
+                    esyaCarpani: { genel: 1, elektronik: 1.15, kirilabilir: 1.25, gida: 1.1 },
+                    // Ekstra hizmetler (TL)
+                    ekstralar: { ekspres: 40, sigorta: 20, paketleme: 15 }
+                };
+
+                /* ============ 81 İL (ad, enlem, boylam) - plaka sırasına göre ============ */
+                var ILLER = [
+                    ["Adana",37.00,35.32],["Adıyaman",37.76,38.28],["Afyonkarahisar",38.76,30.54],["Ağrı",39.72,43.05],
+                    ["Amasya",40.65,35.83],["Ankara",39.93,32.86],["Antalya",36.89,30.71],["Artvin",41.18,41.82],
+                    ["Aydın",37.85,27.85],["Balıkesir",39.65,27.89],["Bilecik",40.14,29.98],["Bingöl",38.88,40.50],
+                    ["Bitlis",38.40,42.11],["Bolu",40.73,31.61],["Burdur",37.72,30.29],["Bursa",40.19,29.06],
+                    ["Çanakkale",40.15,26.41],["Çankırı",40.60,33.62],["Çorum",40.55,34.95],["Denizli",37.78,29.09],
+                    ["Diyarbakır",37.91,40.24],["Edirne",41.68,26.56],["Elazığ",38.67,39.22],["Erzincan",39.75,39.49],
+                    ["Erzurum",39.90,41.27],["Eskişehir",39.78,30.52],["Gaziantep",37.07,37.38],["Giresun",40.91,38.39],
+                    ["Gümüşhane",40.46,39.48],["Hakkari",37.58,43.74],["Hatay",36.40,36.35],["Isparta",37.76,30.55],
+                    ["Mersin",36.80,34.63],["İstanbul",41.01,28.98],["İzmir",38.42,27.14],["Kars",40.60,43.10],
+                    ["Kastamonu",41.38,33.78],["Kayseri",38.72,35.49],["Kırklareli",41.73,27.22],["Kırşehir",39.15,34.16],
+                    ["Kocaeli",40.77,29.94],["Konya",37.87,32.48],["Kütahya",39.42,29.98],["Malatya",38.35,38.31],
+                    ["Manisa",38.61,27.43],["Kahramanmaraş",37.58,36.94],["Mardin",37.31,40.74],["Muğla",37.22,28.36],
+                    ["Muş",38.74,41.49],["Nevşehir",38.62,34.71],["Niğde",37.97,34.68],["Ordu",40.98,37.88],
+                    ["Rize",41.02,40.52],["Sakarya",40.76,30.40],["Samsun",41.29,36.33],["Siirt",37.93,41.94],
+                    ["Sinop",42.03,35.15],["Sivas",39.75,37.02],["Tekirdağ",40.98,27.51],["Tokat",40.31,36.55],
+                    ["Trabzon",41.00,39.72],["Tunceli",39.11,39.55],["Şanlıurfa",37.16,38.79],["Uşak",38.68,29.41],
+                    ["Van",38.49,43.38],["Yozgat",39.82,34.81],["Zonguldak",41.46,31.80],["Aksaray",38.37,34.03],
+                    ["Bayburt",40.26,40.22],["Karaman",37.18,33.22],["Kırıkkale",39.85,33.51],["Batman",37.89,41.13],
+                    ["Şırnak",37.52,42.46],["Bartın",41.63,32.34],["Ardahan",41.11,42.70],["Iğdır",39.92,44.05],
+                    ["Yalova",40.65,29.27],["Karabük",41.20,32.63],["Kilis",36.72,37.12],["Osmaniye",37.07,36.25],
+                    ["Düzce",40.84,31.16]
+                ];
+
+                var $ = function (id) { return document.getElementById(id); };
+                var fmt = function (n) {
+                    return n.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " ₺";
+                };
+
+                /* Combobox'ları doldur */
+                ["kh-from", "kh-to"].forEach(function (id) {
+                    var sel = $(id);
+                    ILLER.forEach(function (il, i) {
+                        var opt = document.createElement("option");
+                        opt.value = i;
+                        opt.textContent = (i + 1 < 10 ? "0" : "") + (i + 1) + " - " + il[0];
+                        sel.appendChild(opt);
+                    });
+                });
+
+                /* Ekstra hizmet fiyatlarını etikete yaz */
+                var spans = document.querySelectorAll("[data-extra-price]");
+                for (var s = 0; s < spans.length; s++) {
+                    spans[s].textContent = CONFIG.ekstralar[spans[s].getAttribute("data-extra-price")];
+                }
+
+                /* Haversine mesafe (km) */
+                function mesafeKm(a, b) {
+                    var R = 6371, rad = Math.PI / 180;
+                    var dLat = (b[1] - a[1]) * rad, dLon = (b[2] - a[2]) * rad;
+                    var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                            Math.cos(a[1] * rad) * Math.cos(b[1] * rad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                    return 2 * R * Math.asin(Math.sqrt(h));
+                }
+
+                /* "30x20x10" -> desi */
+                function desiHesapla(text) {
+                    var p = text.toLowerCase().replace(/,/g, ".").split(/\s*[x×*]\s*/);
+                    if (p.length !== 3) return null;
+                    var n = p.map(parseFloat);
+                    if (n.some(function (v) { return isNaN(v) || v <= 0; })) return null;
+                    return (n[0] * n[1] * n[2]) / CONFIG.desiBolen;
+                }
+
+                function goster(html, hata) {
+                    var box = $("kh-result");
+                    box.style.display = "block";
+                    box.style.borderColor = hata ? "#f0b4b4" : "#cfe3ea";
+                    box.style.background = hata ? "#fdf3f3" : "#f5fafc";
+                    box.innerHTML = html;
+                }
+
+                function hesapla(e) {
+                    e.preventDefault();
+
+                    var hizmetKey = $("kh-service").value;
+                    var esyaKey = $("kh-commodity").value;
+                    var adet = parseInt($("kh-quantity").value, 10);
+                    var kg = parseFloat($("kh-weight").value);
+                    var desi = desiHesapla($("kh-dimensions").value.trim());
+                    var from = $("kh-from").value, to = $("kh-to").value;
+
+                    var eksik = [];
+                    if (!hizmetKey) eksik.push("Hizmet");
+                    if (desi === null) eksik.push("Boyutlar (örn: 30x20x10)");
+                    if (isNaN(kg) || kg <= 0) eksik.push("Ağırlık");
+                    if (from === "") eksik.push("Alım Yeri");
+                    if (to === "") eksik.push("Teslimat Yeri");
+                    if (!esyaKey) eksik.push("Eşya Türü");
+                    if (isNaN(adet)) eksik.push("Ürün Adedi");
+                    if (eksik.length) {
+                        goster("<strong>Lütfen şu alanları doldurun / düzeltin:</strong><br>" + eksik.join(", "), true);
+                        return;
+                    }
+
+                    var h = CONFIG.hizmetler[hizmetKey];
+                    var a = ILLER[from], b = ILLER[to];
+                    var km = from === to ? 0 : mesafeKm(a, b) * CONFIG.yolKatsayisi;
+                    var faturalanan = Math.max(kg, desi) * adet;   // kg ile desiden büyük olan esas alınır
+
+                    var tasima = h.base + faturalanan * h.perKg;
+                    var mesafeUcreti = km * h.perKm;
+                    if (from === to) mesafeUcreti = h.base * CONFIG.ayniIlIndirimi * 0.2; // il içi küçük sabit ek
+                    var ara = (tasima + mesafeUcreti) * CONFIG.esyaCarpani[esyaKey];
+
+                    var ekstraToplam = 0, ekstraListe = [];
+                    var kutular = document.querySelectorAll(".kh-extra");
+                    for (var i = 0; i < kutular.length; i++) {
+                        if (kutular[i].checked) {
+                            var k = kutular[i].getAttribute("data-key");
+                            ekstraToplam += CONFIG.ekstralar[k];
+                            ekstraListe.push(kutular[i].parentNode.textContent.replace(/\s+/g, " ").trim());
+                        }
+                    }
+
+                    var toplam = Math.max(ara, CONFIG.minimumUcret) + ekstraToplam;
+
+                    goster(
+                        "<h4 style='margin-bottom:10px'>Tahmini Kargo Ücreti: " + fmt(toplam) + "</h4>" +
+                        "<ul style='margin:0;padding-left:18px;line-height:1.8'>" +
+                        "<li>Hizmet: " + h.ad + "</li>" +
+                        "<li>Güzergah: " + a[0] + " → " + b[0] + (km ? " (~" + Math.round(km) + " km)" : " (il içi)") + "</li>" +
+                        "<li>Faturalanan ağırlık: " + faturalanan.toFixed(1) + " kg/desi (gerçek: " + (kg * adet).toFixed(1) +
+                            " kg, hacimsel: " + (desi * adet).toFixed(1) + " desi)</li>" +
+                        "<li>Taşıma bedeli: " + fmt(Math.max(ara, CONFIG.minimumUcret)) + "</li>" +
+                        (ekstraListe.length ? "<li>Ekstra hizmetler: " + fmt(ekstraToplam) + " (" + ekstraListe.length + " adet)</li>" : "") +
+                        "</ul>" +
+                        "<small style='color:#777'>Bu tutar tahminidir; kesin fiyat için bizimle iletişime geçin.</small>",
+                        false
+                    );
+                }
+
+                $("kh-calc").addEventListener("click", hesapla);
+            })();
+        </script>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var connection = new signalR.HubConnectionBuilder().withUrl("/signalrhub").build();
+
+        connection.start().then(function () {
+            // İlk açılışta hemen verileri çekmek için
+            connection.invoke("SendStatics");
+            
+            // Sonrasında her 1 saniyede bir güncelle
+            setInterval(function () {
+                connection.invoke("SendStatics");
+            }, 1000);
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        connection.on("DeliveredCount", function (count) {
+            document.getElementById("deliveredCount").innerText = "+ " + count;
+        });
+
+        connection.on("DestinationCityCount", function (count) {
+            document.getElementById("destinationCityCount").innerText = "+ " + count;
+        });
+
+        connection.on("UserCount", function (count) {
+            document.getElementById("userCount").innerText = "+ " + count;
+        });
+
+        connection.on("PreparingCount", function (count) {
+            document.getElementById("preparingCount").innerText = "+ " + count;
+        });
+    });
+</script>

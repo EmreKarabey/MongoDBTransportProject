@@ -19,6 +19,7 @@ namespace Application
             
             services.AddScoped<Application.Features.FAQ.Rules.FAQBusinessRules>();
             services.AddScoped<Application.Features.WhatWeHaveDone.Rules.WhatWeHaveDoneBusinessRules>();
+            services.AddScoped<Application.Features.Shipment.Rules.ShipmentBusinessRules>();
 
             return services;
         }

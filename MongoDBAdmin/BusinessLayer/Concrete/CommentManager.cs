@@ -39,6 +39,11 @@ namespace BusinessLayer.Concrete
            return await _commentDal.GetListAsync(size, page);
         }
 
+        public async Task<List<Comment>> GetListAsync()
+        {
+            return await _commentDal.GetListAsync();
+        }
+
         public async Task UpdateAsync(Comment t, string Id)
         {
             await _commentDal.UpdateAsync(t, Id);

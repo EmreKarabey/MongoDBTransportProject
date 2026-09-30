@@ -1,0 +1,487 @@
+@model Paginate<Shipment>
+@{
+    ViewData["Title"] = "Sipariş Listesi";
+}
+
+<div class="container-fluid mt-4">
+    <div class="mb-5 d-flex justify-content-between align-items-center flex-wrap gap-3" style="background: linear-gradient(135deg, #0f172a 0%, #4f46e5 100%); padding: 30px; border-radius: 16px; color: white; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2);">
+        <div>
+            <h2 class="font-weight-bold mb-2 text-white"><i class="fa fa-box me-3"></i>Sipariş Listesi</h2>
+            <p class="mb-0" style="color: #e0e7ff; font-size: 1.1rem;">Tüm siparişlerinizi ve kargo durumlarını bu alandan takip edebilirsiniz.</p>
+        </div>
+        <div>
+            <a href="/Shipment/Add" class="btn btn-light rounded-pill px-4 py-2 font-weight-bold shadow-sm" style="color: #4f46e5; transition: all 0.3s ease;">
+                <i class="fa fa-plus me-2"></i> Yeni Sipariş Oluştur
+            </a>
+        </div>
+    </div>
+
+    <!-- İstatistik Kartları (Statik Tasarım) -->
+    <div class="row g-3 mb-4">
+        <!-- Aktif Siparişler -->
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; background: linear-gradient(135deg, #ffffff, #f8fafc); border-left: 4px solid #10b981 !important;">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 text-muted" style="font-size: 0.8rem; font-weight: 600;">Aktif Sipariş</h6>
+                        <div class="rounded-circle d-flex justify-content-center align-items-center" style="width: 32px; height: 32px; background-color: rgba(16, 185, 129, 0.1);">
+                            <i data-feather="package" class="text-success" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <h3 class="mb-0 font-weight-bold text-dark" id="activeShipmentCount">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pasif Siparişler -->
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; background: linear-gradient(135deg, #ffffff, #f8fafc); border-left: 4px solid #94a3b8 !important;">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 text-muted" style="font-size: 0.8rem; font-weight: 600;">Pasif Sipariş</h6>
+                        <div class="rounded-circle d-flex justify-content-center align-items-center" style="width: 32px; height: 32px; background-color: rgba(148, 163, 184, 0.1);">
+                            <i data-feather="archive" class="text-secondary" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <h3 class="mb-0 font-weight-bold text-dark" id="passiveShipmentCount">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hazırlanıyor -->
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; background: linear-gradient(135deg, #ffffff, #f8fafc); border-left: 4px solid #f59e0b !important;">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 text-muted" style="font-size: 0.8rem; font-weight: 600;">Hazırlanıyor</h6>
+                        <div class="rounded-circle d-flex justify-content-center align-items-center" style="width: 32px; height: 32px; background-color: rgba(245, 158, 11, 0.1);">
+                            <i data-feather="loader" class="text-warning" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <h3 class="mb-0 font-weight-bold text-dark" id="isBeingPreparedShipmentCount">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kargoya Verildi -->
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; background: linear-gradient(135deg, #ffffff, #f8fafc); border-left: 4px solid #3b82f6 !important;">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 text-muted" style="font-size: 0.8rem; font-weight: 600;">Kargoya Verildi</h6>
+                        <div class="rounded-circle d-flex justify-content-center align-items-center" style="width: 32px; height: 32px; background-color: rgba(59, 130, 246, 0.1);">
+                            <i data-feather="truck" class="text-primary" style="width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <h3 class="mb-0 font-weight-bold text-dark" id="shippedToCarrierCount">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dağıtıma Çıktı -->
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; background: linear-gradient(135deg, #ffffff, #f8fafc); border-left: 4px solid #8b5cf6 !important;">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 text-muted" style="font-size: 0.75rem; font-weight: 600;">Dağıtıma Çıkartıldı</h6>
+                        <div class="rounded-circle d-flex justify-content-center align-items-center" style="width: 32px; height: 32px; background-color: rgba(139, 92, 246, 0.1);">
+                            <i data-feather="map-pin" style="color: #8b5cf6; width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <h3 class="mb-0 font-weight-bold text-dark" id="shippedCount">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teslim Edildi -->
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; background: linear-gradient(135deg, #ffffff, #f8fafc); border-left: 4px solid #14b8a6 !important;">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 text-muted" style="font-size: 0.8rem; font-weight: 600;">Teslim Edildi</h6>
+                        <div class="rounded-circle d-flex justify-content-center align-items-center" style="width: 32px; height: 32px; background-color: rgba(20, 184, 166, 0.1);">
+                            <i data-feather="check-circle" style="color: #14b8a6; width: 16px; height: 16px;"></i>
+                        </div>
+                    </div>
+                    <h3 class="mb-0 font-weight-bold text-dark" id="deliveredCount">0</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert" style="border-radius: 10px; border-left: 5px solid #dc2626;">
+            <div class="d-flex align-items-center">
+                <i class="fa fa-exclamation-triangle me-3" style="font-size: 1.5rem; color: #dc2626;"></i>
+                <div>
+                    <strong>İşlem Başarısız!</strong><br />
+                    @TempData["Error"]
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0" style="border-radius: 16px; overflow: visible;">
+        <div class="card-body p-0">
+            <div class="table-responsive" style="overflow: visible;">
+                <table class="table table-hover mb-0 custom-table">
+                    <thead style="background-color: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                        <tr>
+                            <th class="px-4 py-3" style="color: #64748b; font-weight: 600;">Takip No</th>
+                            <th class="px-4 py-3" style="color: #64748b; font-weight: 600;">Gönderici</th>
+                            <th class="px-4 py-3" style="color: #64748b; font-weight: 600;">Alıcı</th>
+                            <th class="px-4 py-3" style="color: #64748b; font-weight: 600;">Güzergah</th>
+                            <th class="px-4 py-3" style="color: #64748b; font-weight: 600;">Tarih</th>
+                            <th class="px-4 py-3" style="color: #64748b; font-weight: 600;">Durum</th>
+                            <th class="px-4 py-3 text-center" style="color: #64748b; font-weight: 600;">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Items != null && Model.Items.Any())
+                        {
+                            foreach (var item in Model.Items)
+                            {
+                                <tr style="transition: all 0.2s ease;">
+                                    <td class="px-4 py-3 align-middle">
+                                        <span class="font-weight-bold" style="color: #3b82f6;">@item.TrackingNumber</span>
+                                    </td>
+                                    <td class="px-4 py-3 align-middle">
+                                        <div class="d-flex align-items-center">
+                                            <div class="rounded-circle bg-light d-flex justify-content-center align-items-center text-primary me-2 shadow-sm" style="width: 35px; height: 35px; font-weight: bold;">
+                                                @(string.IsNullOrEmpty(item.SenderName) ? "G" : item.SenderName.Substring(0, 1).ToUpper())
+                                            </div>
+                                            <span class="font-weight-medium">@item.SenderName</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 align-middle">
+                                        <div class="d-flex align-items-center">
+                                            <div class="rounded-circle bg-light d-flex justify-content-center align-items-center text-success me-2 shadow-sm" style="width: 35px; height: 35px; font-weight: bold;">
+                                                @(string.IsNullOrEmpty(item.ReceiverName) ? "A" : item.ReceiverName.Substring(0, 1).ToUpper())
+                                            </div>
+                                            <span class="font-weight-medium">@item.ReceiverName</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 align-middle">
+                                        <div class="d-flex flex-column">
+                                            <span style="font-size: 0.85rem; color: #64748b;">Nereden: <strong class="text-dark">@item.OriginCity</strong></span>
+                                            <span style="font-size: 0.85rem; color: #64748b;">Nereye: <strong class="text-dark">@item.DestinationCity</strong></span>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 align-middle text-muted">
+                                        <i class="fa fa-calendar-alt me-1"></i> @item.CreatedDate.ToString("dd.MM.yyyy HH:mm")
+                                    </td>
+                                    <td class="px-4 py-3 align-middle">
+                                        @{
+                                            var lastTracking = item.Trackings?.LastOrDefault();
+                                            string statusDesc = lastTracking?.Description ?? "Bilinmiyor";
+                                            string statusCode = lastTracking?.TrackingStatus ?? item.CurrentStatus ?? "";
+                                            
+                                            string badgeClass = "bg-secondary";
+                                            if (statusCode == "Hazırlanıyor") badgeClass = "bg-warning text-dark";
+                                            else if (statusCode == "Yolda" || statusCode == "Kargoya Verildi") badgeClass = "bg-info text-white";
+                                            else if (statusCode == "Teslim Edildi") badgeClass = "bg-success";
+                                            else if (statusCode == "İptal") badgeClass = "bg-danger";
+                                            else badgeClass = "bg-primary";
+                                        }
+                                        <span class="badge rounded-pill @badgeClass px-3 py-2 shadow-sm" style="font-weight: 500;">
+                                            @statusDesc
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 align-middle text-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 38px; height: 38px; padding: 0; background-color: #f1f5f9; border: none; margin: 0 auto;">
+                                                <i data-feather="more-vertical" class="text-secondary" style="width: 18px; height: 18px;"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius: 12px; padding: 0.5rem; min-width: 200px;">
+                                                <li>
+                                                    <a class="dropdown-item custom-dropdown-item d-flex align-items-center py-2" href="javascript:void(0);" onclick="openTrackingModal('@item.ShipmentId', '@(item.Trackings != null && item.Trackings.Any() ? item.Trackings.Last().Location : string.Empty)', '@(item.Trackings != null && item.Trackings.Any() ? item.Trackings.Last().Description : string.Empty)')" style="color: #6366f1; font-weight: 500; border-radius: 8px;">
+                                                        <i data-feather="activity" class="me-3" style="width: 16px;"></i> Durum Değiştir
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item custom-dropdown-item d-flex align-items-center py-2" href="/Shipment/Details/@item.ShipmentId" style="color: #f59e0b; font-weight: 500; border-radius: 8px;">
+                                                        <i data-feather="eye" class="me-3" style="width: 16px;"></i> Detaylar
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item custom-dropdown-item d-flex align-items-center py-2" href="/Shipment/Update/@item.ShipmentId" style="color: #0d9488; font-weight: 500; border-radius: 8px;">
+                                                        <i data-feather="edit-2" class="me-3" style="width: 16px;"></i> Güncelle
+                                                    </a>
+                                                </li>
+                                                <li><hr class="dropdown-divider my-2" style="border-color: #e2e8f0;"></li>
+                                                <li>
+                                                    <form method="post" action="/Shipment/Delete/@item.ShipmentId" class="m-0 p-0" onsubmit="return confirm('Bu siparişi kalıcı olarak silmek istediğinize emin misiniz?');">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="dropdown-item custom-dropdown-item d-flex align-items-center py-2 bg-transparent border-0 w-100" style="color: #ef4444; font-weight: 500; border-radius: 8px;">
+                                                            <i data-feather="trash-2" class="me-3" style="width: 16px;"></i> Kalıcı Olarak Sil
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <i class="fa fa-box-open fa-3x mb-3 text-light"></i>
+                                    <h5>Henüz hiç sipariş bulunmamaktadır.</h5>
+                                    <p>Sistemde listelenecek bir kargo kaydı yok.</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        @await Html.PartialAsync("_PaginationPartial", Model)
+    </div>
+</div>
+
+<!-- Durum Değiştir Modal -->
+<div class="modal fade" id="trackingModal" tabindex="-1" aria-labelledby="trackingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+            <div class="modal-header bg-light border-bottom-0" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                <h5 class="modal-title font-weight-bold" id="trackingModalLabel" style="color: #475569;">
+                    <i data-feather="activity" class="me-2 text-primary" style="width: 18px;"></i> Sipariş Durumu Güncelle
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/Shipment/AddTracking" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body p-4">
+                    <input type="hidden" id="modalShipmentId" name="shipmentId" />
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-secondary">Durum <span class="text-danger">*</span></label>
+                        <select name="trackingStatus" id="modalStatusSelect" class="form-select form-select-lg bg-light border-0 shadow-sm" style="border-radius: 10px;">
+                            <option value="" disabled selected>Durum Seçiniz (boş bırakırsanız son durum kullanılır)</option>
+                            <option value="Siparişiniz hazırlanıyor">Siparişiniz hazırlanıyor</option>
+                            <option value="Kargoya verildi">Kargoya verildi</option>
+                            <option value="Kargo dağıtıma çıkartıldı">Kargo dağıtıma çıkartıldı</option>
+                            <option value="Teslim edildi">Teslim edildi</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label fw-bold text-secondary">Yeri (Konum) <span class="text-danger">*</span></label>
+                        <select name="location" id="modalLocationSelect" class="form-select form-select-lg bg-light border-0 shadow-sm" style="border-radius: 10px;">
+                            <option value="" disabled selected>İl Seçiniz (boş bırakırsanız son konum kullanılır)</option>
+                            <option value="Adana">Adana</option>
+                            <option value="Adıyaman">Adıyaman</option>
+                            <option value="Afyonkarahisar">Afyonkarahisar</option>
+                            <option value="Ağrı">Ağrı</option>
+                            <option value="Amasya">Amasya</option>
+                            <option value="Ankara">Ankara</option>
+                            <option value="Antalya">Antalya</option>
+                            <option value="Artvin">Artvin</option>
+                            <option value="Aydın">Aydın</option>
+                            <option value="Balıkesir">Balıkesir</option>
+                            <option value="Bilecik">Bilecik</option>
+                            <option value="Bingöl">Bingöl</option>
+                            <option value="Bitlis">Bitlis</option>
+                            <option value="Bolu">Bolu</option>
+                            <option value="Burdur">Burdur</option>
+                            <option value="Bursa">Bursa</option>
+                            <option value="Çanakkale">Çanakkale</option>
+                            <option value="Çankırı">Çankırı</option>
+                            <option value="Çorum">Çorum</option>
+                            <option value="Denizli">Denizli</option>
+                            <option value="Diyarbakır">Diyarbakır</option>
+                            <option value="Edirne">Edirne</option>
+                            <option value="Elazığ">Elazığ</option>
+                            <option value="Erzincan">Erzincan</option>
+                            <option value="Erzurum">Erzurum</option>
+                            <option value="Eskişehir">Eskişehir</option>
+                            <option value="Gaziantep">Gaziantep</option>
+                            <option value="Giresun">Giresun</option>
+                            <option value="Gümüşhane">Gümüşhane</option>
+                            <option value="Hakkari">Hakkari</option>
+                            <option value="Hatay">Hatay</option>
+                            <option value="Isparta">Isparta</option>
+                            <option value="Mersin">Mersin</option>
+                            <option value="İstanbul">İstanbul</option>
+                            <option value="İzmir">İzmir</option>
+                            <option value="Kars">Kars</option>
+                            <option value="Kastamonu">Kastamonu</option>
+                            <option value="Kayseri">Kayseri</option>
+                            <option value="Kırklareli">Kırklareli</option>
+                            <option value="Kırşehir">Kırşehir</option>
+                            <option value="Kocaeli">Kocaeli</option>
+                            <option value="Konya">Konya</option>
+                            <option value="Kütahya">Kütahya</option>
+                            <option value="Malatya">Malatya</option>
+                            <option value="Manisa">Manisa</option>
+                            <option value="Kahramanmaraş">Kahramanmaraş</option>
+                            <option value="Mardin">Mardin</option>
+                            <option value="Muğla">Muğla</option>
+                            <option value="Muş">Muş</option>
+                            <option value="Nevşehir">Nevşehir</option>
+                            <option value="Niğde">Niğde</option>
+                            <option value="Ordu">Ordu</option>
+                            <option value="Rize">Rize</option>
+                            <option value="Sakarya">Sakarya</option>
+                            <option value="Samsun">Samsun</option>
+                            <option value="Siirt">Siirt</option>
+                            <option value="Sinop">Sinop</option>
+                            <option value="Sivas">Sivas</option>
+                            <option value="Tekirdağ">Tekirdağ</option>
+                            <option value="Tokat">Tokat</option>
+                            <option value="Trabzon">Trabzon</option>
+                            <option value="Tunceli">Tunceli</option>
+                            <option value="Şanlıurfa">Şanlıurfa</option>
+                            <option value="Uşak">Uşak</option>
+                            <option value="Van">Van</option>
+                            <option value="Yozgat">Yozgat</option>
+                            <option value="Zonguldak">Zonguldak</option>
+                            <option value="Aksaray">Aksaray</option>
+                            <option value="Bayburt">Bayburt</option>
+                            <option value="Karaman">Karaman</option>
+                            <option value="Kırıkkale">Kırıkkale</option>
+                            <option value="Batman">Batman</option>
+                            <option value="Şırnak">Şırnak</option>
+                            <option value="Bartın">Bartın</option>
+                            <option value="Ardahan">Ardahan</option>
+                            <option value="Iğdır">Iğdır</option>
+                            <option value="Yalova">Yalova</option>
+                            <option value="Karabük">Karabük</option>
+                            <option value="Kilis">Kilis</option>
+                            <option value="Osmaniye">Osmaniye</option>
+                            <option value="Düzce">Düzce</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 bg-light p-3" style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow text-white" style="background: linear-gradient(135deg, #4f46e5, #3b82f6); border: none;">Güncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openTrackingModal(shipmentId, lastLocation, lastStatus) {
+        document.getElementById('modalShipmentId').value = shipmentId;
+
+        // Durum dropdown'ını ayarla
+        var statusSelect = document.getElementById('modalStatusSelect');
+        statusSelect.selectedIndex = 0; // Önce sıfırla
+
+        if (lastStatus && lastStatus.trim() !== '') {
+            for (var i = 0; i < statusSelect.options.length; i++) {
+                if (statusSelect.options[i].value === lastStatus.trim()) {
+                    statusSelect.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        // Konum dropdown'ını ayarla
+        var locationSelect = document.getElementById('modalLocationSelect');
+        locationSelect.selectedIndex = 0; // Önce sıfırla
+
+        if (lastLocation && lastLocation.trim() !== '') {
+            for (var i = 0; i < locationSelect.options.length; i++) {
+                if (locationSelect.options[i].value === lastLocation.trim()) {
+                    locationSelect.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        var myModal = new bootstrap.Modal(document.getElementById('trackingModal'));
+        myModal.show();
+
+        // Modal açıldığında yeni ikonları işle
+        setTimeout(function() {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        }, 100);
+    }
+</script>
+
+<!-- SignalR Referansı -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/SignalRHub")
+            .build();
+
+        connection.on("ActiveShipment", function (value) {
+            document.getElementById("activeShipmentCount").innerText = value;
+        });
+        
+        connection.on("PassiveShipment", function (value) {
+            document.getElementById("passiveShipmentCount").innerText = value;
+        });
+
+        connection.on("IsBeingPreparedShipment", function (value) {
+            document.getElementById("isBeingPreparedShipmentCount").innerText = value;
+        });
+
+        connection.on("Shipped", function (value) {
+            // "Kargoya Verildi"
+            document.getElementById("shippedToCarrierCount").innerText = value;
+        });
+        
+        connection.on("OutForDelivery", function (value) {
+            // "Kargo dağıtıma çıkartıldı"
+            document.getElementById("shippedCount").innerText = value;
+        });
+
+        connection.on("Delivered", function (value) {
+            document.getElementById("deliveredCount").innerText = value;
+        });
+
+        connection.start().then(function () {
+            console.log("SignalR Connected!");
+            
+            // Başlangıçta ve her 3 saniyede bir dataları çekmek için hub metodunu tetikleyelim
+            connection.invoke("SendShipmentStatics");
+            setInterval(function () {
+                connection.invoke("SendShipmentStatics");
+            }, 3000);
+
+        }).catch(function (err) {
+            console.error(err.toString());
+        });
+    });
+</script>
+
+<style>
+    .custom-table tbody tr:hover {
+        background-color: #f8fafc;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.05);
+    }
+    .custom-table td {
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .font-weight-medium {
+        font-weight: 500;
+    }
+    .btn-light:hover {
+        background-color: #f8fafc;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    .custom-dropdown-item {
+        transition: all 0.2s ease;
+    }
+    .custom-dropdown-item:hover {
+        background-color: #f8fafc;
+        transform: translateX(3px);
+    }
+</style>

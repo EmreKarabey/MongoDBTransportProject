@@ -48,5 +48,10 @@ namespace BusinessLayer.Concrete
         {
             return await _aboutDal.AnyActive();
         }
+
+        public async Task<List<About>> GetListAsync()
+        {
+            return await _aboutDal.GetListAsync();
+        }
     }
 }

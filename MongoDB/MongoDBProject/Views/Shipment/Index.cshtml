@@ -1,0 +1,596 @@
+@model Paginate<GetListUserShipmentDto>
+
+@{
+    ViewData["Title"] = "Kargo Takibi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string GetStatusClass(string status)
+    {
+        if (string.IsNullOrEmpty(status)) return "preparing";
+        status = status.Trim().ToLowerInvariant();
+        if (status.Contains("hazırlanıyor")) return "preparing";
+        if (status.Contains("alındı") || status.Contains("verildi")) return "received";
+        if (status.Contains("yolda") || status.Contains("transfer")) return "transit";
+        if (status.Contains("dağıtım")) return "delivery";
+        if (status.Contains("teslim")) return "delivered";
+        return "preparing";
+    }
+
+    string GetStatusName(string status)
+    {
+        if (string.IsNullOrEmpty(status)) return "Siparişiniz hazırlanıyor";
+        status = status.Trim().ToLowerInvariant();
+        if (status.Contains("alındı") || status.Contains("verildi") || status.Contains("yolda") || status.Contains("transfer")) return "Kargoya verildi";
+        if (status.Contains("dağıtım")) return "Kargo dağıtıma çıkartıldı";
+        if (status.Contains("teslim")) return "Teslim edildi";
+        return "Siparişiniz hazırlanıyor";
+    }
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    @@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
+
+    :root {
+        --primary: #0A4D68;
+        --primary-light: #05668D;
+        --secondary: #FDB022;
+        --accent: #088395;
+        --success: #16a34a;
+        --danger: #dc2626;
+        --warning: #f59e0b;
+        --info: #3b82f6;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --border: #e2e8f0;
+    }
+
+    .shipment-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 24px 80px;
+        font-family: 'Poppins', sans-serif;
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Page Title */
+    .page-top {
+        margin-bottom: 28px;
+    }
+
+    .page-top h1 {
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+    }
+
+    .page-top h1 i {
+        color: var(--primary);
+        font-size: 28px;
+    }
+
+    .page-top p {
+        font-size: 14px;
+        color: #64748b;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .filter-tab {
+        padding: 9px 18px;
+        border-radius: 20px;
+        border: 1.5px solid var(--border);
+        background: white;
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: 'Poppins', sans-serif;
+    }
+
+        .filter-tab:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+    /* Shipment Card */
+    .shipment-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin-bottom: 16px;
+        overflow: hidden;
+        transition: all 0.25s;
+    }
+
+        .shipment-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-color: #cbd5e1;
+        }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 24px;
+        background: var(--light);
+        border-bottom: 1px solid var(--border);
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .card-header-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .tracking-no {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--primary);
+        background: rgba(10, 77, 104, 0.08);
+        padding: 5px 12px;
+        border-radius: 6px;
+    }
+
+    .order-date {
+        font-size: 13px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .order-date i {
+        font-size: 14px;
+    }
+
+    .card-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+        .card-status.received {
+            background: rgba(168, 85, 247, 0.1);
+            color: #a855f7;
+        }
+
+        .card-status.transit {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .card-status.delivery {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .card-status.delivered {
+            background: rgba(22, 163, 74, 0.1);
+            color: #16a34a;
+        }
+
+        .card-status.preparing {
+            background: rgba(253, 176, 34, 0.1);
+            color: #FDB022;
+        }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .card-body {
+        padding: 24px;
+        display: flex;
+        gap: 28px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    /* Route Visual */
+    .route-visual {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+        min-width: 280px;
+    }
+
+    .route-point {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 6px;
+        min-width: 90px;
+    }
+
+    .route-point-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .route-point-icon.from {
+        background: rgba(10, 77, 104, 0.1);
+        color: var(--primary);
+    }
+
+    .route-point-icon.to {
+        background: rgba(22, 163, 74, 0.1);
+        color: var(--success);
+    }
+
+    .route-city {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .route-district {
+        font-size: 12px;
+        color: #94a3b8;
+    }
+
+    .route-line {
+        flex: 1;
+        height: 2px;
+        background: var(--border);
+        position: relative;
+        min-width: 40px;
+    }
+
+    .route-line-fill {
+        height: 100%;
+        border-radius: 2px;
+        transition: width 0.5s ease;
+    }
+
+    .route-line-fill.received { width: 15%; background: #a855f7; }
+    .route-line-fill.transit { width: 50%; background: #3b82f6; }
+    .route-line-fill.delivery { width: 80%; background: #f59e0b; }
+    .route-line-fill.delivered { width: 100%; background: #16a34a; }
+    .route-line-fill.preparing { width: 0%; background: #FDB022; }
+
+    .route-truck {
+        position: absolute;
+        top: -10px;
+        font-size: 18px;
+        transition: left 0.5s ease;
+    }
+
+    .route-truck.received { left: 12%; }
+    .route-truck.transit { left: 47%; }
+    .route-truck.delivery { left: 77%; }
+    .route-truck.delivered { left: calc(100% - 18px); }
+    .route-truck.preparing { left: 0%; }
+
+    /* Info Columns */
+    .shipment-info {
+        display: flex;
+        gap: 32px;
+        flex-wrap: wrap;
+    }
+
+    .info-block {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .info-label {
+        font-size: 11px;
+        color: #94a3b8;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    /* Card Footer */
+    .card-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 14px 24px;
+        border-top: 1px solid var(--border);
+        gap: 10px;
+    }
+
+    .card-action {
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: 'Poppins', sans-serif;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        border: 1.5px solid var(--border);
+        background: white;
+        color: var(--dark);
+    }
+
+        .card-action:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(10, 77, 104, 0.04);
+        }
+
+    .card-action.primary-action {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+        .card-action.primary-action:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(10, 77, 104, 0.25);
+            color: white;
+        }
+
+    /* Empty */
+    .empty-state {
+        text-align: center;
+        padding: 80px 32px;
+        background: white;
+        border-radius: 16px;
+        border: 2px dashed var(--border);
+    }
+
+    .empty-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: var(--light);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        color: #94a3b8;
+    }
+
+    .empty-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 6px;
+    }
+
+    .empty-text {
+        font-size: 14px;
+        color: #64748b;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .shipment-page {
+            padding: 24px 16px 60px;
+        }
+
+        .page-top h1 {
+            font-size: 22px;
+        }
+
+        .card-header {
+            padding: 14px 16px;
+        }
+
+        .card-body {
+            padding: 20px 16px;
+            flex-direction: column;
+        }
+
+        .route-visual {
+            min-width: 100%;
+        }
+
+        .shipment-info {
+            width: 100%;
+            gap: 20px;
+        }
+
+        .card-footer {
+            padding: 12px 16px;
+            flex-wrap: wrap;
+        }
+
+        .card-action {
+            flex: 1;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="shipment-page">
+    <!-- Page Top -->
+    <div class="page-top">
+        <h1>
+            <i class="bi bi-box-seam"></i>
+            Kargolarım
+        </h1>
+        <p>Gönderilerinizi takip edin ve detaylarını görüntüleyin</p>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all">Tümü</button>
+        <button class="filter-tab" data-filter="Siparişiniz hazırlanıyor">Siparişiniz hazırlanıyor</button>
+        <button class="filter-tab" data-filter="Kargoya verildi">Kargoya verildi</button>
+        <button class="filter-tab" data-filter="Kargo dağıtıma çıkartıldı">Kargo dağıtıma çıkartıldı</button>
+        <button class="filter-tab" data-filter="Teslim edildi">Teslim edildi</button>
+    </div>
+
+    @Html.AntiForgeryToken()
+    <div id="shipment-list-container" style="transition: opacity 0.3s ease;">
+    @if (Model != null && Model.List != null && Model.List.Any())
+    {
+        foreach (var item in Model.List)
+        {
+            var lastTracking = item.Trackings?.LastOrDefault();
+            var rawStatus = lastTracking?.TrackingStatus;
+            var status = GetStatusName(rawStatus);
+            var statusClass = GetStatusClass(status);
+
+            <div class="shipment-card" data-status="@status">
+        <div class="card-header">
+            <div class="card-header-left">
+                <span class="tracking-no">@item.TrackingNumber</span>
+                <span class="order-date"><i class="bi bi-calendar3"></i> @(lastTracking != null ? $"{lastTracking.EventDate.ToShortDateString()}, {lastTracking.EventDate.ToShortTimeString()}" : "Belirtilmedi")</span>
+            </div>
+            <span class="card-status @statusClass">
+                <span class="status-dot"></span>
+                @status
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="route-visual">
+                <div class="route-point">
+                    <div class="route-point-icon from"><i class="bi bi-geo-alt-fill"></i></div>
+                    <span class="route-city">@item.OriginCity</span>
+                </div>
+                <div class="route-line">
+                    <div class="route-line-fill @statusClass"></div>
+                    <span class="route-truck @statusClass">🚚</span>
+                </div>
+                <div class="route-point">
+                    <div class="route-point-icon to"><i class="bi bi-pin-map-fill"></i></div>
+                    <span class="route-city">@item.DestinationCity</span>
+                </div>
+            </div>
+            <div class="shipment-info">
+                <div class="info-block">
+                    <span class="info-label">Gönderici</span>
+                    <span class="info-value">@item.SenderName</span>
+                </div>
+            </div>
+        </div>
+    </div>
+        }
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <h3 class="empty-title">Kargonuz bulunmamaktadır</h3>
+            <p class="empty-text">Henüz herhangi bir kargo gönderiniz bulunmuyor.</p>
+        </div>
+    }
+    </div>
+
+
+
+</div>
+
+<script>
+    // Filter tabs
+    const tabs = document.querySelectorAll('.filter-tab');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', async () => {
+            // Butonun aktif sınıfını güncelle
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const filter = tab.getAttribute('data-filter');
+            
+            // Backend'e gidecek veriyi hazırla
+            const formData = new FormData();
+            if (filter !== 'all') {
+                formData.append('filtre', filter);
+            }
+
+            // Güvenlik (Anti-forgery) token'ını ekle
+            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (tokenElement) {
+                formData.append('__RequestVerificationToken', tokenElement.value);
+            }
+
+            const container = document.getElementById('shipment-list-container');
+            // Yükleniyor efekti (opaklığı azalt)
+            container.style.opacity = '0.5';
+
+            try {
+                // Controller'a AJAX POST isteği at
+                const response = await fetch('/Shipment/StatusFiltre', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const htmlText = await response.text();
+                    
+                    // Gelen HTML'i parse et
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlText, 'text/html');
+                    
+                    // Gelen sayfadaki listeyi bulup bizimkiyle değiştir
+                    const newContainer = doc.getElementById('shipment-list-container');
+                    if (newContainer) {
+                        container.innerHTML = newContainer.innerHTML;
+                    } else {
+                        // Eğer controller sadece PartialView döndürdüyse doğrudan bas
+                        container.innerHTML = htmlText;
+                    }
+                } else {
+                    console.error("Filtreleme hatası:", response.status);
+                }
+            } catch (error) {
+                console.error("AJAX isteği başarısız oldu:", error);
+            } finally {
+                // Opaklığı geri getir
+                container.style.opacity = '1';
+            }
+        });
+    });
+</script>

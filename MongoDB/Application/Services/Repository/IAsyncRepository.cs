@@ -15,5 +15,8 @@ namespace Application.Services.Repository
         public Task<T> GetByIdAsync(string Id);
         public Task<Paginate<T>> GetListAsync(int size, int page, Expression<Func<T, bool>>? predicate=null);
         public Task DeleteAsync(string Id);
+
+        public Task<List<T>> OnlyListAsync(Expression<Func<T, bool>>? predicate = null);
+
     }
 }

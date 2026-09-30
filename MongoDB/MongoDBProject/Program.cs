@@ -1,3 +1,4 @@
+using System.Reflection;
 using Application;
 using Domain.Entities;
 using Infrastructure;
@@ -13,6 +14,10 @@ builder.Services.AddApplicationServiceRegistration();
 builder.Services.AddPersisitenceServiceRegistration(builder.Configuration);
 builder.Services.AddInfrastructureServiceRegistration(builder.Configuration);
 
+// Web katmanındaki AutoMapper profillerini de kaydet
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
+
+builder.Services.AddSignalR();
 builder.Services.AddHttpClient();
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -38,6 +43,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
@@ -46,6 +52,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}")
     .WithStaticAssets();
+
+app.MapHub<MongoDBProject.Hubs.SignalRHub>("/signalrhub");
 
 
 app.Run();

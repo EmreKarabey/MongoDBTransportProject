@@ -1,12 +1,14 @@
+using System.Net.NetworkInformation;
 using BusinessLayer.Abstract;
 using EntityLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using MongoDB.Driver.Linq;
 
 namespace MongoDBAdmin.Hubs
 {
-    
+    [Authorize(Roles = "Admin,Moderatör")]
     public class SignalRHub:Hub
     {
         private readonly UserManager<AppUser> _userManager;
@@ -15,8 +17,9 @@ namespace MongoDBAdmin.Hubs
         private readonly ISliderService _sliderService;
         private readonly IWhatWeHaveDoneService _whatWeHaveDoneService;
         private readonly IFAQService _faqService;
+        private readonly IShipmentService _shipmentService;
 
-        public SignalRHub(UserManager<AppUser> userManager, IBrandService brandService, IOfferService offerService, ISliderService sliderService, IWhatWeHaveDoneService whatWeHaveDoneService, IFAQService faqService)
+        public SignalRHub(UserManager<AppUser> userManager, IBrandService brandService, IOfferService offerService, ISliderService sliderService, IWhatWeHaveDoneService whatWeHaveDoneService, IFAQService faqService, IShipmentService shipmentService)
         {
             _userManager = userManager;
             _brandService = brandService;
@@ -24,6 +27,7 @@ namespace MongoDBAdmin.Hubs
             _sliderService = sliderService;
             _whatWeHaveDoneService = whatWeHaveDoneService;
             _faqService = faqService;
+            _shipmentService = shipmentService;
         }
 
         public async Task SendStatics()
@@ -43,8 +47,8 @@ namespace MongoDBAdmin.Hubs
 
         public async Task SendBrandStatics()
         {
-            var brandsList = await _brandService.GetListAsync(1000, 1);
-            var brands = brandsList.Items;
+            var brandsList = await _brandService.GetListAsync();
+            var brands = brandsList;
             
             var totalBrands = brands.Count;
             var activeBrands = brands.Count(x => x.IsStatus);
@@ -57,8 +61,8 @@ namespace MongoDBAdmin.Hubs
 
         public async Task SendOfferStatics()
         {
-            var offersList = await _offerService.GetListAsync(1000, 1);
-            var offers = offersList.Items;
+            var offersList = await _offerService.GetListAsync();
+            var offers = offersList;
 
             var totalOffers = offers.Count;
             var activeOffers = offers.Count(x => x.IsStatus);
@@ -79,8 +83,8 @@ namespace MongoDBAdmin.Hubs
 
         public async Task SendWhatWeHaveDoneStatics()
         {
-            var dataList = await _whatWeHaveDoneService.GetListAsync(1000, 1);
-            var items = dataList.Items;
+            var dataList = await _whatWeHaveDoneService.GetListAsync();
+            var items = dataList;
 
             var totalCount = items.Count;
             var activeCount = items.Count(x => x.IsActive);
@@ -93,8 +97,8 @@ namespace MongoDBAdmin.Hubs
 
         public async Task SendFAQStatics()
         {
-            var dataList = await _faqService.GetListAsync(1000, 1);
-            var items = dataList.Items;
+            var dataList = await _faqService.GetListAsync();
+            var items = dataList;
 
             var totalCount = items.Count;
             var activeCount = items.Count(x => x.IsActive);
@@ -103,6 +107,28 @@ namespace MongoDBAdmin.Hubs
             await Clients.All.SendAsync("TotalFAQCount", totalCount);
             await Clients.All.SendAsync("ActiveFAQCount", activeCount);
             await Clients.All.SendAsync("PassiveFAQCount", passiveCount);
+        }
+
+        public async Task SendShipmentStatics()
+        {
+            var dataList = await _shipmentService.GetListAsync();
+
+            var items = dataList;
+
+            var passiveShipment = items.Where(n => !n.IsActive).Count();
+            var activeShipment = items.Where(n => n.IsActive).Count();
+            var isBeingPreparedShipment = items.Count(n =>n.Trackings != null &&n.Trackings.Any() &&n.Trackings.LastOrDefault().TrackingStatus == "Sipariþiniz hazýrlanýyor");
+            var shipped = items.Count(n =>n.Trackings != null &&n.Trackings.Any() &&n.Trackings.LastOrDefault().TrackingStatus == "Kargoya verildi");
+            var outForDelivery = items.Count(n =>n.Trackings != null &&n.Trackings.Any() &&n.Trackings.LastOrDefault().TrackingStatus == "Kargo daðýtýma çýkartýldý");
+            var delivered = items.Count(n =>n.Trackings != null &&n.Trackings.Any() &&n.Trackings.LastOrDefault().TrackingStatus == "Teslim edildi");
+
+            await Clients.All.SendAsync("PassiveShipment",passiveShipment);
+            await Clients.All.SendAsync("ActiveShipment", activeShipment);
+            await Clients.All.SendAsync("IsBeingPreparedShipment", isBeingPreparedShipment);
+            await Clients.All.SendAsync("Shipped", shipped);
+            await Clients.All.SendAsync("OutForDelivery", outForDelivery);
+            await Clients.All.SendAsync("Delivered", delivered);
+
         }
     }
 }

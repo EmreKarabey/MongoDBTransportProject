@@ -1,0 +1,399 @@
+
+@model CreateShipmentDto
+
+@{
+    ViewData["Title"] = "Yeni Sipariş Oluştur";
+}
+
+<div class="container-fluid mt-4">
+    <!-- Süslü Başlık Alanı -->
+    <div class="mb-5 d-flex justify-content-between align-items-center flex-wrap gap-3" style="background: linear-gradient(135deg, #0f172a 0%, #4f46e5 100%); padding: 30px; border-radius: 16px; color: white; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2);">
+        <div>
+            <h2 class="font-weight-bold mb-2 text-white"><i class="fa fa-plus-circle me-3"></i>Yeni Sipariş Ekle</h2>
+            <p class="mb-0" style="color: #e0e7ff; font-size: 1.1rem;">Sisteme yeni bir sipariş (kargo) kaydı girebilirsiniz.</p>
+        </div>
+        <div>
+            <a href="/Shipment/Index" class="btn btn-outline-light rounded-pill px-4 py-2 font-weight-bold transition-300">
+                <i class="fa fa-arrow-left me-2"></i> Listeye Dön
+            </a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <!-- FORM ALANI -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-lg border-0 h-100" style="border-radius: 20px; overflow: hidden;">
+                <div class="card-header bg-white p-4 border-bottom" style="border-bottom: 2px solid #f1f5f9 !important;">
+                    <h4 class="mb-0 text-dark font-weight-bold"><i class="fa fa-clipboard-list me-2 text-primary"></i> Sipariş Bilgileri</h4>
+                </div>
+                <div class="card-body p-5">
+                    <form asp-action="Add" asp-controller="Shipment" method="post">
+                        <div class="row mb-5">
+                            <div class="col-md-12">
+                                <label class="form-label font-weight-bold text-secondary">Alıcı Adı Soyadı</label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0"><i class="fa fa-user-tag text-success"></i></span>
+                                    <select id="ReceiverId" name="ReceiverUserId" class="form-select border-start-0 custom-input" required>
+                                        <option value="" disabled selected>Alıcı Seçiniz</option>
+                                        @await Component.InvokeAsync("_MembersListPartialComponent")
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-5" style="border-color: #e2e8f0; opacity: 1;">
+
+                        <!-- Şehir Bilgileri -->
+                        <h5 class="font-weight-bold mb-4" style="color: #3b82f6;"><i class="fa fa-route me-2"></i>Rota Bilgileri</h5>
+                        <div class="row mb-5">
+                            <div class="col-md-6">
+                                <label class="form-label font-weight-bold text-secondary">Çıkış Şehri (Nereden)</label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0"><i class="fa fa-map-marker-alt text-primary"></i></span>
+                                    <select id="OriginCity" name="OriginCity" class="form-select border-start-0 custom-input" required>
+                                        <option value="" disabled selected>İl Seçiniz</option>
+                                        <option value="Adana">Adana</option>
+                                        <option value="Adıyaman">Adıyaman</option>
+                                        <option value="Afyonkarahisar">Afyonkarahisar</option>
+                                        <option value="Ağrı">Ağrı</option>
+                                        <option value="Amasya">Amasya</option>
+                                        <option value="Ankara">Ankara</option>
+                                        <option value="Antalya">Antalya</option>
+                                        <option value="Artvin">Artvin</option>
+                                        <option value="Aydın">Aydın</option>
+                                        <option value="Balıkesir">Balıkesir</option>
+                                        <option value="Bilecik">Bilecik</option>
+                                        <option value="Bingöl">Bingöl</option>
+                                        <option value="Bitlis">Bitlis</option>
+                                        <option value="Bolu">Bolu</option>
+                                        <option value="Burdur">Burdur</option>
+                                        <option value="Bursa">Bursa</option>
+                                        <option value="Çanakkale">Çanakkale</option>
+                                        <option value="Çankırı">Çankırı</option>
+                                        <option value="Çorum">Çorum</option>
+                                        <option value="Denizli">Denizli</option>
+                                        <option value="Diyarbakır">Diyarbakır</option>
+                                        <option value="Edirne">Edirne</option>
+                                        <option value="Elazığ">Elazığ</option>
+                                        <option value="Erzincan">Erzincan</option>
+                                        <option value="Erzurum">Erzurum</option>
+                                        <option value="Eskişehir">Eskişehir</option>
+                                        <option value="Gaziantep">Gaziantep</option>
+                                        <option value="Giresun">Giresun</option>
+                                        <option value="Gümüşhane">Gümüşhane</option>
+                                        <option value="Hakkâri">Hakkâri</option>
+                                        <option value="Hatay">Hatay</option>
+                                        <option value="Isparta">Isparta</option>
+                                        <option value="Mersin">Mersin</option>
+                                        <option value="İstanbul">İstanbul</option>
+                                        <option value="İzmir">İzmir</option>
+                                        <option value="Kars">Kars</option>
+                                        <option value="Kastamonu">Kastamonu</option>
+                                        <option value="Kayseri">Kayseri</option>
+                                        <option value="Kırklareli">Kırklareli</option>
+                                        <option value="Kırşehir">Kırşehir</option>
+                                        <option value="Kocaeli">Kocaeli</option>
+                                        <option value="Konya">Konya</option>
+                                        <option value="Kütahya">Kütahya</option>
+                                        <option value="Malatya">Malatya</option>
+                                        <option value="Manisa">Manisa</option>
+                                        <option value="Kahramanmaraş">Kahramanmaraş</option>
+                                        <option value="Mardin">Mardin</option>
+                                        <option value="Muğla">Muğla</option>
+                                        <option value="Muş">Muş</option>
+                                        <option value="Nevşehir">Nevşehir</option>
+                                        <option value="Niğde">Niğde</option>
+                                        <option value="Ordu">Ordu</option>
+                                        <option value="Rize">Rize</option>
+                                        <option value="Sakarya">Sakarya</option>
+                                        <option value="Samsun">Samsun</option>
+                                        <option value="Siirt">Siirt</option>
+                                        <option value="Sinop">Sinop</option>
+                                        <option value="Sivas">Sivas</option>
+                                        <option value="Tekirdağ">Tekirdağ</option>
+                                        <option value="Tokat">Tokat</option>
+                                        <option value="Trabzon">Trabzon</option>
+                                        <option value="Tunceli">Tunceli</option>
+                                        <option value="Şanlıurfa">Şanlıurfa</option>
+                                        <option value="Uşak">Uşak</option>
+                                        <option value="Van">Van</option>
+                                        <option value="Yozgat">Yozgat</option>
+                                        <option value="Zonguldak">Zonguldak</option>
+                                        <option value="Aksaray">Aksaray</option>
+                                        <option value="Bayburt">Bayburt</option>
+                                        <option value="Karaman">Karaman</option>
+                                        <option value="Kırıkkale">Kırıkkale</option>
+                                        <option value="Batman">Batman</option>
+                                        <option value="Şırnak">Şırnak</option>
+                                        <option value="Bartın">Bartın</option>
+                                        <option value="Ardahan">Ardahan</option>
+                                        <option value="Iğdır">Iğdır</option>
+                                        <option value="Yalova">Yalova</option>
+                                        <option value="Karabük">Karabük</option>
+                                        <option value="Kilis">Kilis</option>
+                                        <option value="Osmaniye">Osmaniye</option>
+                                        <option value="Düzce">Düzce</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-4 mt-md-0">
+                                <label class="form-label font-weight-bold text-secondary">Varış Şehri (Nereye)</label>
+                                <div class="input-group input-group-lg shadow-sm">
+                                    <span class="input-group-text bg-light border-end-0"><i class="fa fa-map-pin text-success"></i></span>
+                                    <select id="DestinationCity" name="DestinationCity" class="form-select border-start-0 custom-input" required>
+                                        <option value="" disabled selected>İl Seçiniz</option>
+                                        <option value="Adana">Adana</option>
+                                        <option value="Adıyaman">Adıyaman</option>
+                                        <option value="Afyonkarahisar">Afyonkarahisar</option>
+                                        <option value="Ağrı">Ağrı</option>
+                                        <option value="Amasya">Amasya</option>
+                                        <option value="Ankara">Ankara</option>
+                                        <option value="Antalya">Antalya</option>
+                                        <option value="Artvin">Artvin</option>
+                                        <option value="Aydın">Aydın</option>
+                                        <option value="Balıkesir">Balıkesir</option>
+                                        <option value="Bilecik">Bilecik</option>
+                                        <option value="Bingöl">Bingöl</option>
+                                        <option value="Bitlis">Bitlis</option>
+                                        <option value="Bolu">Bolu</option>
+                                        <option value="Burdur">Burdur</option>
+                                        <option value="Bursa">Bursa</option>
+                                        <option value="Çanakkale">Çanakkale</option>
+                                        <option value="Çankırı">Çankırı</option>
+                                        <option value="Çorum">Çorum</option>
+                                        <option value="Denizli">Denizli</option>
+                                        <option value="Diyarbakır">Diyarbakır</option>
+                                        <option value="Edirne">Edirne</option>
+                                        <option value="Elazığ">Elazığ</option>
+                                        <option value="Erzincan">Erzincan</option>
+                                        <option value="Erzurum">Erzurum</option>
+                                        <option value="Eskişehir">Eskişehir</option>
+                                        <option value="Gaziantep">Gaziantep</option>
+                                        <option value="Giresun">Giresun</option>
+                                        <option value="Gümüşhane">Gümüşhane</option>
+                                        <option value="Hakkâri">Hakkâri</option>
+                                        <option value="Hatay">Hatay</option>
+                                        <option value="Isparta">Isparta</option>
+                                        <option value="Mersin">Mersin</option>
+                                        <option value="İstanbul">İstanbul</option>
+                                        <option value="İzmir">İzmir</option>
+                                        <option value="Kars">Kars</option>
+                                        <option value="Kastamonu">Kastamonu</option>
+                                        <option value="Kayseri">Kayseri</option>
+                                        <option value="Kırklareli">Kırklareli</option>
+                                        <option value="Kırşehir">Kırşehir</option>
+                                        <option value="Kocaeli">Kocaeli</option>
+                                        <option value="Konya">Konya</option>
+                                        <option value="Kütahya">Kütahya</option>
+                                        <option value="Malatya">Malatya</option>
+                                        <option value="Manisa">Manisa</option>
+                                        <option value="Kahramanmaraş">Kahramanmaraş</option>
+                                        <option value="Mardin">Mardin</option>
+                                        <option value="Muğla">Muğla</option>
+                                        <option value="Muş">Muş</option>
+                                        <option value="Nevşehir">Nevşehir</option>
+                                        <option value="Niğde">Niğde</option>
+                                        <option value="Ordu">Ordu</option>
+                                        <option value="Rize">Rize</option>
+                                        <option value="Sakarya">Sakarya</option>
+                                        <option value="Samsun">Samsun</option>
+                                        <option value="Siirt">Siirt</option>
+                                        <option value="Sinop">Sinop</option>
+                                        <option value="Sivas">Sivas</option>
+                                        <option value="Tekirdağ">Tekirdağ</option>
+                                        <option value="Tokat">Tokat</option>
+                                        <option value="Trabzon">Trabzon</option>
+                                        <option value="Tunceli">Tunceli</option>
+                                        <option value="Şanlıurfa">Şanlıurfa</option>
+                                        <option value="Uşak">Uşak</option>
+                                        <option value="Van">Van</option>
+                                        <option value="Yozgat">Yozgat</option>
+                                        <option value="Zonguldak">Zonguldak</option>
+                                        <option value="Aksaray">Aksaray</option>
+                                        <option value="Bayburt">Bayburt</option>
+                                        <option value="Karaman">Karaman</option>
+                                        <option value="Kırıkkale">Kırıkkale</option>
+                                        <option value="Batman">Batman</option>
+                                        <option value="Şırnak">Şırnak</option>
+                                        <option value="Bartın">Bartın</option>
+                                        <option value="Ardahan">Ardahan</option>
+                                        <option value="Iğdır">Iğdır</option>
+                                        <option value="Yalova">Yalova</option>
+                                        <option value="Karabük">Karabük</option>
+                                        <option value="Kilis">Kilis</option>
+                                        <option value="Osmaniye">Osmaniye</option>
+                                        <option value="Düzce">Düzce</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Butonlar -->
+                        <div class="d-flex justify-content-end gap-3 mt-2">
+                            <a href="/Shipment/Index" class="btn btn-light btn-lg rounded-pill px-5 shadow-sm border" style="font-weight: 600;">İptal</a>
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow text-white save-btn" style="background: linear-gradient(135deg, #4f46e5, #3b82f6); border: none; font-weight: 600;">
+                                <i class="fa fa-save me-2"></i> Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- CANLI ÖNİZLEME ALANI -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-lg border-0 h-100" style="border-radius: 20px; overflow: hidden; background: linear-gradient(135deg, #ffffff, #f8fafc);">
+                <div class="card-header p-4 border-bottom text-center" style="background-color: #f1f5f9;">
+                    <h5 class="mb-0 text-secondary font-weight-bold"><i class="fa fa-eye me-2"></i> Canlı Önizleme</h5>
+                </div>
+                <div class="card-body p-4 d-flex flex-column justify-content-center">
+                    
+                    <div class="ticket-preview p-0 rounded-4 shadow bg-white position-relative overflow-hidden" style="border: none;">
+                        
+                        <!-- Bilet Üst Kısım -->
+                        <div class="ticket-header p-4 text-center text-white position-relative" style="background: linear-gradient(135deg, #4f46e5, #3b82f6);">
+                            <div class="ticket-cutout ticket-cutout-left"></div>
+                            <div class="ticket-cutout ticket-cutout-right"></div>
+                            <i class="fa fa-box-open fa-3x mb-3 text-white" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));"></i>
+                            <h4 class="font-weight-bold mb-1 letter-spacing-1 text-uppercase" style="letter-spacing: 2px;">Kargo Bileti</h4>
+                            <span class="badge bg-white text-primary rounded-pill px-3 py-1 font-weight-bold" id="preview-date">@DateTime.Now.ToString("dd MMM yyyy")</span>
+                        </div>
+
+                        <!-- Bilet Alt Kısım -->
+                        <div class="ticket-body p-4 position-relative">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="text-start" style="width: 35%;">
+                                    <small class="text-muted fw-bold d-block text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 1px;">Çıkış</small>
+                                    <h3 class="text-dark font-weight-bold mb-0 ticket-city text-truncate" id="preview-origin">---</h3>
+                                </div>
+                                <div class="text-center px-2 flex-grow-1 position-relative">
+                                    <div class="airplane-track"></div>
+                                    <i class="fa fa-plane text-primary flying-airplane fs-4"></i>
+                                </div>
+                                <div class="text-end" style="width: 35%;">
+                                    <small class="text-muted fw-bold d-block text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 1px;">Varış</small>
+                                    <h3 class="text-dark font-weight-bold mb-0 ticket-city text-truncate" id="preview-destination">---</h3>
+                                </div>
+                            </div>
+
+                            <div class="p-3 rounded-3 mt-4" style="background-color: #f8fafc; border-left: 4px solid #3b82f6;">
+                                <small class="text-muted d-block text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 1px;"><i class="fa fa-user me-1"></i> Alıcı Bilgisi</small>
+                                <span class="font-weight-bold text-dark fs-5 text-truncate d-block" id="preview-receiver">Seçilmedi</span>
+                            </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .transition-300 {
+        transition: all 0.3s ease;
+    }
+    .custom-input {
+        background-color: #f8fafc;
+        border-color: #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    .custom-input:focus {
+        background-color: #ffffff;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+    }
+    .input-group-text {
+        border-color: #e2e8f0;
+    }
+    .save-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4) !important;
+    }
+    .ticket-preview {
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .ticket-preview:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.2) !important;
+    }
+    .ticket-cutout {
+        position: absolute;
+        bottom: -15px;
+        width: 30px;
+        height: 30px;
+        background-color: #f1f5f9; /* card-body background ile aynı */
+        border-radius: 50%;
+        z-index: 10;
+    }
+    .ticket-cutout-left {
+        left: -15px;
+    }
+    .ticket-cutout-right {
+        right: -15px;
+    }
+    .border-dashed {
+        border-top: 2px dashed #cbd5e1 !important;
+    }
+    .airplane-track {
+        height: 2px; 
+        background: repeating-linear-gradient(to right, #cbd5e1 0, #cbd5e1 6px, transparent 6px, transparent 12px); 
+        width: 100%; 
+        position: absolute; 
+        top: 50%; 
+        left: 0; 
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+    .flying-airplane {
+        position: relative;
+        z-index: 2;
+        background-color: white;
+        padding: 0 5px;
+    }
+    .ticket-city {
+        font-size: 1.5rem;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const receiverSelect = document.getElementById('ReceiverId');
+        const originSelect = document.getElementById('OriginCity');
+        const destSelect = document.getElementById('DestinationCity');
+
+        const previewReceiver = document.getElementById('preview-receiver');
+        const previewOrigin = document.getElementById('preview-origin');
+        const previewDest = document.getElementById('preview-destination');
+
+        function updatePreview() {
+            // Receiver (If they split by '|', we get the second part, otherwise just the text)
+            if (receiverSelect.selectedIndex > 0) {
+                const text = receiverSelect.options[receiverSelect.selectedIndex].text;
+                previewReceiver.innerText = text;
+            } else {
+                previewReceiver.innerText = 'Alıcı Seçilmedi';
+            }
+
+            if (originSelect.selectedIndex > 0) {
+                previewOrigin.innerText = originSelect.options[originSelect.selectedIndex].text;
+            } else {
+                previewOrigin.innerText = 'Belirtilmedi';
+            }
+
+            if (destSelect.selectedIndex > 0) {
+                previewDest.innerText = destSelect.options[destSelect.selectedIndex].text;
+            } else {
+                previewDest.innerText = 'Belirtilmedi';
+            }
+        }
+
+        receiverSelect.addEventListener('change', updatePreview);
+        originSelect.addEventListener('change', updatePreview);
+        destSelect.addEventListener('change', updatePreview);
+    });
+</script>

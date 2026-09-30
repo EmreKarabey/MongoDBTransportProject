@@ -35,6 +35,11 @@ namespace BusinessLayer.Concrete
             return await _howItWorkDal.GetListAsync( size, index);
         }
 
+        public async Task<List<HowItWork>> GetListAsync()
+        {
+            return await _howItWorkDal.GetListAsync();
+        }
+
         public async Task UpdateAsync(HowItWork t, string id)
         {
             await _howItWorkDal.UpdateAsync(t, id);

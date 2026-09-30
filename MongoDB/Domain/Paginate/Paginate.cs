@@ -18,6 +18,7 @@ namespace Persistence.Paginate
         public int TotalPages => (int)Math.Ceiling(TotalCount / (double)Size);
         public bool HasNext => Page < TotalPages;
 
+
         public Paginate()
         {
             List = new List<T>();

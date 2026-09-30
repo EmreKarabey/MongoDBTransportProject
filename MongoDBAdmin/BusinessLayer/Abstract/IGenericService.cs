@@ -9,5 +9,6 @@ namespace BusinessLayer.Abstract
         public Task<T> GetByIdAsync(string Id);
         public Task<Paginate<T>> GetListAsync(int size, int page);
         public Task DeleteAsync(string Id);
+        public Task<List<T>> GetListAsync();
     }
 }

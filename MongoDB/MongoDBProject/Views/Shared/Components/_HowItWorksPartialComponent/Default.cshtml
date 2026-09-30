@@ -1,8 +1,8 @@
 @model Paginate<GetListHowItWorkDto>
 
-<section class="section pt-85 bg-worldmap">
+<section class="section pt-85 bg-worldmap" id="nasil-calisir">
 	<div class="box-swiper">
-		<div class="swiper-container swiper-group-1 pb-50">
+		<div class="swiper-container swiper-group-1 pb-50" id="howItWorksSwiper">
 			<div class="swiper-wrapper">
 				@foreach (var item in Model.List)
 				{
@@ -42,3 +42,24 @@
 		</div>
 	</div>
 </section>
+
+@if (Model.List.Count <= 1)
+{
+	<style>
+		/* Tek veri varken swiper'ı sabit tut */
+		#howItWorksSwiper .swiper-wrapper {
+			transform: translate3d(0, 0, 0) !important;
+		}
+		#howItWorksSwiper .swiper-pagination {
+			display: none !important;
+		}
+	</style>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var el = document.querySelector('#howItWorksSwiper');
+			if (el && el.swiper) {
+				el.swiper.disable();
+			}
+		});
+	</script>
+}

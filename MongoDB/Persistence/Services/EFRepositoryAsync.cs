@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -77,6 +78,17 @@ namespace Persistence.Services
             var paginate = new Paginate<T>(list, size, page, totalCount);
 
             return paginate;
+        }
+
+        public async Task<List<T>> OnlyListAsync(Expression<Func<T, bool>>? predicate = null)
+        {
+            var query = _collection.AsQueryable();
+
+            if (predicate != null) query = query.Where(predicate);
+
+            var list = await query.ToListAsync();
+
+            return list;
         }
 
         public async Task UpdateAsync(T t, string Id)

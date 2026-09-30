@@ -9,7 +9,7 @@ using MongoDBAdmin.Dto.About;
 namespace MongoDBAdmin.Controllers
 {
     [AutoValidateAntiforgeryToken]
-    [Authorize]
+    [Authorize(Roles = "Admin,Moderatör")]
     public class AboutController : Controller
     {
         private readonly IAboutService _aboutService;

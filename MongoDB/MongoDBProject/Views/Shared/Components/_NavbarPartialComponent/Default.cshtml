@@ -1,16 +1,228 @@
+@{
+	var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+	var isShipment = string.Equals(currentController, "Shipment", StringComparison.OrdinalIgnoreCase);
+	var isProfile = string.Equals(currentController, "Profile", StringComparison.OrdinalIgnoreCase);
+	var isHome = string.Equals(currentController, "Home", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(currentController);
+	var isAuth = (ViewBag.IsAuthenticated as bool? == true) || (User.Identity?.IsAuthenticated == true);
+	var userImg = ViewBag.UserImage as string;
+	var displayName = ViewBag.DisplayName as string ?? User.Identity?.Name ?? "Kullanıcı";
+}
+
 <style>
-	/* Menü öğelerinin yan yana sığması için aralarındaki boşluğu biraz daralttık ve alt satıra düşmesini (wrap) engelledik. */
-	.header .main-menu {
+	html {
+		scroll-behavior: smooth;
+	}
+
+	#anasayfa, #hizmetlerimiz, #hakkimizda, #nasil-calisir, #projelerimiz, #yorumlar, #sss, #iletisim {
+		scroll-margin-top: 95px;
+	}
+
+	/* Header genel padding ve boşluk ayarları */
+	.header {
+		padding: 18px 0 !important;
+		background-color: #ffffff !important;
+		transition: padding 0.25s ease, box-shadow 0.25s ease !important;
+	}
+
+		.header.sticky-bar.stick {
+			padding: 12px 0 !important;
+		}
+
+		/* Header düzeni - Template ezmelerini engelle */
+		.header .main-header {
+			width: 100% !important;
+			min-height: 46px;
+			display: flex !important;
+			align-items: center !important;
+		}
+
+			.header .main-header .header-left {
+				display: flex !important;
+				align-items: center !important;
+				width: 100% !important;
+			}
+
+				.header .main-header .header-left .header-logo {
+					flex: 0 0 auto !important;
+					max-width: 150px !important;
+					min-width: 130px !important;
+					margin-right: 35px !important;
+					display: flex !important;
+					align-items: center !important;
+				}
+
+					.header .main-header .header-left .header-logo a {
+						display: flex !important;
+						align-items: center !important;
+					}
+
+				.header .main-header .header-left .header-nav {
+					flex: 1 1 auto !important;
+					width: auto !important;
+					padding-left: 0 !important;
+					display: flex !important;
+					align-items: center !important;
+				}
+
+				.header .main-header .header-left .header-right {
+					flex: 0 0 auto !important;
+					width: auto !important;
+					min-width: unset !important;
+					margin-left: auto !important;
+					display: flex !important;
+					align-items: center !important;
+					gap: 20px !important;
+					text-align: right !important;
+				}
+
+	/* Kullanıcı ve Çıkış İkonları CSS'i */
+	.user-actions {
+		display: flex !important;
+		align-items: center !important;
+		gap: 14px !important;
+		padding-right: 18px !important;
+		border-right: 1px solid #e2e8f0;
+	}
+
+	.nav-profile-link {
+		display: inline-flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		text-decoration: none !important;
+		transition: transform 0.2s ease;
+	}
+
+		.nav-profile-link:hover {
+			transform: scale(1.06);
+		}
+
+	.nav-profile-img {
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 2px solid #f7941d;
+		box-shadow: 0 2px 8px rgba(247, 148, 29, 0.25);
+		transition: all 0.25s ease;
+	}
+
+	.nav-profile-link:hover .nav-profile-img {
+		border-color: #0A4D68;
+		box-shadow: 0 4px 12px rgba(10, 77, 104, 0.35);
+	}
+
+	.nav-profile-avatar-fallback {
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		background: #f1f5f9;
+		color: #041c2f;
 		display: flex;
-		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: center;
+		border: 1.5px solid #cbd5e1;
+		transition: all 0.25s ease;
 	}
-	.header .main-menu > li {
-		margin-right: 25px !important; /* İhtiyaca göre bu değeri küçültebilirsiniz (orijinali daha geniş olabilir) */
-		white-space: nowrap;
+
+	.nav-profile-link:hover .nav-profile-avatar-fallback {
+		background: #0A4D68;
+		color: #ffffff;
+		border-color: #0A4D68;
 	}
-	@@media (max-width: 1399px) {
+
+	/* Hem linkler hem de form içindeki buton için stiller */
+	.user-actions a,
+	.user-actions button {
+		color: #041c2f;
+		display: flex;
+		align-items: center;
+		background: transparent;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		transition: color 0.25s ease, transform 0.2s ease;
+	}
+
+		.user-actions a:hover,
+		.user-actions button:hover {
+			color: #f7941d;
+		}
+
+	/* Form etiketinin ekstra boşluk yaratmasını ve flex yapısını bozmasını engelle */
+	.user-actions form {
+		margin: 0;
+		padding: 0;
+		display: flex;
+	}
+
+	/* Menü öğeleri */
+	.header .main-menu {
+		display: flex !important;
+		align-items: center !important;
+		flex-wrap: nowrap !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		list-style: none !important;
+		gap: 28px !important;
+	}
+
 		.header .main-menu > li {
-			margin-right: 15px !important;
+			float: none !important;
+			margin: 0 !important;
+			padding: 0 !important;
+			white-space: nowrap !important;
+		}
+
+			.header .main-menu > li > a {
+				display: inline-block !important;
+				padding: 10px 0 !important;
+				font-family: "epilogue", sans-serif !important;
+				font-weight: 600 !important;
+				font-size: 15px !important;
+				color: #041c2f !important;
+				line-height: 24px !important;
+				position: relative !important;
+				transition: color 0.25s ease !important;
+				text-decoration: none !important;
+			}
+
+				.header .main-menu > li > a::after {
+					content: "" !important;
+					position: absolute !important;
+					bottom: 2px !important;
+					left: 0 !important;
+					width: 0 !important;
+					height: 2.5px !important;
+					background-color: #f7941d !important;
+					border-radius: 2px !important;
+					transition: width 0.25s ease !important;
+				}
+
+				.header .main-menu > li > a:hover,
+				.header .main-menu > li > a.active {
+					color: #f7941d !important;
+				}
+
+					.header .main-menu > li > a:hover::after,
+					.header .main-menu > li > a.active::after {
+						width: 100% !important;
+					}
+
+	@@media (max-width: 1350px) {
+		.header .main-menu {
+			gap: 18px !important;
+		}
+
+			.header .main-menu > li > a {
+				font-size: 14px !important;
+			}
+	}
+
+	@@media (max-width: 576px) {
+		.user-actions {
+			padding-right: 10px !important;
+			gap: 10px !important;
+			border-right: none;
 		}
 	}
 </style>
@@ -19,109 +231,80 @@
 	<div class="container">
 		<div class="main-header">
 			<div class="header-left">
-				<div class="header-logo"><a class="d-flex" href="/"><img alt="Transp" src="~/templates/assets/imgs/template/logo.svg"></a></div>
+				<div class="header-logo">
+					<a class="d-flex" href="/Home/Index#anasayfa">
+						<img alt="Transp" src="~/templates/assets/imgs/template/logo.svg">
+					</a>
+				</div>
 				<div class="header-nav">
-					<nav class="nav-main-menu d-none d-xl-block">
-						<ul class="main-menu">
-							<li class="has-children">
-								<a class="active" href="/">Ana Sayfa</a>
-								<ul class="sub-menu">
-									<li><a href="index-2.html">Homepage - 2</a></li>
-									<li><a href="index-3.html">Homepage - 3</a></li>
-									<li><a href="index-4.html">Homepage - 4</a></li>
-								</ul>
-							</li>
-							<li><a href="about.html">Hakkımızda</a></li>
-							<li class="has-children">
-								<a href="#">Hizmetler</a>
-								<div class="sub-menu five-col">
-									<div class="menu-col">
-										<h6 class="color-brand-2 mb-15">Sea Forwarding</h6>
-										<div class="menu-image"><img src="~/templates/assets/imgs/page/homepage1/menu1.png" alt="transp"></div>
-										<ul class="megamenu">
-											<li><a href="services.html">Container Shipping</a></li>
-											<li><a href="services.html">Bulk Shipping</a></li>
-											<li><a href="services.html">Roll-on/Roll-off Shipping</a></li>
-											<li><a href="services.html">Break Bulk Shipping</a></li>
-											<li><a href="services.html">Project Cargo Shipping</a></li>
-										</ul>
-									</div>
-									<div class="menu-col">
-										<h6 class="color-brand-2 mb-15">Air Freight Forwarding</h6>
-										<div class="menu-image"><img src="~/templates/assets/imgs/page/homepage1/menu2.png" alt="transp"></div>
-										<ul class="megamenu">
-											<li><a href="services.html">General Cargo</a></li>
-											<li><a href="services.html">Express Shipping</a></li>
-											<li><a href="services.html">Dangerous Goods</a></li>
-											<li><a href="services.html">Oversized Cargo</a></li>
-											<li><a href="services.html">Perishable Goods</a></li>
-										</ul>
-									</div>
-									<div class="menu-col">
-										<h6 class="color-brand-2 mb-15">Land Transportation</h6>
-										<div class="menu-image"><img src="~/templates/assets/imgs/page/homepage1/menu3.png" alt="transp"></div>
-										<ul class="megamenu">
-											<li><a href="services.html">Road Freight</a></li>
-											<li><a href="services.html">Rail Freight</a></li>
-											<li><a href="services.html">Intermodal Transportation</a></li>
-											<li><a href="services.html">Less-than-Truckload (LTL) Shipping</a></li>
-											<li><a href="services.html">Specialized Transportation</a></li>
-										</ul>
-									</div>
-									<div class="menu-col">
-										<h6 class="color-brand-2 mb-15">Railway Logistics</h6>
-										<div class="menu-image"><img src="~/templates/assets/imgs/page/homepage1/menu4.png" alt="transp"></div>
-										<ul class="megamenu">
-											<li><a href="services.html">Rail Freight Transportation</a></li>
-											<li><a href="services.html">Rail Terminal Services</a></li>
-											<li><a href="services.html">Rail Freight Forwarding</a></li>
-											<li><a href="services.html">Intermodal Transportation</a></li>
-											<li><a href="services.html">Rail Logistics Consulting</a></li>
-										</ul>
-									</div>
-									<div class="menu-col">
-										<h6 class="color-brand-2 mb-15">Warehouse</h6>
-										<div class="menu-image"><img src="~/templates/assets/imgs/page/homepage1/menu5.png" alt="transp"></div>
-										<ul class="megamenu">
-											<li><a href="services.html">Warehousing</a></li>
-											<li><a href="services.html">Distribution Center Operations</a></li>
-											<li><a href="services.html">E-Commerce Fulfillment</a></li>
-											<li><a href="services.html">Reverse Logistics</a></li>
-											<li><a href="services.html">Inventory Management</a></li>
-										</ul>
-									</div>
-								</div>
-							</li>
-							<li class="has-children">
-								<a href="#">Sayfalar</a>
-								<ul class="sub-menu">
-									<li><a href="service-detail.html">Service Detail</a></li>
-									<li><a href="trackyourparcel.html">Track Your Parcel</a></li>
-									<li><a href="workprocess.html">Work Process</a></li>
-									<li><a href="request-a-quote.html">Request a quote</a></li>
-									<li><a href="our-team.html">Our team</a></li>
-									<li><a href="faqs.html">FAQ's</a></li>
-									<li><a href="trackyourparcel.html">Track Your Parcel</a></li>
-									<li><a href="register.html">Register</a></li>
-									<li><a href="login.html">Login</a></li>
-									<li><a href="comingsoon.html">Coming soon</a></li>
-									<li><a href="newsletter.html">Newsletter</a></li>
-									<li><a href="404.html">Error 404</a></li>
-								</ul>
-							</li>
-							<li class="has-children">
-								<a href="blog.html">Blog</a>
-								<ul class="sub-menu">
-									<li><a href="blog-single.html">Blog Details</a></li>
-								</ul>
-							</li>
-							<li><a href="contact.html">İletişim</a></li>
-							<li><a href="/Comment/Index">Yorum Yap</a></li>
-						</ul>
-					</nav>
-					<div class="burger-icon burger-icon-white"><span class="burger-icon-top"></span><span class="burger-icon-mid"></span><span class="burger-icon-bottom"></span></div>
+					@if (isHome)
+					{
+						<nav class="nav-main-menu d-none d-xl-block">
+							<ul class="main-menu">
+								<li><a class="nav-link-scroll active" href="/#anasayfa">Ana Sayfa</a></li>
+								<li><a class="nav-link-scroll" href="/#hizmetlerimiz">Hizmetlerimiz</a></li>
+								<li><a class="nav-link-scroll" href="/#hakkimizda">Hakkımızda</a></li>
+								<li><a class="nav-link-scroll" href="/#projelerimiz">Projelerimiz</a></li>
+								<li><a class="nav-link-scroll" href="/#iletisim">İletişim</a></li>
+							</ul>
+						</nav>
+						<div class="burger-icon burger-icon-white">
+							<span class="burger-icon-top"></span>
+							<span class="burger-icon-mid"></span>
+							<span class="burger-icon-bottom"></span>
+						</div>
+					}
+					else
+					{
+						<nav class="nav-main-menu d-none d-xl-block">
+							<ul class="main-menu">
+								<li><a href="/Home/Index#anasayfa">Ana Sayfa</a></li>
+								<li><a href="/Shipment/Index" class="@(isShipment ? "active" : "")">Kargolarım</a></li>
+								@if (isAuth)
+								{
+									<li><a href="/Profile/Index" class="@(isProfile ? "active" : "")">Profilim</a></li>
+								}
+							</ul>
+						</nav>
+					}
 				</div>
 				<div class="header-right">
+
+					<!-- KULLANICI PROFİL RESMİ / İKONU VE ÇIKIŞ İŞLEMLERİ -->
+					@if (isAuth)
+					{
+						<div class="user-actions">
+							<a href="/Profile/Index" class="nav-profile-link" title="Profilim (@displayName)">
+								@if (!string.IsNullOrEmpty(userImg))
+								{
+									<img src="@userImg" alt="@displayName" class="nav-profile-img" />
+								}
+								else
+								{
+									<div class="nav-profile-avatar-fallback">
+										<svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width: 20px; height: 20px;">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+										</svg>
+									</div>
+								}
+							</a>
+							<form asp-action="Logout" asp-controller="Account" method="post">
+								@Html.AntiForgeryToken()
+								<button type="submit" title="Çıkış Yap">
+									<svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width: 21px; height: 21px;">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"></path>
+									</svg>
+								</button>
+							</form>
+						</div>
+					}
+					else
+					{
+						<div class="user-actions">
+							<a class="btn btn-default hover-up" href="/Account/Login" style="padding: 7px 16px; font-size: 13px; font-weight: 600; border-radius: 8px; border: 1.5px solid #e2e8f0; color: #041c2f; text-decoration: none;">Giriş Yap</a>
+						</div>
+					}
+
 					<div class="d-inline-block box-dropdown-cart">
 						<span class="font-lg icon-list icon-account">
 							<span class="font-sm color-grey-900 arrow-down">
@@ -154,14 +337,109 @@
 						</div>
 					</div>
 					<div class="d-none d-sm-inline-block">
-						<a class="btn btn-default mr-10 hover-up" href="/Account/Login">Giriş Yap</a><a class="btn btn-brand-1 d-none d-xl-inline-block hover-up" href="request-a-quote.html">
-							<svg fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"> </path>
-							</svg>Fiyat Al
-						</a>
+						@if (isShipment || isProfile)
+						{
+							<a class="btn btn-brand-1 d-none d-xl-inline-block hover-up" href="/Home/Index">
+								<svg fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width: 18px; height: 18px; margin-right: 6px; vertical-align: text-bottom;">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+								</svg>Ana Sayfaya Dön
+							</a>
+						}
+						else
+						{
+							<a class="btn btn-brand-1 d-none d-xl-inline-block hover-up" href="/Shipment/Index">
+								<svg fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"> </path>
+								</svg>Kargo Takibi
+							</a>
+						}
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </header>
+
+@if (isHome)
+{
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const navLinks = document.querySelectorAll(".nav-link-scroll");
+
+			function smoothScrollTo(targetSelector) {
+				const targetEl = document.querySelector(targetSelector);
+				if (targetEl) {
+					const headerOffset = 85;
+					const elementPosition = targetEl.getBoundingClientRect().top;
+					const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+					window.scrollTo({
+						top: offsetPosition,
+						behavior: "smooth"
+					});
+				}
+			}
+
+			navLinks.forEach(function (link) {
+				link.addEventListener("click", function (e) {
+					const href = this.getAttribute("href");
+					if (href && (href.startsWith("/#") || href.startsWith("#"))) {
+						const hash = href.includes("#") ? "#" + href.split("#")[1] : "";
+						const isHomePage = window.location.pathname === "/" || window.location.pathname === "" || window.location.pathname.toLowerCase().endsWith("/home") || window.location.pathname.toLowerCase().endsWith("/home/index");
+
+						if (hash && isHomePage) {
+							e.preventDefault();
+							smoothScrollTo(hash);
+							history.pushState(null, null, hash);
+							navLinks.forEach(l => l.classList.remove("active"));
+							this.classList.add("active");
+
+							const mobileContainer = document.querySelector(".mobile-header-active");
+							if (mobileContainer && mobileContainer.classList.contains("sidebar-visible")) {
+								mobileContainer.classList.remove("sidebar-visible");
+								document.body.classList.remove("mobile-menu-active");
+								document.querySelectorAll(".burger-icon").forEach(b => b.classList.remove("burger-close"));
+							}
+						}
+					}
+				});
+			});
+
+			if (window.location.hash) {
+				setTimeout(function () {
+					smoothScrollTo(window.location.hash);
+				}, 300);
+			}
+
+			// Scrollspy: Sayfa kaydırıldıkça aktif menüyü güncelle
+			const isHomePage = window.location.pathname === "/" || window.location.pathname === "" || window.location.pathname.toLowerCase().endsWith("/home") || window.location.pathname.toLowerCase().endsWith("/home/index");
+			if (isHomePage) {
+				const sectionIds = ["#anasayfa", "#hizmetlerimiz", "#hakkimizda", "#projelerimiz", "#iletisim"];
+
+				window.addEventListener("scroll", function () {
+					const scrollPosition = window.pageYOffset + 120;
+					let activeId = "";
+
+					for (let i = sectionIds.length - 1; i >= 0; i--) {
+						const sec = document.querySelector(sectionIds[i]);
+						if (sec && sec.offsetTop <= scrollPosition) {
+							activeId = sectionIds[i];
+							break;
+						}
+					}
+
+					if (activeId) {
+						navLinks.forEach(l => {
+							const href = l.getAttribute("href");
+							if (href && href.endsWith(activeId)) {
+								l.classList.add("active");
+							} else {
+								l.classList.remove("active");
+							}
+						});
+					}
+				}, { passive: true });
+			}
+		});
+	</script>
+}

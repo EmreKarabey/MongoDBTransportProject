@@ -8,7 +8,7 @@ using MongoDBAdmin.Dto.Role;
 
 namespace MongoDBAdmin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Moderatör")]
     public class RoleController : Controller
     {
         private readonly RoleManager<AppRole> _roleManager;

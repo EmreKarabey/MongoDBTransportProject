@@ -8,7 +8,7 @@ using MongoDBAdmin.Dto.Offer;
 
 namespace MongoDBAdmin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Moderatör")]
     public class OfferController : Controller
     {
         private readonly IOfferService _offerService;

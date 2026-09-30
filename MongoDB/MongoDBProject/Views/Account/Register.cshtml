@@ -1,0 +1,124 @@
+@model MongoDBProject.Controllers.RegisterDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="msapplication-TileColor" content="#0E0E0E">
+    <meta name="template-color" content="#0E0E0E">
+    <meta name="description" content="Kayıt Ol">
+    <meta name="keywords" content="kayıt, register, page">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="~/templates/assets/imgs/template/favicon.svg">
+    <link href="~/templates/assets/css/style.css?v=3.0.0" rel="stylesheet">
+    <title>Kayıt Ol</title>
+    <style>
+      .text-danger { color: #dc3545; }
+    </style>
+  </head>
+  <body>
+    <div id="preloader-active">
+      <div class="preloader d-flex align-items-center justify-content-center">
+        <div class="preloader-inner position-relative">
+          <div class="flip-square"></div>
+        </div>
+      </div>
+    </div>
+    
+    <main class="main">
+      <section class="section box-login" style="min-height: 100vh; display: flex; align-items: center;">
+        <div class="row align-items-center m-0 w-100"> 
+          <div class="col-lg-6">
+            <div class="box-login-left">
+              <h2 class="color-brand-2 mb-10">Aramıza Katılın</h2>
+              <p class="font-md color-grey-500">Hesap oluşturarak tüm özelliklere erişebilirsiniz.</p>
+              
+              <div class="box-form-login mt-40">
+                <form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data"> 
+                  <div asp-validation-summary="ModelOnly" class="text-danger mb-3 font-sm"></div>
+                  
+                  <div class="form-group"> 
+                    <input asp-for="FullName" class="form-control" type="text" placeholder="Ad Soyad">
+                    <span asp-validation-for="FullName" class="text-danger font-xs"></span>
+                  </div>
+                  
+                  <div class="form-group"> 
+                    <input asp-for="UserName" class="form-control" type="text" placeholder="Kullanıcı Adı">
+                    <span asp-validation-for="UserName" class="text-danger font-xs"></span>
+                  </div>
+                  
+                  <div class="form-group"> 
+                    <input asp-for="Email" class="form-control" type="email" placeholder="E-Posta Adresi">
+                    <span asp-validation-for="Email" class="text-danger font-xs"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="font-xs color-grey-900 d-block mb-10" asp-for="ImageFile">Profil Resmi (İsteğe Bağlı)</label>
+                    <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" style="padding-top: 13px;">
+                    <span asp-validation-for="ImageFile" class="text-danger font-xs"></span>
+                  </div>
+                  
+                  <div class="form-group"> 
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Şifrenizi Giriniz">
+                    <span asp-validation-for="Password" class="text-danger font-xs"></span>
+                  </div>
+                  
+                  <div class="form-group"> 
+                    <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Şifrenizi Tekrar Giriniz">
+                    <span asp-validation-for="ConfirmPassword" class="text-danger font-xs"></span>
+                  </div>
+                  
+                  <div class="form-group mt-30"> 
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div class="box-button-form-login">
+                        <input class="btn btn-brand-1-big mr-20" type="submit" value="Kayıt Ol">
+                      </div>
+                      <div class="box-text-form-login"><span class="font-xs color-grey-500">Zaten Hesabınız Var Mı? </span><a class="font-xs color-brand-2" href="/Account/Login">Giriş Yap</a></div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="box-login-right">
+              <div class="quote-shape shape-1"></div>
+              <div class="box-info-bottom-img box-info-bottom-img-3"> 
+                <div class="image-play"><img class="mb-15" src="~/templates/assets/imgs/template/icons/play.svg" alt="transp"></div>
+                <div class="info-play"> 
+                  <h4 class="color-white mb-15">Sektörde 25 yıllık tecrübeye sahibiz</h4>
+                  <p class="font-sm color-white">Lojistik ve taşımacılık alanında en güvenilir hizmeti vermek için yılların getirdiği tecrübe ile hareket ediyoruz.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    
+    <script src="~/templates/assets/js/vendors/modernizr-3.6.0.min.js"></script>
+    <script src="~/templates/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="~/templates/assets/js/vendors/jquery-migrate-3.3.0.min.js"></script>
+    <script src="~/templates/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="~/templates/assets/js/vendors/waypoints.js"></script>
+    <script src="~/templates/assets/js/vendors/wow.js"></script>
+    <script src="~/templates/assets/js/vendors/magnific-popup.js"></script>
+    <script src="~/templates/assets/js/vendors/perfect-scrollbar.min.js"></script>
+    <script src="~/templates/assets/js/vendors/select2.min.js"></script>
+    <script src="~/templates/assets/js/vendors/isotope.js"></script>
+    <script src="~/templates/assets/js/vendors/scrollup.js"></script>
+    <script src="~/templates/assets/js/vendors/swiper-bundle.min.js"></script>
+    <script src="~/templates/assets/js/vendors/noUISlider.js"></script>
+    <script src="~/templates/assets/js/vendors/slider.js"></script>
+    <script src="~/templates/assets/js/vendors/counterup.js"></script>
+    <script src="~/templates/assets/js/vendors/jquery.countdown.min.js"></script>
+    <script src="~/templates/assets/js/vendors/jquery.elevatezoom.js"></script>
+    <script src="~/templates/assets/js/vendors/slick.js"></script>
+    <script src="~/templates/assets/js/main.js?v=3.0.0"></script>
+  </body>
+</html>

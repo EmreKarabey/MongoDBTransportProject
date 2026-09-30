@@ -1,7 +1,58 @@
 
 @model Paginate<GetActiveOfferListDto>
 
-<section class="section mt-100">
+<style>
+    /* Offer kartlarını eşit yüksekliğe getir */
+    .swiper-group-3-slider .swiper-wrapper {
+        align-items: stretch !important;
+    }
+
+    .swiper-group-3-slider .swiper-slide {
+        height: auto !important;
+        display: flex !important;
+    }
+
+    .swiper-group-3-slider .card-offer {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    .swiper-group-3-slider .card-offer .card-image {
+        height: 200px !important;
+        min-height: 200px !important;
+        max-height: 200px !important;
+        overflow: hidden !important;
+        flex-shrink: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 15px !important;
+    }
+
+    .swiper-group-3-slider .card-offer .card-image img {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        width: auto !important;
+        height: auto !important;
+        object-fit: contain !important;
+    }
+
+    .swiper-group-3-slider .card-offer .card-info {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: 150px !important;
+        padding: 20px !important;
+    }
+
+    .swiper-group-3-slider .card-offer .card-info p {
+        flex: 1 !important;
+    }
+</style>
+
+<section class="section mt-100" id="hizmetlerimiz">
     <div class="container">
         <h2 class="title-favicon mb-20">Neler Sunuyoruz</h2>
         <div class="row align-items-end">

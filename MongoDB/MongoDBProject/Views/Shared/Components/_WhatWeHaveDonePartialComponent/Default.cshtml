@@ -1,7 +1,51 @@
 
 @model Paginate<GetActiveListWhatWeHaveDoneDto>
 
-<section class="section bg-what-done pb-95 pt-110">
+<style>
+    /* Neler Yaptık kartlarını eşit yüksekliğe getir */
+    .swiper-group-4 .swiper-wrapper {
+        align-items: stretch !important;
+    }
+
+    .swiper-group-4 .swiper-slide {
+        height: auto !important;
+        display: flex !important;
+    }
+
+    .swiper-group-4 .cardGrid {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    .swiper-group-4 .cardGrid .cardImage {
+        height: 200px !important;
+        min-height: 200px !important;
+        max-height: 200px !important;
+        overflow: hidden !important;
+        flex-shrink: 0 !important;
+    }
+
+    .swiper-group-4 .cardGrid .cardImage img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .swiper-group-4 .cardGrid .cardInfo {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: 120px !important;
+    }
+
+    .swiper-group-4 .cardGrid .cardInfo p {
+        flex: 1 !important;
+    }
+</style>
+
+<section class="section bg-what-done pb-95 pt-110" id="projelerimiz">
     <div class="container">
         <h2 class="title-favicon mb-20">Neler Yaptık</h2>
         <div class="row align-items-end">

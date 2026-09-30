@@ -39,6 +39,11 @@ namespace BusinessLayer.Concrete
             return await _getInTouchDal.GetListAsync(size, page);
         }
 
+        public async Task<List<GetInTouch>> GetListAsync()
+        {
+            return await _getInTouchDal.GetListAsync();
+        }
+
         public async Task UpdateAsync(GetInTouch t, string Id)
         {
             await _getInTouchDal.UpdateAsync(t, Id);

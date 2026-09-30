@@ -21,7 +21,9 @@ namespace Application.Features.Login.Command.GoogleLogin
         private readonly IGoogleLoginService _googleLoginService;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public GoogleLoginHandler(UserManager<AppUser> userManager, IGoogleLoginService googleLoginService, SignInManager<AppUser> signInManager)
+
+
+        public GoogleLoginHandler(UserManager<AppUser> userManager, IGoogleLoginService googleLoginService, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
             _googleLoginService = googleLoginService;
@@ -46,6 +48,9 @@ namespace Application.Features.Login.Command.GoogleLogin
                 };
 
                 var createResult = await _userManager.CreateAsync(user);
+
+                var assigneRole = await _userManager.AddToRoleAsync(user, "Üye");
+
                 if (!createResult.Succeeded)
                 {
                     var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));

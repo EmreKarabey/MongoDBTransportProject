@@ -1,9 +1,12 @@
 using System.Threading.Tasks;
 using BusinessLayer.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MongoDBAdmin.Controllers
 {
+    [Authorize(Roles = "Admin,Moderatör")]
+    [AutoValidateAntiforgeryToken]
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;

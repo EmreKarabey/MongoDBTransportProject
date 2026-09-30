@@ -47,6 +47,9 @@ builder.Services.AddScoped<IWhatWeHaveDoneService, WhatWeHaveDoneManager>();
 builder.Services.AddScoped<IFAQDal, EFFAQDal>();
 builder.Services.AddScoped<IFAQService, FAQManager>();
 
+builder.Services.AddScoped<IShipmentDal, EFShipmentDal>();
+builder.Services.AddScoped<IShipmentService, ShipmentManager>();
+
 builder.Services.AddScoped<IDatabaseSettings, DatabaseSettings>();
 var databaseSettings = builder.Configuration.GetSection("DatabaseSettings").Get<DatabaseSettings>() ?? new DatabaseSettings();
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettings"));

@@ -39,6 +39,11 @@ namespace BusinessLayer.Concrete
            return await _sliderDal.GetListAsync(size, page);
         }
 
+        public async Task<List<Slider>> GetListAsync()
+        {
+            return await _sliderDal.GetListAsync();
+        }
+
         public async Task UpdateAsync(Slider t, string Id)
         {
             await _sliderDal.UpdateAsync(t, Id);

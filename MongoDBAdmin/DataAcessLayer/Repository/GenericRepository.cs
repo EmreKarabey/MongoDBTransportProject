@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,6 +62,15 @@ namespace DataAcessLayer.Repository
             var paginate = new Paginate<T>(list, size, page, totalCount);
 
             return paginate;
+        }
+
+        public async Task<List<T>> GetListAsync()
+        {
+            var list = await _collection.AsQueryable().ToListAsync();
+
+            if (!list.Any()) list = new List<T>();
+
+            return list;
         }
 
         public async Task UpdateAsync(T t, string Id)

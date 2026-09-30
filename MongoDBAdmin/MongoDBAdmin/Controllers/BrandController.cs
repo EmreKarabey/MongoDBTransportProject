@@ -8,7 +8,7 @@ using MongoDBAdmin.Dto.Brand;
 
 namespace MongoDBAdmin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Moderatör")]
     public class BrandController : Controller
     {
         private readonly IBrandService _brandService;

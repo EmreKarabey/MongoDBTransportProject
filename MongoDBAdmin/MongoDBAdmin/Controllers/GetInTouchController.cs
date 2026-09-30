@@ -8,7 +8,7 @@ using MongoDBAdmin.Dto.GetInTouch;
 
 namespace MongoDBAdmin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Moderatör")]
     [AutoValidateAntiforgeryToken]
     public class GetInTouchController : Controller
     {

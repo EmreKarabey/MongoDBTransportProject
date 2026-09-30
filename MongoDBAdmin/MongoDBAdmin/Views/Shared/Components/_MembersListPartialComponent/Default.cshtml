@@ -1,0 +1,6 @@
+@model List<AppUser>
+
+@foreach (var item in Model)
+{
+	<option value="@item.Id">@item.FullName</option>
+}

@@ -1,0 +1,1184 @@
+@model MongoDBProject.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profil Ayarları";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var roleName = Model.Roles != null && Model.Roles.Any() ? string.Join(", ", Model.Roles) : "Taşıma Üyesi";
+    var userInitial = !string.IsNullOrWhiteSpace(Model.FullName) ? Model.FullName.Substring(0, 1).ToUpper() : (!string.IsNullOrWhiteSpace(Model.UserName) ? Model.UserName.Substring(0, 1).ToUpper() : "U");
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Epilogue:wght@400;600;700;800&display=swap');
+    @@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
+
+    :root {
+        --pf-primary: #041c2f;
+        --pf-primary-light: #0A4D68;
+        --pf-accent: #f7941d;
+        --pf-accent-hover: #e08316;
+        --pf-bg: #f8fafc;
+        --pf-card-bg: #ffffff;
+        --pf-border: #e2e8f0;
+        --pf-text-dark: #0f172a;
+        --pf-text-muted: #64748b;
+        --pf-success: #10b981;
+        --pf-danger: #ef4444;
+    }
+
+    .profile-page-wrapper {
+        min-height: calc(100vh - 200px);
+        background-color: var(--pf-bg);
+        padding: 40px 15px 80px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .profile-container {
+        max-width: 1040px;
+        margin: 0 auto;
+        animation: profileFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @@keyframes profileFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(18px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Hero / Banner Card */
+    .profile-hero-card {
+        background: linear-gradient(135deg, #041c2f 0%, #0A4D68 65%, #05668D 100%);
+        border-radius: 20px;
+        padding: 36px 40px;
+        color: #ffffff;
+        box-shadow: 0 12px 35px rgba(4, 28, 47, 0.18);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+
+    .profile-hero-card::after {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(circle, rgba(247, 148, 29, 0.22) 0%, rgba(247, 148, 29, 0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .hero-user-info {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        z-index: 1;
+    }
+
+    /* Avatar Container with Upload Trigger */
+    .avatar-wrapper {
+        position: relative;
+        width: 105px;
+        height: 105px;
+        flex-shrink: 0;
+    }
+
+    .avatar-preview-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid rgba(255, 255, 255, 0.95);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+        transition: filter 0.25s ease;
+        background-color: #ffffff;
+    }
+
+    .avatar-initial-fallback {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f7941d, #ff6b35);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 38px;
+        font-weight: 700;
+        border: 4px solid rgba(255, 255, 255, 0.95);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+        font-family: 'Epilogue', sans-serif;
+    }
+
+    .avatar-upload-btn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        background-color: var(--pf-accent);
+        border: 3px solid #041c2f;
+        border-radius: 50%;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        cursor: pointer;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .avatar-upload-btn:hover {
+        transform: scale(1.14);
+        background-color: #ffffff;
+        color: var(--pf-accent);
+    }
+
+    .hero-meta h2 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 6px 0;
+        font-family: 'Epilogue', sans-serif;
+    }
+
+    .hero-meta-subtitle {
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 14px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .hero-badges {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .hero-badge-role {
+        background: rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(8px);
+        color: #ffffff;
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .hero-badge-status {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .pulse-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: #10b981;
+        box-shadow: 0 0 8px #10b981;
+    }
+
+    /* Hero Quick Stat Box */
+    .hero-stats-box {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        z-index: 1;
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .hero-stats-box:hover {
+        background: rgba(255, 255, 255, 0.16);
+        transform: translateY(-2px);
+    }
+
+    .hero-stats-icon {
+        width: 46px;
+        height: 46px;
+        background: var(--pf-accent);
+        color: #ffffff;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .hero-stats-content .stat-label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+
+    .hero-stats-content .stat-number {
+        font-size: 20px;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .hero-stats-link {
+        color: #f7941d;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 2px;
+        transition: color 0.2s ease;
+    }
+
+    .hero-stats-link:hover {
+        color: #ffffff;
+    }
+
+    /* Alerts */
+    .profile-alert {
+        border-radius: 14px;
+        padding: 16px 20px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        animation: profileFadeIn 0.3s ease;
+    }
+
+    .profile-alert-success {
+        background-color: #ecfdf5;
+        border: 1.5px solid #a7f3d0;
+        color: #065f46;
+    }
+
+    .profile-alert-error {
+        background-color: #fef2f2;
+        border: 1.5px solid #fecaca;
+        color: #991b1b;
+    }
+
+    /* Content Cards Grid */
+    .profile-cards-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .profile-card {
+        background: var(--pf-card-bg);
+        border: 1.5px solid var(--pf-border);
+        border-radius: 18px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .profile-card:hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        border-color: #cbd5e1;
+    }
+
+    .card-title-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1.5px solid #f1f5f9;
+    }
+
+    .card-title-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: rgba(10, 77, 104, 0.08);
+        color: var(--pf-primary-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .card-title-group.security .card-title-icon {
+        background: rgba(247, 148, 29, 0.12);
+        color: var(--pf-accent);
+    }
+
+    .card-title-group h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--pf-text-dark);
+        margin: 0;
+        font-family: 'Epilogue', sans-serif;
+    }
+
+    .card-title-group p {
+        font-size: 12px;
+        color: var(--pf-text-muted);
+        margin: 2px 0 0 0;
+    }
+
+    /* Photo Upload Box inside Form */
+    .photo-upload-box {
+        background: #f8fafc;
+        border: 2px dashed #cbd5e1;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: border-color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .photo-upload-box:hover {
+        border-color: var(--pf-accent);
+        background: rgba(247, 148, 29, 0.02);
+    }
+
+    .photo-box-preview-wrap {
+        position: relative;
+        width: 72px;
+        height: 72px;
+        flex-shrink: 0;
+    }
+
+    .photo-box-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #e2e8f0;
+    }
+
+    .photo-box-initial {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0A4D68, #041c2f);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        font-weight: 700;
+        border: 2px solid #e2e8f0;
+    }
+
+    .photo-box-controls {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .photo-box-btn-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-choose-file {
+        background: var(--pf-primary);
+        color: #ffffff !important;
+        padding: 8px 18px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: none;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-choose-file:hover {
+        background: var(--pf-primary-light);
+        transform: translateY(-1px);
+    }
+
+    .btn-delete-photo {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+        padding: 7px 14px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-delete-photo:hover {
+        background: #fca5a5;
+        color: #7f1d1d;
+    }
+
+    .photo-file-status {
+        font-size: 12px;
+        color: var(--pf-text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .photo-file-status.selected {
+        color: var(--pf-accent);
+        font-weight: 600;
+    }
+
+    .photo-file-status.removed {
+        color: var(--pf-danger);
+        font-weight: 600;
+    }
+
+    .photo-hints {
+        font-size: 11px;
+        color: #94a3b8;
+    }
+
+    /* Form Styles */
+    .custom-form-group {
+        margin-bottom: 20px;
+    }
+
+    .custom-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-icon-left {
+        position: absolute;
+        left: 16px;
+        color: #94a3b8;
+        font-size: 16px;
+        pointer-events: none;
+        transition: color 0.2s ease;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding: 12px 16px 12px 46px;
+        background-color: #f8fafc;
+        border: 1.5px solid var(--pf-border);
+        border-radius: 12px;
+        font-size: 14px;
+        color: var(--pf-text-dark);
+        font-family: 'Poppins', sans-serif;
+        transition: all 0.25s ease;
+    }
+
+    .custom-input:focus {
+        background-color: #ffffff;
+        border-color: var(--pf-accent);
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(247, 148, 29, 0.12);
+    }
+
+    .custom-input:focus + .input-icon-left,
+    .custom-input:focus ~ .input-icon-left {
+        color: var(--pf-accent);
+    }
+
+    .password-toggle-btn {
+        position: absolute;
+        right: 14px;
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 16px;
+        transition: color 0.2s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    .password-toggle-btn:hover {
+        color: var(--pf-text-dark);
+    }
+
+    .security-notice-box {
+        background-color: #fffbeb;
+        border: 1.5px dashed #fde68a;
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 12px;
+        color: #92400e;
+        line-height: 1.5;
+    }
+
+    .security-notice-box i {
+        font-size: 16px;
+        color: #d97706;
+        margin-top: 1px;
+    }
+
+    /* Actions Bar */
+    .profile-actions-bar {
+        background: var(--pf-card-bg);
+        border: 1.5px solid var(--pf-border);
+        border-radius: 18px;
+        padding: 20px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .actions-bar-info {
+        font-size: 13px;
+        color: var(--pf-text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .actions-bar-buttons {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .btn-profile-cancel {
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--pf-text-dark);
+        background: #f1f5f9;
+        border: 1.5px solid #e2e8f0;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-profile-cancel:hover {
+        background: #e2e8f0;
+        color: var(--pf-primary);
+    }
+
+    .btn-profile-save {
+        padding: 12px 28px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffff;
+        background: linear-gradient(135deg, #f7941d 0%, #ff7a00 100%);
+        border: none;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(247, 148, 29, 0.35);
+    }
+
+    .btn-profile-save:hover {
+        background: linear-gradient(135deg, #e08316 0%, #f06a00 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 148, 29, 0.45);
+        color: #ffffff;
+    }
+
+    .validation-text-danger {
+        color: var(--pf-danger);
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .photo-selected-pill {
+        display: none;
+        margin-top: 6px;
+        font-size: 11px;
+        background: rgba(247, 148, 29, 0.25);
+        color: #ffffff;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+
+    /* Responsive */
+    @@media (max-width: 900px) {
+        .profile-cards-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-hero-card {
+            padding: 28px 24px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .hero-user-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .hero-stats-box {
+            width: 100%;
+        }
+
+        .photo-upload-box {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .profile-actions-bar {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 20px;
+        }
+
+        .actions-bar-buttons {
+            flex-direction: column-reverse;
+            width: 100%;
+        }
+
+        .btn-profile-cancel,
+        .btn-profile-save {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="profile-page-wrapper">
+    <div class="profile-container">
+
+        <!-- Notification Alerts -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="profile-alert profile-alert-success">
+                <i class="bi bi-check-circle-fill fs-5"></i>
+                <span>@TempData["SuccessMessage"]</span>
+            </div>
+        }
+
+        @if (!ViewData.ModelState.IsValid && ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+        {
+            <div class="profile-alert profile-alert-error">
+                <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                <div>
+                    <strong>Lütfen aşağıdaki hataları düzeltiniz:</strong>
+                    <div asp-validation-summary="All" style="font-size: 13px; margin-top: 4px; list-style: none;"></div>
+                </div>
+            </div>
+        }
+
+        <form asp-action="Index" asp-controller="Profile" method="post" enctype="multipart/form-data" id="profileForm">
+            @Html.AntiForgeryToken()
+
+            <!-- Hidden File Input for Image Upload -->
+            <input type="file" asp-for="ImageFile" id="imageFileInput" accept="image/png, image/jpeg, image/jpg, image/webp" style="display: none;" onchange="handleImagePreview(event)" />
+            
+            <!-- Hidden Input for Photo Removal Flag -->
+            <input type="hidden" asp-for="RemoveImage" id="removeImageInput" value="false" />
+
+            <!-- Profile Hero Banner -->
+            <div class="profile-hero-card">
+                <div class="hero-user-info">
+                    <div class="avatar-wrapper">
+                        @if (!string.IsNullOrEmpty(Model.ExistingImageUrl))
+                        {
+                            <img src="@Model.ExistingImageUrl" alt="@Model.FullName" id="avatarPreview" class="avatar-preview-img" />
+                            <div class="avatar-initial-fallback" id="avatarInitial" style="display: none;">@userInitial</div>
+                        }
+                        else
+                        {
+                            <div class="avatar-initial-fallback" id="avatarInitial">
+                                @userInitial
+                            </div>
+                            <img src="" alt="Önizleme" id="avatarPreview" class="avatar-preview-img" style="display: none;" />
+                        }
+                        <label for="imageFileInput" class="avatar-upload-btn" title="Fotoğraf Seç / Değiştir">
+                            <i class="bi bi-camera-fill"></i>
+                        </label>
+                    </div>
+
+                    <div class="hero-meta">
+                        <h2>@(string.IsNullOrWhiteSpace(Model.FullName) ? Model.UserName : Model.FullName)</h2>
+                        <div class="hero-meta-subtitle">
+                            <span><i class="bi bi-at"></i>@Model.UserName</span>
+                            <span>•</span>
+                            <span><i class="bi bi-envelope"></i>@Model.Email</span>
+                        </div>
+                        <div class="hero-badges">
+                            <span class="hero-badge-role">
+                                <i class="bi bi-shield-check"></i>
+                                @roleName
+                            </span>
+                            <span class="hero-badge-status">
+                                <span class="pulse-dot"></span>
+                                Aktif Hesap
+                            </span>
+                            <span class="photo-selected-pill" id="photoPill">
+                                <i class="bi bi-check-lg"></i> Yeni Fotoğraf Seçildi
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-stats-box">
+                    <div class="hero-stats-icon">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <div class="hero-stats-content">
+                        <p class="stat-label">Toplam Kargo</p>
+                        <p class="stat-number">@Model.TotalShipments Adet</p>
+                        <a href="/Shipment/Index" class="hero-stats-link">
+                            Kargolarıma Git <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Cards Grid -->
+            <div class="profile-cards-grid">
+                
+                <!-- Card 1: Kişisel Bilgiler & Fotoğraf -->
+                <div class="profile-card">
+                    <div class="card-title-group">
+                        <div class="card-title-icon">
+                            <i class="bi bi-person-lines-fill"></i>
+                        </div>
+                        <div>
+                            <h3>Kişisel Bilgiler</h3>
+                            <p>Temel hesap ve iletişim bilgilerinizi güncelleyin</p>
+                        </div>
+                    </div>
+
+                    <!-- GÖRSEL VE BELİRGİN PROFİL FOTOĞRAFI YÜKLEME ALANI -->
+                    <div class="custom-form-group">
+                        <label class="custom-label">
+                            <i class="bi bi-image"></i> Profil Fotoğrafı
+                        </label>
+                        <div class="photo-upload-box">
+                            <div class="photo-box-preview-wrap">
+                                @if (!string.IsNullOrEmpty(Model.ExistingImageUrl))
+                                {
+                                    <img src="@Model.ExistingImageUrl" alt="Önizleme" id="boxAvatarPreview" class="photo-box-img" />
+                                    <div class="photo-box-initial" id="boxAvatarInitial" style="display: none;">@userInitial</div>
+                                }
+                                else
+                                {
+                                    <div class="photo-box-initial" id="boxAvatarInitial">@userInitial</div>
+                                    <img src="" alt="Önizleme" id="boxAvatarPreview" class="photo-box-img" style="display: none;" />
+                                }
+                            </div>
+                            <div class="photo-box-controls">
+                                <div class="photo-box-btn-row">
+                                    <label for="imageFileInput" class="btn-choose-file">
+                                        <i class="bi bi-cloud-arrow-up-fill"></i> Fotoğraf Seç / Değiştir
+                                    </label>
+                                    @if (!string.IsNullOrEmpty(Model.ExistingImageUrl))
+                                    {
+                                        <button type="button" class="btn-delete-photo" id="btnRemovePhoto" onclick="removeProfilePhoto()">
+                                            <i class="bi bi-trash3"></i> Kaldır
+                                        </button>
+                                    }
+                                    <button type="button" class="btn-delete-photo" id="btnCancelNewPhoto" onclick="cancelSelectedPhoto()" style="display: none;">
+                                        <i class="bi bi-x-circle"></i> İptal Et
+                                    </button>
+                                </div>
+                                <div class="photo-file-status" id="fileStatusText">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span>@(string.IsNullOrEmpty(Model.ExistingImageUrl) ? "Henüz fotoğraf yüklenmedi" : "Mevcut profil fotoğrafı yüklü")</span>
+                                </div>
+                                <div class="photo-hints">Desteklenen: JPG, PNG, WEBP (Önerilen: 1:1 kare format)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FullName -->
+                    <div class="custom-form-group">
+                        <label class="custom-label" asp-for="FullName">
+                            <i class="bi bi-person"></i> Ad Soyad
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-person input-icon-left"></i>
+                            <input asp-for="FullName" class="custom-input" placeholder="Adınız ve Soyadınız" />
+                        </div>
+                        <span asp-validation-for="FullName" class="validation-text-danger"></span>
+                    </div>
+
+                    <!-- UserName -->
+                    <div class="custom-form-group">
+                        <label class="custom-label" asp-for="UserName">
+                            <i class="bi bi-at"></i> Kullanıcı Adı
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-at input-icon-left"></i>
+                            <input asp-for="UserName" class="custom-input" placeholder="Kullanıcı adınız" />
+                        </div>
+                        <span asp-validation-for="UserName" class="validation-text-danger"></span>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="custom-form-group">
+                        <label class="custom-label" asp-for="Email">
+                            <i class="bi bi-envelope"></i> E-Posta Adresi
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-envelope input-icon-left"></i>
+                            <input asp-for="Email" type="email" class="custom-input" placeholder="ornek@alanadi.com" />
+                        </div>
+                        <span asp-validation-for="Email" class="validation-text-danger"></span>
+                    </div>
+
+                    <!-- PhoneNumber -->
+                    <div class="custom-form-group">
+                        <label class="custom-label" asp-for="PhoneNumber">
+                            <i class="bi bi-telephone"></i> Telefon Numarası
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-telephone input-icon-left"></i>
+                            <input asp-for="PhoneNumber" type="tel" class="custom-input" placeholder="05XX XXX XX XX" />
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="validation-text-danger"></span>
+                    </div>
+
+                </div>
+
+                <!-- Card 2: Şifre ve Güvenlik -->
+                <div class="profile-card">
+                    <div class="card-title-group security">
+                        <div class="card-title-icon">
+                            <i class="bi bi-shield-lock-fill"></i>
+                        </div>
+                        <div>
+                            <h3>Şifre ve Güvenlik</h3>
+                            <p>Hesabınızın giriş şifresini güvenle güncelleyin</p>
+                        </div>
+                    </div>
+
+                    <div class="security-notice-box">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <div>
+                            Şifrenizi değiştirmek istemiyorsanız aşağıdaki şifre alanlarını boş bırakabilirsiniz.
+                        </div>
+                    </div>
+
+                    <!-- Current Password -->
+                    <div class="custom-form-group">
+                        <label class="custom-label" asp-for="CurrentPassword">
+                            <i class="bi bi-key"></i> Mevcut Şifre
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-lock input-icon-left"></i>
+                            <input asp-for="CurrentPassword" type="password" id="currentPasswordInput" class="custom-input" placeholder="Mevcut şifrenizi giriniz" autocomplete="current-password" />
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('currentPasswordInput', this)" title="Şifreyi Göster/Gizle">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="CurrentPassword" class="validation-text-danger"></span>
+                    </div>
+
+                    <!-- New Password -->
+                    <div class="custom-form-group">
+                        <label class="custom-label" asp-for="NewPassword">
+                            <i class="bi bi-shield-check"></i> Yeni Şifre
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-lock-fill input-icon-left"></i>
+                            <input asp-for="NewPassword" type="password" id="newPasswordInput" class="custom-input" placeholder="En az 6 karakterli yeni şifre" autocomplete="new-password" />
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('newPasswordInput', this)" title="Şifreyi Göster/Gizle">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="NewPassword" class="validation-text-danger"></span>
+                    </div>
+
+                    <!-- Confirm New Password -->
+                    <div class="custom-form-group">
+                        <label class="custom-label" asp-for="ConfirmNewPassword">
+                            <i class="bi bi-check-all"></i> Yeni Şifre Tekrar
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-lock-fill input-icon-left"></i>
+                            <input asp-for="ConfirmNewPassword" type="password" id="confirmPasswordInput" class="custom-input" placeholder="Yeni şifrenizi tekrar giriniz" autocomplete="new-password" />
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('confirmPasswordInput', this)" title="Şifreyi Göster/Gizle">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="ConfirmNewPassword" class="validation-text-danger"></span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Bottom Actions Bar -->
+            <div class="profile-actions-bar">
+                <div class="actions-bar-info">
+                    <i class="bi bi-shield-shaded text-success fs-5"></i>
+                    <span>Bilgileriniz güvenli bağlantı üzerinden şifrelenerek saklanmaktadır.</span>
+                </div>
+                <div class="actions-bar-buttons">
+                    <a href="/Home/Index" class="btn-profile-cancel">
+                        <i class="bi bi-x-lg"></i> Vazgeç
+                    </a>
+                    <button type="submit" class="btn-profile-save" id="btnSaveProfile">
+                        <i class="bi bi-floppy-fill"></i> Değişiklikleri Kaydet
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    const originalImageUrl = '@(Model.ExistingImageUrl ?? "")';
+
+    // Live Image Preview Function
+    function handleImagePreview(event) {
+        const file = event.target.files[0];
+        if (file) {
+            // Check file format
+            const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+            if (!validTypes.includes(file.type)) {
+                alert('Lütfen geçerli bir resim formatı (JPG, PNG, WEBP) seçiniz.');
+                event.target.value = '';
+                return;
+            }
+
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Seçilen dosya çok büyük. Lütfen 5MB\'dan küçük bir resim seçiniz.');
+                event.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const dataUrl = e.target.result;
+
+                // Update Hero Avatar
+                const heroImg = document.getElementById('avatarPreview');
+                const heroInitial = document.getElementById('avatarInitial');
+                if (heroImg) {
+                    heroImg.src = dataUrl;
+                    heroImg.style.display = 'block';
+                }
+                if (heroInitial) {
+                    heroInitial.style.display = 'none';
+                }
+
+                // Update Form Box Avatar
+                const boxImg = document.getElementById('boxAvatarPreview');
+                const boxInitial = document.getElementById('boxAvatarInitial');
+                if (boxImg) {
+                    boxImg.src = dataUrl;
+                    boxImg.style.display = 'block';
+                }
+                if (boxInitial) {
+                    boxInitial.style.display = 'none';
+                }
+
+                // Update Status text and pills
+                const photoPill = document.getElementById('photoPill');
+                if (photoPill) photoPill.style.display = 'inline-flex';
+
+                const fileStatusText = document.getElementById('fileStatusText');
+                if (fileStatusText) {
+                    fileStatusText.className = 'photo-file-status selected';
+                    fileStatusText.innerHTML = '<i class="bi bi-check-circle-fill"></i> <span>Seçildi: ' + file.name + '</span>';
+                }
+
+                // Show Cancel New Photo button
+                const btnCancelNew = document.getElementById('btnCancelNewPhoto');
+                if (btnCancelNew) btnCancelNew.style.display = 'inline-flex';
+
+                // Reset RemoveImage flag
+                const removeInput = document.getElementById('removeImageInput');
+                if (removeInput) removeInput.value = 'false';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Remove Profile Photo (Mark for removal on server)
+    function removeProfilePhoto() {
+        if (!confirm('Profil fotoğrafınızı kaldırmak istediğinize emin misiniz?')) {
+            return;
+        }
+
+        const removeInput = document.getElementById('removeImageInput');
+        if (removeInput) removeInput.value = 'true';
+
+        // Clear file input
+        const fileInput = document.getElementById('imageFileInput');
+        if (fileInput) fileInput.value = '';
+
+        // Switch to initial fallback
+        const heroImg = document.getElementById('avatarPreview');
+        const heroInitial = document.getElementById('avatarInitial');
+        if (heroImg) heroImg.style.display = 'none';
+        if (heroInitial) heroInitial.style.display = 'flex';
+
+        const boxImg = document.getElementById('boxAvatarPreview');
+        const boxInitial = document.getElementById('boxAvatarInitial');
+        if (boxImg) boxImg.style.display = 'none';
+        if (boxInitial) boxInitial.style.display = 'flex';
+
+        // Status text
+        const fileStatusText = document.getElementById('fileStatusText');
+        if (fileStatusText) {
+            fileStatusText.className = 'photo-file-status removed';
+            fileStatusText.innerHTML = '<i class="bi bi-trash3-fill"></i> <span>Fotoğraf kaydedildiğinde silinecektir.</span>';
+        }
+
+        const photoPill = document.getElementById('photoPill');
+        if (photoPill) photoPill.style.display = 'none';
+
+        const btnRemove = document.getElementById('btnRemovePhoto');
+        if (btnRemove) btnRemove.style.display = 'none';
+    }
+
+    // Cancel newly selected photo and restore original
+    function cancelSelectedPhoto() {
+        const fileInput = document.getElementById('imageFileInput');
+        if (fileInput) fileInput.value = '';
+
+        const removeInput = document.getElementById('removeImageInput');
+        if (removeInput) removeInput.value = 'false';
+
+        const btnCancelNew = document.getElementById('btnCancelNewPhoto');
+        if (btnCancelNew) btnCancelNew.style.display = 'none';
+
+        const photoPill = document.getElementById('photoPill');
+        if (photoPill) photoPill.style.display = 'none';
+
+        if (originalImageUrl) {
+            const heroImg = document.getElementById('avatarPreview');
+            const heroInitial = document.getElementById('avatarInitial');
+            if (heroImg) {
+                heroImg.src = originalImageUrl;
+                heroImg.style.display = 'block';
+            }
+            if (heroInitial) heroInitial.style.display = 'none';
+
+            const boxImg = document.getElementById('boxAvatarPreview');
+            const boxInitial = document.getElementById('boxAvatarInitial');
+            if (boxImg) {
+                boxImg.src = originalImageUrl;
+                boxImg.style.display = 'block';
+            }
+            if (boxInitial) boxInitial.style.display = 'none';
+
+            const fileStatusText = document.getElementById('fileStatusText');
+            if (fileStatusText) {
+                fileStatusText.className = 'photo-file-status';
+                fileStatusText.innerHTML = '<i class="bi bi-info-circle"></i> <span>Mevcut profil fotoğrafı yüklü</span>';
+            }
+        } else {
+            const heroImg = document.getElementById('avatarPreview');
+            const heroInitial = document.getElementById('avatarInitial');
+            if (heroImg) heroImg.style.display = 'none';
+            if (heroInitial) heroInitial.style.display = 'flex';
+
+            const boxImg = document.getElementById('boxAvatarPreview');
+            const boxInitial = document.getElementById('boxAvatarInitial');
+            if (boxImg) boxImg.style.display = 'none';
+            if (boxInitial) boxInitial.style.display = 'flex';
+
+            const fileStatusText = document.getElementById('fileStatusText');
+            if (fileStatusText) {
+                fileStatusText.className = 'photo-file-status';
+                fileStatusText.innerHTML = '<i class="bi bi-info-circle"></i> <span>Henüz fotoğraf yüklenmedi</span>';
+            }
+        }
+    }
+
+    // Toggle Password Visibility
+    function togglePasswordVisibility(inputId, buttonEl) {
+        const input = document.getElementById(inputId);
+        const icon = buttonEl.querySelector('i');
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    }
+
+    // Form Submit visual feedback
+    document.getElementById('profileForm').addEventListener('submit', function () {
+        const btn = document.getElementById('btnSaveProfile');
+        if (btn) {
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="width: 16px; height: 16px; border-width: 2px;"></span> Kaydediliyor...';
+            btn.style.opacity = '0.85';
+            btn.style.pointerEvents = 'none';
+        }
+    });
+</script>

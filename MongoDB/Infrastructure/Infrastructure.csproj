@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+	  <PackageReference Include="CloudinaryDotNet" Version="1.29.3" />
 	  <PackageReference Include="Google.Apis.Auth" Version="1.76.0" />
 	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.12" />
 	  <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.17" />

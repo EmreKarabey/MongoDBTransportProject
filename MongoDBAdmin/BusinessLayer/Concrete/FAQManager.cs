@@ -39,6 +39,11 @@ namespace BusinessLayer.Concrete
             return await _faqDal.GetListAsync(limit, skip);
         }
 
+        public async Task<List<FAQ>> GetListAsync()
+        {
+            return await _faqDal.GetListAsync();
+        }
+
         public async Task UpdateAsync(FAQ entity, string id)
         {
             await _faqDal.UpdateAsync(entity, id);

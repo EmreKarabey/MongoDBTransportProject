@@ -10,7 +10,7 @@ using MongoDBAdmin.Models;
 
 namespace MongoDBAdmin.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Moderatör")]
     public class SliderController : Controller
     {
         private readonly ISliderService _sliderService;
@@ -152,6 +152,7 @@ namespace MongoDBAdmin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSlider(string Id)
         {
             try
