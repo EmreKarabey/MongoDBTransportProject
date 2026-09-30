@@ -10,22 +10,19 @@ Transp, modern kurumsal lojistik ve kargo takip süreçlerini dijitalleştiren, 
 ## 📸 Ekran Görüntüleri
 
 ### 👤 Kullanıcı Arayüzü
-<img width="1786" height="887" alt="Ekran görüntüsü 2026-09-30 164725" src="https://github.com/user-attachments/assets/ff700a03-13a2-4a34-831e-7d1527e4d2f4" />
-<img width="1833" height="811" alt="Ekran görüntüsü 2026-09-30 164132" src="https://github.com/user-attachments/assets/7131c123-f0d4-441a-8dad-2e117f61083a" />
-<img width="1830" height="870" alt="Ekran görüntüsü 2026-09-30 164124" src="https://github.com/user-attachments/assets/3b5aba70-8986-4f65-a342-7150be2c95c7" />
-<img width="1845" height="871" alt="Ekran görüntüsü 2026-09-30 164100" src="https://github.com/user-attachments/assets/15918044-3f6d-4bb2-8247-8bce0a7572ae" />
-<img width="1851" height="876" alt="Ekran görüntüsü 2026-09-30 164051" src="https://github.com/user-attachments/assets/af90d236-ed89-4a0f-bf97-8d63dc645fb8" />
 <img width="1852" height="877" alt="Ekran görüntüsü 2026-09-30 164035" src="https://github.com/user-attachments/assets/c0c92801-7c54-4efe-8d47-49fd7461b7e5" />
-
+<img width="1851" height="876" alt="Ekran görüntüsü 2026-09-30 164051" src="https://github.com/user-attachments/assets/af90d236-ed89-4a0f-bf97-8d63dc645fb8" />
+<img width="1845" height="871" alt="Ekran görüntüsü 2026-09-30 164100" src="https://github.com/user-attachments/assets/15918044-3f6d-4bb2-8247-8bce0a7572ae" />
+<img width="1830" height="870" alt="Ekran görüntüsü 2026-09-30 164124" src="https://github.com/user-attachments/assets/3b5aba70-8986-4f65-a342-7150be2c95c7" />
+<img width="1833" height="811" alt="Ekran görüntüsü 2026-09-30 164132" src="https://github.com/user-attachments/assets/7131c123-f0d4-441a-8dad-2e117f61083a" />
+<img width="1786" height="887" alt="Ekran görüntüsü 2026-09-30 164725" src="https://github.com/user-attachments/assets/ff700a03-13a2-4a34-831e-7d1527e4d2f4" />
 ---
-
 ### 🛡️ Yönetici Paneli
 <img width="1827" height="872" alt="image" src="https://github.com/user-attachments/assets/5fb3bed3-ef51-42c7-8f82-dd83d00bfe2b" />
 <img width="1826" height="880" alt="Ekran görüntüsü 2026-09-30 164330" src="https://github.com/user-attachments/assets/d7be9111-f448-4a92-9463-304d35eb8eaf" />
 <img width="1823" height="872" alt="image" src="https://github.com/user-attachments/assets/273240d4-d861-4bda-975e-b581fedaa10e" />
 <img width="1816" height="857" alt="image" src="https://github.com/user-attachments/assets/06aec5fe-2fee-4281-8d5f-a2d2434ea85f" />
 <img width="1815" height="872" alt="image" src="https://github.com/user-attachments/assets/2dde661c-e317-4b95-ad33-c48303681202" />
-
 
 ---
 
